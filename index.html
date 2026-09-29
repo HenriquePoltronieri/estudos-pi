@@ -3,1121 +3,691 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Flutter — Lanchonete Express</title>
+<title>Quiz Flutter — Integração & Persistência</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #09090b;
-    --card: #131316;
-    --card2: #1a1a1f;
-    --border: #26262c;
-    --texto: #e4e4e7;
-    --dim: #8b8b93;
-    --verde: #22c55e;
-    --verde-soft: rgba(34, 197, 94, 0.12);
-    --vermelho: #ef4444;
-    --vermelho-soft: rgba(239, 68, 68, 0.12);
-    --azul: #60a5fa;
-    --amarelo: #fbbf24;
-    --laranja: #fb923c;
-    --roxo: #a78bfa;
+    --bg: #060a12; --card: #0f1826; --card2: #16202f; --border: #263447;
+    --texto: #e4e9f0; --dim: #8494a8; --azulesc: #7db9ff;
+    --verde: #4ade80; --verde-soft: rgba(74, 222, 128, 0.1);
+    --vermelho: #f87171; --vermelho-soft: rgba(248, 113, 113, 0.1);
+    --dourado: #e8c14f; --dourado-soft: rgba(232, 193, 79, 0.12);
+    --codigo: #ff9db8; --roxo: #a78bfa;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: var(--bg);
-    background-image: radial-gradient(circle at 50% -20%, rgba(34,197,94,0.07), transparent 60%);
-    color: var(--texto);
-    font-family: 'JetBrains Mono', monospace;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 32px 16px;
+    background-image: radial-gradient(circle at 50% -20%, rgba(125, 185, 255, 0.06), transparent 60%);
+    color: var(--texto); font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh; display: flex; justify-content: center; padding: 32px 16px;
   }
   .app { width: 100%; max-width: 760px; }
-
-  /* ---------- barra de navegação ---------- */
-  .navbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-    min-height: 36px;
-  }
-  .nav-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    color: var(--dim);
-    font-family: inherit;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 8px 13px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s, transform 0.1s;
-  }
+  .topbar { height: 6px; background: linear-gradient(90deg, #1a3a5c 0%, #1a3a5c 55%, var(--dourado) 100%); border-radius: 99px; margin-bottom: 18px; }
+  .navbar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; min-height: 36px; }
+  .nav-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--border); color: var(--dim); font-family: inherit; font-size: 0.72rem; font-weight: 600; padding: 8px 13px; border-radius: 8px; cursor: pointer; transition: color 0.15s, border-color 0.15s, transform 0.1s; }
   .nav-btn:hover:not(:disabled) { color: var(--texto); border-color: var(--dim); transform: translateY(-1px); }
-  .nav-btn:disabled { opacity: 0.35; cursor: default; }
-  .nav-btn.home:hover:not(:disabled) { color: var(--verde); border-color: var(--verde); }
+  .nav-btn:disabled { opacity: 0.4; cursor: default; }
+  .nav-btn.home:hover:not(:disabled) { color: var(--azulesc); border-color: var(--azulesc); }
   .nav-spacer { flex: 1; }
-  .nav-modo {
-    font-size: 0.7rem;
-    color: var(--dim);
-    background: var(--card2);
-    border: 1px solid var(--border);
-    padding: 6px 12px;
-    border-radius: 99px;
-  }
+  .nav-modo { font-size: 0.7rem; color: var(--dim); background: var(--card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 99px; }
   .nav-modo b { color: var(--texto); }
-
-  .barra-wrap {
-    height: 4px;
-    background: var(--border);
-    border-radius: 99px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-  .barra {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--verde), #86efac);
-    border-radius: 99px;
-    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .topo {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.75rem;
-    color: var(--dim);
-    margin-bottom: 10px;
-  }
+  .barra-wrap { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 20px; }
+  .barra { height: 100%; width: 0%; background: linear-gradient(90deg, var(--dourado), #f5d97e); border-radius: 99px; transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+  .topo { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--dim); margin-bottom: 10px; }
   .topo .placar { color: var(--verde); font-weight: 600; }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-    animation: entrar 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  @keyframes entrar {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .hero h1 { font-size: 1.5rem; font-weight: 800; line-height: 1.3; }
-  .hero h1 span { color: var(--verde); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3); animation: entrar 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+  @keyframes entrar { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .hero h1 { font-size: 1.5rem; font-weight: 800; line-height: 1.3; color: var(--texto); }
+  .hero h1 span { color: var(--dourado); }
   .hero .desc { color: var(--dim); font-size: 0.85rem; margin: 14px 0 20px; line-height: 1.6; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
-  .chip {
-    font-size: 0.7rem;
-    color: var(--dim);
-    background: var(--card2);
-    border: 1px solid var(--border);
-    padding: 5px 10px;
-    border-radius: 99px;
-  }
-
+  .chip { font-size: 0.7rem; color: var(--dim); background: var(--card2); border: 1px solid var(--border); padding: 5px 10px; border-radius: 99px; }
   .modos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 8px; }
   @media (max-width: 560px) { .modos { grid-template-columns: 1fr; } }
-  .modo {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 14px;
-    cursor: pointer;
-    font-family: inherit;
-    color: var(--texto);
-    text-align: left;
-    transition: border-color 0.15s, transform 0.1s;
-  }
+  .modo { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 14px; cursor: pointer; font-family: inherit; color: var(--texto); text-align: left; transition: border-color 0.15s, transform 0.1s; }
   .modo:hover { transform: translateY(-2px); }
   .modo .m-icone { font-size: 1.2rem; display: block; margin-bottom: 8px; }
   .modo .m-nome { font-weight: 800; font-size: 0.88rem; display: block; margin-bottom: 4px; }
   .modo .m-desc { font-size: 0.67rem; color: var(--dim); line-height: 1.5; display: block; }
-  .modo.facil:hover     { border-color: var(--verde); }
-  .modo.facil .m-nome   { color: var(--verde); }
-  .modo.medio:hover     { border-color: var(--laranja); }
-  .modo.medio .m-nome   { color: var(--laranja); }
-  .modo.dificil:hover   { border-color: var(--vermelho); }
-  .modo.dificil .m-nome { color: var(--vermelho); }
-  .modo.codigo:hover    { border-color: var(--azul); }
-  .modo.codigo .m-nome  { color: var(--azul); }
-  .modo.resumo:hover    { border-color: var(--roxo); }
-  .modo.resumo .m-nome  { color: var(--roxo); }
-
-  .tema {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--verde);
-    background: var(--verde-soft);
-    border: 1px solid rgba(34,197,94,0.3);
-    padding: 4px 12px;
-    border-radius: 99px;
-    margin-bottom: 16px;
-  }
+  .modo.facil:hover { border-color: var(--verde); } .modo.facil .m-nome { color: var(--verde); }
+  .modo.medio:hover { border-color: var(--dourado); } .modo.medio .m-nome { color: var(--dourado); }
+  .modo.dificil:hover { border-color: var(--vermelho); } .modo.dificil .m-nome { color: var(--vermelho); }
+  .modo.codigo:hover { border-color: var(--azulesc); } .modo.codigo .m-nome { color: var(--azulesc); }
+  .modo.resumo:hover { border-color: var(--roxo); } .modo.resumo .m-nome { color: var(--roxo); }
+  .tema { display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 600; color: var(--dourado); background: var(--dourado-soft); border: 1px solid rgba(232, 193, 79, 0.3); padding: 4px 12px; border-radius: 99px; margin-bottom: 16px; }
   .pergunta { font-size: 0.95rem; line-height: 1.65; margin-bottom: 22px; }
-  .pergunta b { color: var(--amarelo); }
-  code {
-    background: #202027;
-    padding: 2px 6px;
-    border-radius: 5px;
-    color: var(--azul);
-    font-size: 0.85em;
-    font-family: inherit;
-  }
-  pre {
-    background: #0c0c0f;
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--azul);
-    border-radius: 8px;
-    padding: 16px;
-    margin: 14px 0 20px;
-    overflow-x: auto;
-    font-size: 0.8rem;
-    line-height: 1.65;
-    color: #d4d4d8;
-  }
-  pre .kw { color: #c084fc; }
-  pre .fn { color: #60a5fa; }
-  pre .str { color: #86efac; }
-  pre .cm { color: #6b7280; font-style: italic; }
-  pre .num { color: #fbbf24; }
-
-  .opcao {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    width: 100%;
-    text-align: left;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    color: var(--texto);
-    font-family: inherit;
-    font-size: 0.83rem;
-    line-height: 1.55;
-    padding: 13px 15px;
-    border-radius: 10px;
-    margin-bottom: 9px;
-    cursor: pointer;
-    transition: border-color 0.15s, transform 0.1s, background 0.15s;
-  }
+  .pergunta b { color: var(--dourado); }
+  code { background: var(--card2); padding: 2px 6px; border-radius: 5px; color: var(--codigo); font-size: 0.85em; font-family: inherit; }
+  pre { background: #05090f; border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 14px 0 20px; overflow-x: auto; font-size: 0.8rem; line-height: 1.65; color: #e8eef5; }
+  pre .kw { color: #ff9db8; } pre .fn { color: #7db9ff; } pre .str { color: #a5e8b0; } pre .cm { color: #6b7d94; font-style: italic; } pre .num { color: #f5c563; }
+  .opcao { display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left; background: var(--card2); border: 1px solid var(--border); color: var(--texto); font-family: inherit; font-size: 0.83rem; line-height: 1.55; padding: 13px 15px; border-radius: 10px; margin-bottom: 9px; cursor: pointer; transition: border-color 0.15s, transform 0.1s, background 0.15s; }
   .opcao .txt { display: block; min-height: 3.1em; }
   .opcao:hover:not(:disabled) { border-color: var(--verde); transform: translateX(3px); }
   .opcao:disabled { cursor: default; }
-  .letra {
-    flex-shrink: 0;
-    width: 24px; height: 24px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.7rem; font-weight: 800;
-    color: var(--dim);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-top: 1px;
-    transition: all 0.15s;
-  }
+  .letra { flex-shrink: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--dim); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; margin-top: 1px; transition: all 0.15s; }
   .opcao:hover:not(:disabled) .letra { color: var(--verde); border-color: var(--verde); }
   .opcao.correta { border-color: var(--verde); background: var(--verde-soft); }
   .opcao.correta .letra { background: var(--verde); border-color: var(--verde); color: #052e16; }
   .opcao.errada { border-color: var(--vermelho); background: var(--vermelho-soft); }
   .opcao.errada .letra { background: var(--vermelho); border-color: var(--vermelho); color: #450a0a; }
   .opcao.apagada { opacity: 0.45; }
-
-  .explicacao {
-    display: none;
-    margin-top: 18px;
-    padding: 14px 16px;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--verde);
-    border-radius: 8px;
-    font-size: 0.82rem;
-    line-height: 1.6;
-    color: var(--dim);
-    animation: entrar 0.3s ease;
-  }
+  .explicacao { display: none; margin-top: 18px; padding: 14px 16px; background: var(--card2); border: 1px solid var(--border); border-left: 3px solid var(--verde); border-radius: 8px; font-size: 0.82rem; line-height: 1.6; color: var(--dim); animation: entrar 0.3s ease; }
   .explicacao .tag { color: var(--verde); font-weight: 800; margin-right: 6px; }
-  .explicacao.err .tag { color: var(--vermelho); }
-  .explicacao.err { border-left-color: var(--vermelho); }
-
-  .botao {
-    display: none;
-    margin-top: 20px;
-    background: var(--verde);
-    color: #052e16;
-    border: none;
-    font-family: inherit;
-    font-weight: 800;
-    font-size: 0.85rem;
-    padding: 13px 28px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.1s, filter 0.15s;
-  }
+  .explicacao.err .tag { color: var(--vermelho); } .explicacao.err { border-left-color: var(--vermelho); }
+  .botao { display: none; margin-top: 20px; background: var(--dourado); color: #1a1400; border: none; font-family: inherit; font-weight: 800; font-size: 0.85rem; padding: 13px 28px; border-radius: 10px; cursor: pointer; transition: transform 0.1s, filter 0.15s; }
   .botao:hover { filter: brightness(1.15); transform: translateY(-1px); }
   .botao.mostrar { display: inline-block; animation: entrar 0.3s ease; }
-  .botao.secundario {
-    background: transparent;
-    color: var(--dim);
-    border: 1px solid var(--border);
-    margin-left: 8px;
-  }
+  .botao.secundario { background: transparent; color: var(--dim); border: 1px solid var(--border); margin-left: 8px; }
   .botao.secundario:hover { color: var(--texto); border-color: var(--dim); }
-  .dica-teclado { font-size: 0.68rem; color: #55555c; margin-top: 14px; }
-
+  .dica-teclado { font-size: 0.68rem; color: #4a5568; margin-top: 14px; }
   .resultado { text-align: center; }
-  .anel {
-    width: 140px; height: 140px;
-    margin: 10px auto 18px;
-    border-radius: 50%;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    background:
-      radial-gradient(closest-side, var(--card) 82%, transparent 83%),
-      conic-gradient(var(--verde) calc(var(--pct) * 1%), var(--border) 0);
-  }
+  .anel { width: 140px; height: 140px; margin: 10px auto 18px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(closest-side, var(--card) 82%, transparent 83%), conic-gradient(var(--verde) calc(var(--pct) * 1%), var(--border) 0); }
   .anel .num { font-size: 1.8rem; font-weight: 800; color: var(--verde); }
   .anel .sub { font-size: 0.7rem; color: var(--dim); }
   .veredito { color: var(--texto); font-size: 0.95rem; margin-bottom: 4px; font-weight: 600; }
   .veredito-sub { color: var(--dim); font-size: 0.8rem; margin-bottom: 24px; }
-
   .revisao { text-align: left; margin-top: 8px; }
-  .revisao h3 {
-    font-size: 0.8rem; color: var(--vermelho);
-    margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em;
-  }
-  .rev-item {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--vermelho);
-    border-radius: 8px;
-    padding: 13px 15px; margin-bottom: 9px;
-    font-size: 0.78rem; line-height: 1.6;
-  }
+  .revisao h3 { font-size: 0.8rem; color: var(--vermelho); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .rev-item { background: var(--card2); border: 1px solid var(--border); border-left: 3px solid var(--vermelho); border-radius: 8px; padding: 13px 15px; margin-bottom: 9px; font-size: 0.78rem; line-height: 1.6; }
   .rev-item .q { color: var(--texto); margin-bottom: 6px; }
-  .rev-item .r { color: var(--dim); }
-  .rev-item .r b { color: var(--verde); font-weight: 600; }
-
-  /* ---------- resumo ---------- */
-  .resumo-topo { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .rev-item .r { color: var(--dim); } .rev-item .r b { color: var(--verde); font-weight: 600; }
+  .resumo-topo { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
   .resumo-topo h2 { font-size: 1.15rem; font-weight: 800; color: var(--roxo); }
-  .resumo-tag {
-    font-size: 0.7rem; color: var(--dim);
-    background: var(--card2); border: 1px solid var(--border);
-    padding: 3px 10px; border-radius: 99px;
-  }
+  .resumo-tag { font-size: 0.7rem; color: var(--dim); background: var(--card2); border: 1px solid var(--border); padding: 3px 10px; border-radius: 99px; }
   .resumo-corpo { font-size: 0.88rem; line-height: 1.75; color: var(--texto); }
-  .resumo-corpo p { margin-bottom: 14px; }
-  .resumo-corpo b { color: var(--amarelo); }
-  .resumo-corpo .destaque {
-    display: block;
-    background: var(--card2);
-    border-left: 3px solid var(--roxo);
-    border-radius: 6px;
-    padding: 12px 14px;
-    margin: 4px 0 16px;
-    font-size: 0.82rem;
-    color: var(--dim);
-  }
-  .resumo-lista {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px;
-  }
-  .resumo-nav {
-    font-size: 0.72rem; color: var(--dim);
-    background: var(--card2); border: 1px solid var(--border);
-    padding: 7px 12px; border-radius: 8px; cursor: pointer;
-    font-family: inherit; transition: all 0.15s;
-  }
+  .resumo-corpo p { margin-bottom: 14px; } .resumo-corpo b { color: var(--dourado); }
+  .resumo-corpo .destaque { display: block; background: #05090f; border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; margin: 4px 0 16px; font-size: 0.82rem; color: #cdd7e3; line-height: 1.7; }
+  .resumo-corpo .destaque code { background: rgba(255,255,255,0.08); color: #ff9db8; }
+  .resumo-lista { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .resumo-nav { font-size: 0.72rem; color: var(--dim); background: var(--card2); border: 1px solid var(--border); padding: 7px 12px; border-radius: 8px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
   .resumo-nav:hover { color: var(--texto); border-color: var(--dim); }
   .resumo-nav.ativo { color: var(--roxo); border-color: var(--roxo); }
 </style>
 </head>
 <body>
 <div class="app">
+  <div class="topbar"></div>
   <div class="navbar" id="navbar"></div>
   <div class="barra-wrap"><div class="barra" id="barra"></div></div>
-  <div class="topo">
-    <span id="contador"></span>
-    <span class="placar" id="placar"></span>
-  </div>
+  <div class="topo"><span id="contador"></span><span class="placar" id="placar"></span></div>
   <div class="card" id="card"></div>
 </div>
 
 <script>
-  /* =========================== MODO FÁCIL =========================== */
+  /* =========================== MODO FÁCIL (18) =========================== */
   const facil = [
-    {
-      tema: "Scaffold",
-      pergunta: "O que é o <code>Scaffold</code> no Flutter?",
+    { tema: "Arquitetura", pergunta: "No fluxo Service → Provider → Page, qual é a responsabilidade da <b>Page</b> (tela)?",
       opcoes: [
-        "É o widget que fornece a estrutura visual básica de uma tela Material Design, com espaços reservados para a AppBar, o body, o FloatingActionButton e o Drawer.",
-        "É o motor interno do framework responsável por compilar o código Dart para código nativo de cada plataforma no momento em que o aplicativo é executado pelo usuário.",
-        "É o banco de dados local que o Flutter usa por padrão para salvar as informações do aplicativo, como os pedidos, mantendo tudo mesmo depois que o app é fechado.",
-        "É um pacote externo de layout mantido pela comunidade que precisa ser instalado com <code>flutter pub add scaffold</code> antes de poder ser usado no projeto."
-      ],
-      correta: 0,
-      explicacao: "O <code>Scaffold</code> é o \"esqueleto\" da tela: AppBar em cima, body no meio, FAB, Drawer etc. Já vem no Flutter — não é pacote externo, não compila nada e não guarda dados."
-    },
-    {
-      tema: "Scaffold",
-      pergunta: "Qual propriedade do <code>Scaffold</code> define o conteúdo principal da tela?",
+        "Mostrar os dados para o usuário na interface — a tela apenas exibe o que recebe do Provider, sem buscar dados por conta própria.",
+        "Fazer a requisição HTTP diretamente para a API, receber o JSON e converter os dados antes de exibi-los na interface do aplicativo.",
+        "Guardar o estado do aplicativo e controlar o carregamento, avisando as outras telas sempre que os dados forem alterados.",
+        "Comunicar-se com o banco de dados SQLite, executando os comandos de INSERT, SELECT, UPDATE e DELETE conforme a necessidade."
+      ], correta: 0, explicacao: "\"TELA MOSTRA. PROVIDER CONTROLA. SERVICE SE COMUNICA.\" A Page só exibe; quem busca dado é o Service e quem guarda estado é o Provider." },
+    { tema: "Arquitetura", pergunta: "Qual é a responsabilidade da camada <b>Service</b> em um projeto Flutter que consome uma API?",
       opcoes: [
-        "A propriedade <code>appBar</code>, já que tudo o que aparece na tela é considerado parte da barra superior e é desenhado a partir dela, de cima para baixo.",
-        "A propriedade <code>body</code>, que recebe o widget principal exibido na área central da tela, entre a AppBar (se houver) e a parte inferior do Scaffold.",
-        "A propriedade <code>home</code>, que define o widget inicial exibido em qualquer estrutura do Flutter, funcionando tanto no MaterialApp quanto dentro do Scaffold.",
-        "A propriedade <code>child</code>, padrão presente em todos os widgets do Flutter para definir o conteúdo interno que será renderizado dentro do componente."
-      ],
-      correta: 1,
-      explicacao: "O conteúdo principal vai no <code>body</code>. <code>appBar</code> é só a barra do topo, <code>home</code> pertence ao <code>MaterialApp</code> e o <code>Scaffold</code> nem tem propriedade <code>child</code>."
-    },
-    {
-      tema: "Stateless × Stateful",
-      pergunta: "Você precisa de uma tela com um contador que muda quando o usuário aperta um botão. Qual tipo de widget usar?",
+        "Fazer a comunicação: realizar a requisição HTTP, acessar a rota da API, receber o JSON e devolver os dados convertidos ao Provider.",
+        "Exibir os dados na tela de forma organizada, montando os widgets e cuidando de todo o visual apresentado ao usuário final.",
+        "Armazenar a lista de dados em memória e avisar as telas com <code>notifyListeners()</code> sempre que algo mudar no aplicativo.",
+        "Definir as classes que representam as tabelas do banco, com seus campos e tipos, servindo de molde para os dados salvos."
+      ], correta: 0, explicacao: "A Service sabe como buscar os dados: faz o HTTP, acessa a API e converte o JSON. As chamadas HTTP ficam sempre na pasta <code>services/</code>." },
+    { tema: "Arquitetura", pergunta: "Qual é a responsabilidade da camada <b>Provider</b>?",
       opcoes: [
-        "<code>StatelessWidget</code>, porque telas com apenas um botão e um texto são consideradas simples demais para justificar qualquer mecanismo de gerenciamento de estado.",
-        "<code>StatefulWidget</code>, porque o valor do contador muda durante a execução e a tela precisa ser redesenhada para refletir cada novo valor exibido ao usuário.",
-        "<code>Scaffold</code>, que já vem com um mecanismo interno de controle de estado embutido e atualiza automaticamente qualquer contador declarado dentro dele.",
-        "<code>MaterialApp</code>, que centraliza e gerencia o estado de todos os widgets filhos, dispensando o uso de qualquer outro tipo de widget para essa finalidade."
-      ],
-      correta: 1,
-      explicacao: "Se algo na tela muda com o tempo ou com interação, é <code>StatefulWidget</code>. <code>Scaffold</code> e <code>MaterialApp</code> são estruturais — não gerenciam o estado do seu contador."
-    },
-    {
-      tema: "setState",
-      pergunta: "De forma simples, o que o <code>setState()</code> faz?",
+        "Guardar os dados, controlar o carregamento e os erros, chamar a Service e avisar as telas quando algo muda.",
+        "Fazer diretamente a requisição HTTP para a API, dispensando qualquer outra camada intermediária no processo de busca de dados.",
+        "Montar os widgets visuais da tela, definindo cores, botões e a disposição dos elementos exibidos ao usuário do aplicativo.",
+        "Criar fisicamente as tabelas no banco de dados e executar os comandos SQL necessários para persistir cada registro do sistema."
+      ], correta: 0, explicacao: "\"PROVIDER CONTROLA.\" Ele guarda os dados, controla estado/carregamento/erro, chama a Service e avisa as telas com <code>notifyListeners()</code>." },
+    { tema: "Provider", pergunta: "De qual classe um Provider deve herdar para conseguir avisar as telas sobre mudanças?",
       opcoes: [
-        "Ele grava o novo valor da variável de forma permanente na memória do celular, garantindo que o dado continue existindo mesmo depois que o app for fechado.",
-        "Ele avisa o Flutter que uma variável de estado mudou, fazendo o <code>build()</code> ser executado de novo e a tela ser redesenhada com os valores atualizados.",
-        "Ele cria uma nova tela já com os valores atualizados e navega automaticamente até ela, substituindo a tela antiga que exibia os valores desatualizados.",
-        "Ele reinicia o widget do zero, apagando todas as variáveis da classe e devolvendo a tela ao estado inicial definido no momento da sua criação."
-      ],
-      correta: 1,
-      explicacao: "<code>setState</code> = \"ei Flutter, mudei algo, redesenha a tela\". Não salva nada em disco, não navega e não apaga variáveis."
-    },
-    {
-      tema: "Navigator",
-      pergunta: "Qual comando abre uma nova tela no Flutter?",
+        "De <code>ChangeNotifier</code>, que fornece o mecanismo para notificar os widgets ouvintes quando os dados mudam.",
+        "De <code>StatelessWidget</code>, pois o Provider é apenas uma tela sem estado que exibe os dados recebidos da Service.",
+        "De <code>HttpClient</code>, já que a principal função do Provider é realizar as requisições HTTP para a API do projeto.",
+        "De <code>Database</code>, porque o Provider é o responsável direto por abrir e manipular o banco de dados SQLite."
+      ], correta: 0, explicacao: "O Provider usa <code>extends ChangeNotifier</code> e chama <code>notifyListeners()</code> para avisar as telas quando os dados mudam." },
+    { tema: "Provider", pergunta: "Qual método o Provider chama para avisar as telas de que os dados foram atualizados?",
       opcoes: [
-        "<code>Navigator.push(context, MaterialPageRoute(builder: (context) =&gt; NovaTela()))</code>, que empilha a nova tela por cima da atual na pilha de navegação.",
-        "<code>Scaffold.open(context, NovaTela())</code>, método do próprio Scaffold que fecha a estrutura visual da tela atual e abre uma nova estrutura no lugar dela.",
-        "<code>setState(() =&gt; NovaTela())</code>, já que a mudança de tela é uma mudança de estado e por isso deve passar pelo mecanismo padrão de rebuild do framework.",
-        "<code>MaterialApp.route(context, NovaTela())</code>, que registra a nova tela na tabela de rotas do aplicativo e em seguida a exibe imediatamente ao usuário."
-      ],
-      correta: 0,
-      explicacao: "<code>Navigator.push</code> com <code>MaterialPageRoute</code> é a forma padrão de empilhar uma nova tela. Os outros métodos simplesmente não existem no framework."
-    },
-    {
-      tema: "Navigator",
-      pergunta: "E para voltar para a tela anterior?",
+        "<code>notifyListeners()</code>, que dispara a reconstrução dos widgets que estão ouvindo aquele Provider.",
+        "<code>setState()</code>, que é chamado dentro do próprio Provider para forçar todas as telas do app a se redesenharem juntas.",
+        "<code>refresh()</code>, método padrão do <code>ChangeNotifier</code> usado especificamente para recarregar dados vindos de uma API.",
+        "<code>update()</code>, que percorre a lista de widgets abertos e atualiza manualmente cada um deles um por vez na tela."
+      ], correta: 0, explicacao: "<code>notifyListeners()</code> avisa os ouvintes. Dentro de um Provider (ChangeNotifier) não se usa <code>setState</code> — esse é dos widgets." },
+    { tema: "PokéAPI · rota", pergunta: "Na atividade da Pokédex, qual rota Flask busca um Pokémon pelo nome?",
       opcoes: [
-        "<code>Navigator.pop(context)</code>, que remove a tela atual do topo da pilha de navegação e devolve o usuário para a tela imediatamente anterior que estava aberta.",
-        "<code>Navigator.back(context)</code>, método equivalente ao botão físico de voltar do Android e ao gesto de deslizar da borda esquerda para a direita no iOS.",
-        "<code>Navigator.return(context)</code>, que encerra a rota atual e devolve o controle da navegação diretamente para a primeira tela que foi aberta no aplicativo.",
-        "<code>Navigator.exit(context)</code>, que fecha a tela atual e, se não existir nenhuma tela anterior na pilha, minimiza o aplicativo deixando-o em segundo plano."
-      ],
-      correta: 0,
-      explicacao: "<code>pop</code> remove a tela atual da pilha e volta para a anterior. <code>back</code>, <code>return</code> e <code>exit</code> não existem no <code>Navigator</code>."
-    },
-    {
-      tema: "TextEditingController",
-      pergunta: "Para que serve o <code>TextEditingController</code>?",
+        "<code>GET /pokemons/nome/&lt;nome&gt;</code>, por exemplo <code>/pokemons/nome/pikachu</code>, que consulta a PokéAPI e devolve os dados do Pokémon.",
+        "<code>POST /pokemons/buscar</code>, enviando o nome do Pokémon no corpo da requisição para a API retornar seus dados completos.",
+        "<code>GET /pokeapi/pikachu</code>, que o Flutter acessa diretamente na PokéAPI sem passar pelo backend Flask do projeto.",
+        "<code>GET /nome?pokemon=pikachu</code>, informando o nome como parâmetro de query string em vez de fazer parte do caminho da URL."
+      ], correta: 0, explicacao: "A rota é <code>GET /pokemons/nome/&lt;nome&gt;</code>. O Flask consulta a PokéAPI e devolve id, nome, imagem, tipo, altura e peso." },
+    { tema: "Fluxo · regra", pergunta: "Na atividade da Pokédex, o Flutter pode acessar a PokéAPI diretamente?",
       opcoes: [
-        "Ele serve para ler e controlar o texto digitado em um <code>TextField</code> — por exemplo, recuperar o nome do cliente com <code>meuController.text</code> ao enviar o pedido.",
-        "Ele valida automaticamente o formato de e-mails, senhas e telefones digitados nos formulários do app, dispensando qualquer verificação manual escrita no código.",
-        "Ele cria animações de digitação letra por letra na tela, controlando a velocidade com que cada caractere do texto aparece gradualmente para o usuário.",
-        "Ele formata o estilo visual dos textos exibidos no aplicativo, controlando propriedades como cor, fonte, tamanho e espaçamento de cada campo da interface."
-      ],
-      correta: 0,
-      explicacao: "É a ponte entre o campo e o código: <code>meuController.text</code> retorna o que foi digitado. Validação é papel do <code>validator</code>; estilo é papel do <code>TextStyle</code>."
-    },
-    {
-      tema: "SnackBar",
-      pergunta: "O que é um <code>SnackBar</code>?",
+        "Não. O fluxo deve ser Flutter → Provider → Service → Flask → PokéAPI; o Flutter nunca acessa a PokéAPI diretamente.",
+        "Sim, desde que a requisição seja feita dentro da tela inicial para agilizar o carregamento dos dados dos Pokémon.",
+        "Sim, o Flutter deve acessar a PokéAPI diretamente e usar o Flask apenas para salvar os Pokémon favoritos do usuário.",
+        "Não, mas apenas em Flutter Web; no aplicativo mobile o acesso direto à PokéAPI é permitido e recomendado pela atividade."
+      ], correta: 0, explicacao: "Regra importante: o Flutter não acessa a PokéAPI direto. Todo o HTTP passa pela Service, que fala com o Flask, que fala com a PokéAPI." },
+    { tema: "SQLite · Model", pergunta: "Na atividade \"Minha Lista de Filmes\", quais campos a classe <code>Filme</code> deve possuir?",
       opcoes: [
-        "É uma mensagem temporária que aparece na parte de baixo da tela (por exemplo, \"Pedido enviado!\") e desaparece sozinha depois de alguns segundos.",
-        "É um menu lateral que desliza a partir da borda esquerda da tela quando o usuário toca no ícone de três linhas localizado na AppBar do aplicativo.",
-        "É uma barra fixa de navegação exibida no rodapé do app, usada para alternar entre as seções principais, como o cardápio, a lista de pedidos e o perfil.",
-        "É um alerta em formato de janela que aparece no centro da tela e bloqueia toda a interação do usuário até que ele toque em um dos botões de confirmação."
-      ],
-      correta: 0,
-      explicacao: "SnackBar é o aviso rápido da base da tela. Menu lateral é o <code>Drawer</code>, barra fixa no rodapé é o <code>BottomNavigationBar</code> e alerta bloqueante é o <code>AlertDialog</code>."
-    },
-    {
-      tema: "ListView",
-      pergunta: "Qual widget é o mais indicado para exibir uma lista rolável de produtos do cardápio?",
+        "<code>id</code>, <code>titulo</code> e <code>assistido</code>, sendo o id criado pelo SQLite e o assistido um valor true ou false.",
+        "<code>nome</code>, <code>ano</code> e <code>nota</code>, todos obrigatórios e digitados manualmente pelo usuário no momento do cadastro.",
+        "<code>id</code>, <code>categoria</code> e <code>preco</code>, seguindo a mesma estrutura usada na tabela de produtos do controle de estoque.",
+        "Apenas <code>titulo</code>, já que o SQLite não permite armazenar valores booleanos como o status de assistido de um filme."
+      ], correta: 0, explicacao: "O Model <code>Filme</code> tem <code>id</code> (gerado pelo SQLite), <code>titulo</code> (nome do filme) e <code>assistido</code> (true/false)." },
+    { tema: "SQLite · booleano", pergunta: "No SQLite, como o valor booleano <code>assistido</code> costuma ser armazenado?",
       opcoes: [
-        "O <code>ListView</code>, widget feito para exibir itens em sequência vertical, com rolagem automática sempre que o conteúdo ultrapassa a altura da tela.",
-        "O <code>Row</code>, que organiza os produtos lado a lado na horizontal e adiciona rolagem automática sempre que os itens não couberem na largura do aparelho.",
-        "O <code>Stack</code>, que empilha os produtos um sobre o outro em camadas e permite ao usuário deslizar entre eles com o dedo, como um baralho de cartas.",
-        "A <code>AppBar</code>, que exibe os itens do cardápio na barra superior da tela e os mantém sempre visíveis, independentemente da rolagem do conteúdo."
-      ],
-      correta: 0,
-      explicacao: "<code>ListView</code> já vem com rolagem vertical automática — é o widget clássico de listas. <code>Row</code> não rola sozinho, <code>Stack</code> sobrepõe e <code>AppBar</code> é só a barra do topo."
-    },
-    {
-      tema: "BottomSheet",
-      pergunta: "O que o <code>showModalBottomSheet</code> faz?",
+        "Como um número inteiro (INTEGER): <code>0</code> para false e <code>1</code> para true, pois o SQLite não tem um tipo booleano próprio.",
+        "Como um texto (TEXT) contendo literalmente as palavras \"true\" e \"false\", que são convertidas em booleano na hora de exibir.",
+        "Como um tipo BOOLEAN nativo do SQLite, que aceita diretamente os valores <code>true</code> e <code>false</code> sem conversão.",
+        "Como um valor REAL, usando <code>0.0</code> para false e <code>1.0</code> para true por questões de compatibilidade entre bancos."
+      ], correta: 0, explicacao: "O SQLite guarda o booleano como INTEGER: false → 0, true → 1. A coluna <code>assistido</code> é <code>INTEGER NOT NULL</code>." },
+    { tema: "SQLite · CRUD", pergunta: "Qual comando SQL é usado para <b>cadastrar</b> um novo registro (ex.: um novo filme ou produto)?",
       opcoes: [
-        "Ele abre um painel que desliza de baixo para cima sobre a tela atual (ex.: detalhes do pedido), bloqueando o conteúdo que fica atrás até ser fechado.",
-        "Ele fixa uma barra de menu permanente no rodapé do aplicativo, que permanece visível em todas as telas abertas até ser explicitamente removida pelo código.",
-        "Ele abre uma nova tela em modo cheio por cima da tela atual, funcionando de forma equivalente a um <code>Navigator.push</code> porém com animação de baixo para cima.",
-        "Ele exibe uma notificação na barra de sistema do celular, que fica visível para o usuário mesmo quando o aplicativo está fechado ou rodando em segundo plano."
-      ],
-      correta: 0,
-      explicacao: "É o painel deslizante da parte de baixo, muito usado pra detalhes e confirmações. Não é tela cheia, não é barra fixa (<code>BottomNavigationBar</code>) e não mexe com notificações do sistema."
-    }
+        "<code>INSERT</code>, usado para inserir uma nova linha na tabela do banco de dados.",
+        "<code>SELECT</code>, usado para adicionar um registro ao mesmo tempo em que consulta os dados já existentes na tabela.",
+        "<code>UPDATE</code>, que cria o registro caso ele ainda não exista e atualiza seus dados caso já esteja cadastrado.",
+        "<code>CREATE</code>, comando responsável por inserir cada novo item dentro de uma tabela já criada anteriormente no banco."
+      ], correta: 0, explicacao: "INSERT = cadastrar. SELECT = buscar, UPDATE = alterar, DELETE = excluir. São as quatro operações do CRUD." },
+    { tema: "SQLite · CRUD", pergunta: "Qual comando SQL é usado para <b>buscar</b> registros já salvos no banco?",
+      opcoes: [
+        "<code>SELECT</code>, que consulta e retorna os registros da tabela conforme os critérios informados.",
+        "<code>GET</code>, comando padrão do SQLite para recuperar todas as linhas de uma determinada tabela do banco de dados.",
+        "<code>FIND</code>, usado especificamente para localizar um único registro a partir do seu id dentro da tabela consultada.",
+        "<code>READ</code>, que faz parte do CRUD e é o comando responsável por ler os dados persistidos em qualquer tabela SQLite."
+      ], correta: 0, explicacao: "SELECT = buscar/ler registros. No CRUD, o \"R\" (Read) corresponde ao comando SELECT do SQL." },
+    { tema: "Firebase", pergunta: "Na atividade \"Central de Missões\", qual serviço do Firebase é usado para armazenar as missões?",
+      opcoes: [
+        "O Cloud Firestore, um banco de dados de documentos onde as missões ficam em uma collection chamada <code>missoes</code>.",
+        "O Firebase Authentication, responsável por guardar cada missão vinculada ao login do usuário que a cadastrou no app.",
+        "O Firebase Storage, usado para salvar as missões em arquivos separados e recuperá-los quando o aplicativo for aberto.",
+        "O Realtime Database local, que mantém as missões apenas no dispositivo e nunca as sincroniza com a nuvem do projeto."
+      ], correta: 0, explicacao: "É o Cloud Firestore, banco de documentos. As missões ficam numa collection <code>missoes</code>, cada uma como um documento." },
+    { tema: "Firebase · estrutura", pergunta: "No Cloud Firestore, como os dados são organizados?",
+      opcoes: [
+        "Em collections que contêm documents, e cada document guarda campos (ex.: titulo, dificuldade, pontos, concluida).",
+        "Em tabelas com linhas e colunas fixas, exatamente como em um banco de dados relacional tradicional como o SQLite.",
+        "Em arquivos de texto separados por vírgula, um para cada registro, agrupados dentro de pastas no servidor do Firebase.",
+        "Em uma única lista global na memória do aplicativo, que é enviada inteira para a nuvem sempre que algo é alterado."
+      ], correta: 0, explicacao: "Firestore = collections → documents → campos. Na Central de Missões, a collection <code>missoes</code> tem um documento por missão." },
+    { tema: "Estoque · login", pergunta: "Na atividade de Controle de Estoque, o que acontece quando o login está correto?",
+      opcoes: [
+        "O usuário acessa a tela principal, que exibe uma saudação com o nome encontrado no SQLite (ex.: \"Olá, Lucas!\").",
+        "O aplicativo cadastra automaticamente um novo usuário no banco e depois libera o acesso à tela de controle de estoque.",
+        "O sistema mostra a mensagem \"E-mail ou senha incorretos\" e permanece na tela de login aguardando uma nova tentativa.",
+        "O aplicativo apaga os dados antigos do usuário e recria a tabela <code>usuarios</code> antes de liberar o acesso ao estoque."
+      ], correta: 0, explicacao: "Login correto → tela principal com \"Olá, [nome]!\", usando o nome encontrado no SELECT do SQLite. Login errado → mensagem de erro." },
+    { tema: "Estoque · terminal", pergunta: "Na atividade de Controle de Estoque, além de gravar no banco, o que o app deve fazer a cada operação?",
+      opcoes: [
+        "Usar <code>print()</code> para mostrar no terminal o que aconteceu (ex.: <code>INSERT → Usuário cadastrado: Maria</code>).",
+        "Enviar um e-mail de confirmação ao usuário informando que a operação no banco de dados foi concluída com sucesso.",
+        "Criar um arquivo de log em disco com a data e hora de cada INSERT, SELECT, UPDATE e DELETE realizado no sistema.",
+        "Exibir um SnackBar na tela repetindo o comando SQL executado para que o usuário confirme cada alteração feita no banco."
+      ], correta: 0, explicacao: "A atividade pede <code>print()</code> no terminal para cada operação: INSERT, SELECT, UPDATE e DELETE — para conferir se salvou de fato." },
+    { tema: "Voos · ICAO", pergunta: "Na atividade da API de voos, o que o usuário informa para filtrar os voos de um aeroporto?",
+      opcoes: [
+        "O código ICAO do aeroporto (ex.: <code>SBGR</code> para Guarulhos), que é enviado para a API na requisição.",
+        "O nome completo do aeroporto por extenso, que a API converte internamente no código correspondente antes de buscar.",
+        "O número do voo desejado, a partir do qual a API descobre automaticamente de qual aeroporto ele parte ou chega.",
+        "A cidade de origem digitada em texto livre, sem necessidade de código, pois a API aceita qualquer formato de busca."
+      ], correta: 0, explicacao: "O usuário informa o código ICAO (SBGR, SBSP, SBBR, SBCF...) e ele é enviado à API na rota <code>/api/voos?aeroporto=SBGR</code>." },
+    { tema: "Voos · tipo", pergunta: "Na API de voos, quais são as opções de <code>tipo</code> que o usuário pode escolher?",
+      opcoes: [
+        "<code>chegadas</code>, <code>partidas</code> e <code>todos</code>, enviadas na query string (ex.: <code>?tipo=chegadas</code>).",
+        "<code>nacional</code>, <code>internacional</code> e <code>regional</code>, que filtram os voos conforme o alcance de cada rota aérea.",
+        "<code>manhã</code>, <code>tarde</code> e <code>noite</code>, permitindo ao usuário escolher o período do dia dos voos exibidos.",
+        "<code>atrasados</code>, <code>no horário</code> e <code>cancelados</code>, filtrando os voos de acordo com o seu status atual."
+      ], correta: 0, explicacao: "As opções são <code>chegadas</code>, <code>partidas</code> e <code>todos</code>, passadas em <code>?aeroporto=SBGR&tipo=chegadas</code>." },
+    { tema: "Firebase · pontos", pergunta: "Na Central de Missões, como os pontos de uma missão são definidos?",
+      opcoes: [
+        "Automaticamente pela dificuldade: Fácil → 10, Médio → 20, Difícil → 30 pontos.",
+        "Manualmente pelo usuário, que digita a quantidade de pontos desejada no momento do cadastro de cada nova missão.",
+        "Aleatoriamente pelo aplicativo, que sorteia um valor entre 10 e 30 pontos toda vez que uma missão é cadastrada.",
+        "Pelo número de missões já concluídas, aumentando 10 pontos a cada missão finalizada anteriormente pelo usuário."
+      ], correta: 0, explicacao: "Os pontos vêm da dificuldade: Fácil = 10, Médio = 20, Difícil = 30. O app define automaticamente ao cadastrar." }
   ];
 
-  /* =========================== MODO MÉDIO =========================== */
+  /* =========================== MODO MÉDIO (18) =========================== */
   const medio = [
-    {
-      tema: "Stateful · estrutura",
-      pergunta: "Em um <code>StatefulWidget</code>, onde as variáveis de estado (ex.: <code>int total = 0;</code>) devem ser declaradas?",
+    { tema: "Provider · fluxo", pergunta: "Ao pesquisar um Pokémon pelo nome, qual é a ordem correta do fluxo de dados?",
       opcoes: [
-        "Na classe que estende <code>State</code> (ex.: <code>_MinhaTelaState</code>), pois é ela que permanece viva entre os rebuilds e mantém os valores enquanto a tela existir.",
-        "Na classe que estende <code>StatefulWidget</code>, pois é ela que representa a tela e por isso deve concentrar tanto os dados quanto a lógica de construção do layout.",
-        "Dentro do método <code>build()</code>, para que as variáveis sejam recriadas a cada frame e a tela sempre reflita os valores mais recentes calculados pelo app.",
-        "No <code>main()</code>, como variáveis globais, para que qualquer tela do aplicativo consiga acessar e modificar os valores livremente sem precisar passar parâmetros."
-      ],
-      correta: 0,
-      explicacao: "O widget é recriado a cada rebuild; o objeto <code>State</code> permanece — por isso o estado mora nele. Dentro do <code>build()</code> a variável seria zerada a cada redesenho."
-    },
-    {
-      tema: "setState",
-      pergunta: "Um aluno fez <code>total++;</code> no <code>onPressed</code> do botão, mas <b>sem</b> chamar <code>setState</code>. O que acontece?",
+        "Tela → Provider → Service → GET /pokemons/nome/pikachu → Flask, e o resultado volta pelo mesmo caminho até a tela.",
+        "Tela → Service → PokéAPI direto, e depois o Provider apenas guarda o resultado para exibir na próxima abertura do app.",
+        "Flask → Provider → Tela → Service, pois é o backend que inicia o fluxo e envia os dados diretamente para a interface.",
+        "Provider → Tela → Flask → Service, com a tela intermediando a comunicação entre o Provider e o servidor Python."
+      ], correta: 0, explicacao: "Tela → Provider → Service → Flask (→ PokéAPI). O dado volta pelo caminho inverso até a tela exibir." },
+    { tema: "Loading · erro", pergunta: "Na tela inicial da atividade de voos, o que deve ser exibido enquanto os dados estão sendo buscados?",
       opcoes: [
-        "A variável <code>total</code> muda normalmente na memória, mas a tela não é redesenhada, porque o Flutter não foi avisado de que precisa executar o <code>build()</code> de novo.",
-        "O aplicativo lança uma exceção de estado inválido no console, pois alterar variáveis de estado fora de um <code>setState</code> é uma operação proibida pelo framework.",
-        "A tela atualiza normalmente, pois o Flutter monitora todas as variáveis do <code>State</code> e o <code>setState</code> é apenas uma convenção opcional de legibilidade.",
-        "O valor nem chega a mudar na memória, pois variáveis declaradas dentro de um <code>State</code> são imutáveis e só podem ser alteradas dentro do callback apropriado."
-      ],
-      correta: 0,
-      explicacao: "Sem <code>setState</code>, o valor muda \"por dentro\" mas a UI fica congelada no valor antigo. Não dá erro — o Flutter simplesmente não fica observando suas variáveis."
-    },
-    {
-      tema: "Navigator · dados",
-      pergunta: "Qual a forma mais comum de <b>enviar</b> dados (ex.: o produto escolhido) para a próxima tela?",
+        "Um indicador de carregamento; e uma mensagem de erro caso a API não responda, além da lista de voos quando chegarem.",
+        "A lista de voos já preenchida com dados de exemplo, substituídos pelos dados reais assim que a API terminar de responder.",
+        "Uma tela em branco sem nenhum aviso, pois mostrar carregamento deixaria o aplicativo visualmente mais poluído para o usuário.",
+        "Diretamente a tela de detalhes do primeiro voo, que serve como pré-visualização enquanto o restante da lista é carregado."
+      ], correta: 0, explicacao: "A tela deve ter: indicador de carregamento durante a busca, mensagem de erro se a API falhar, e a lista quando os voos chegarem." },
+    { tema: "SQLite · persistência", pergunta: "Por que usar SQLite em vez de apenas uma <code>List</code> na memória para guardar os filmes?",
       opcoes: [
-        "Passando os dados pelo construtor da tela de destino dentro do <code>MaterialPageRoute</code> — por exemplo, <code>builder: (context) =&gt; Detalhes(produto: p)</code>.",
-        "Chamando <code>Navigator.pop</code> com o dado como segundo argumento imediatamente antes de dar o <code>push</code>, para que a nova tela receba o valor pela pilha.",
-        "Salvando o dado em <code>SharedPreferences</code> antes de navegar e lendo o valor de volta no <code>initState</code> da tela seguinte, garantindo a persistência.",
-        "Chamando <code>setState</code> na tela de destino antes de abri-la, para que ela já seja construída com os valores atualizados do produto que o usuário selecionou."
-      ],
-      correta: 0,
-      explicacao: "A tela de destino recebe os dados como parâmetro do construtor. <code>SharedPreferences</code> funcionaria, mas é exagero pra passar dado entre telas; as outras duas nem fazem sentido."
-    },
-    {
-      tema: "Navigator · retorno",
-      pergunta: "A tela de detalhes fecha com <code>Navigator.pop(context, \"confirmado\")</code>. O que a string <code>\"confirmado\"</code> representa?",
+        "Porque dados em uma List desaparecem quando o app é fechado; o SQLite mantém os dados salvos entre execuções.",
+        "Porque a List do Dart tem um limite máximo de registros, enquanto o SQLite consegue armazenar uma quantidade ilimitada.",
+        "Porque o SQLite renderiza a lista na tela automaticamente, dispensando a criação de widgets para exibir cada filme.",
+        "Porque a List não permite marcar itens como assistidos, recurso que só existe quando os dados estão em um banco SQLite."
+      ], correta: 0, explicacao: "List vive só na memória e some ao fechar o app. O SQLite persiste: os filmes continuam lá ao reabrir." },
+    { tema: "MVVM", pergunta: "Na atividade de filmes (MVVM), a <code>List&lt;Filme&gt;</code> da ViewModel é responsável por persistir os dados?",
       opcoes: [
-        "É o valor devolvido para a tela anterior, que pode capturá-lo usando <code>await</code> no <code>push</code>, já que o <code>push</code> retorna um <code>Future</code> com esse resultado.",
-        "É o nome da rota que será removida da pilha de navegação, usado pelo Flutter para localizar e fechar a tela correta quando existem várias telas abertas.",
-        "É o título que aparecerá na <code>AppBar</code> da tela anterior assim que o usuário voltar, permitindo atualizar o cabeçalho da tela de forma dinâmica.",
-        "Não representa nada na prática: o <code>pop</code> ignora qualquer argumento além do <code>context</code> e a string extra é simplesmente descartada pelo framework."
-      ],
-      correta: 0,
-      explicacao: "O segundo argumento do <code>pop</code> vira o resultado do <code>Future</code> retornado pelo <code>push</code>: <code>final r = await Navigator.push(...)</code>."
-    },
-    {
-      tema: "TextEditingController",
-      pergunta: "Qual é o par correto de \"onde criar\" e \"onde descartar\" um <code>TextEditingController</code>?",
+        "Não. A List só mantém os dados em memória; a persistência é feita pelo FilmeService, que acessa o SQLite.",
+        "Sim. A List da ViewModel grava automaticamente cada filme no SQLite sempre que um item é adicionado a ela.",
+        "Sim, mas apenas os filmes marcados como assistidos; os não assistidos ficam somente na memória temporária do app.",
+        "Não, pois a ViewModel não pode ter listas — os dados devem ficar exclusivamente dentro dos widgets da interface."
+      ], correta: 0, explicacao: "A List da ViewModel NÃO persiste — ela busca via FilmeService. A persistência é responsabilidade do Service (SQLite)." },
+    { tema: "SQLite · UPDATE", pergunta: "Ao marcar um filme como assistido, qual operação SQL é usada e por que salvar no banco?",
       opcoes: [
-        "Criar como atributo da classe <code>State</code> (ou dentro do <code>initState</code>) e descartar no <code>dispose()</code> chamando <code>controller.dispose()</code> para liberar recursos.",
-        "Criar dentro do método <code>build()</code>, garantindo uma instância nova a cada redesenho da tela, e descartar dentro do próprio <code>setState()</code> quando necessário.",
-        "Criar no <code>main()</code> como variável global e nunca descartar manualmente, pois o Dart possui um garbage collector que libera a memória de forma automática.",
-        "Criar no <code>dispose()</code>, que é o método de inicialização de recursos do <code>State</code>, e descartar no <code>initState()</code> quando a tela estiver prestes a fechar."
-      ],
-      correta: 0,
-      explicacao: "Criar no <code>build()</code> recria o controller a cada rebuild (e perde o texto digitado); não descartar causa memory leak — o GC não resolve, pois há listeners ativos segurando o objeto."
-    },
-    {
-      tema: "SnackBar",
-      pergunta: "Complete: para exibir um SnackBar de \"Pedido enviado!\", o código correto é...",
+        "<code>UPDATE</code>, para alterar o campo <code>assistido</code> no banco — não basta mudar só o valor mostrado na tela.",
+        "<code>INSERT</code>, criando um novo registro do filme marcado como assistido e mantendo o antigo como não assistido.",
+        "<code>SELECT</code>, que ao buscar o filme já atualiza o seu status automaticamente dentro do banco de dados SQLite.",
+        "Nenhuma; marcar como assistido é uma mudança apenas visual e não precisa ser gravada no banco de dados do app."
+      ], correta: 0, explicacao: "UPDATE altera o status no banco. Se você mudar só na tela, ao reabrir o app o filme volta ao estado antigo — não persistiu." },
+    { tema: "Estoque · e-mail único", pergunta: "Na atividade de estoque, como impedir o cadastro de dois usuários com o mesmo e-mail?",
       opcoes: [
-        "<code>ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(\"Pedido enviado!\")))</code>, que localiza o messenger mais próximo e exibe o aviso.",
-        "<code>SnackBar.show(context, Text(\"Pedido enviado!\"))</code>, método estático da própria classe SnackBar que localiza a tela atual e exibe a mensagem nela.",
-        "<code>Navigator.push(context, SnackBar(...))</code>, já que o SnackBar é tratado internamente como uma rota leve que entra e sai da pilha de navegação.",
-        "<code>setState(() =&gt; SnackBar(\"Pedido enviado!\"))</code>, pois exibir um aviso é uma mudança de estado da tela e deve passar pelo mecanismo padrão de rebuild."
-      ],
-      correta: 0,
-      explicacao: "SnackBar se exibe via <code>ScaffoldMessenger.of(context).showSnackBar(...)</code> — as outras três chamadas não existem na API do Flutter."
-    },
-    {
-      tema: "Validação",
-      pergunta: "Na tela de pedido, o botão \"Enviar\" só deve funcionar se nome e produto estiverem preenchidos. Qual implementação simples resolve?",
+        "Antes do INSERT, fazer um SELECT para verificar se o e-mail já existe; se existir, mostrar \"E-mail já cadastrado\".",
+        "Deixar o SQLite cadastrar os dois e depois apagar o mais antigo automaticamente na próxima vez que o app for aberto.",
+        "Confiar que o usuário não vai repetir o e-mail, pois o SQLite bloqueia sozinho qualquer duplicata sem precisar de código.",
+        "Cadastrar ambos normalmente, já que ter dois usuários com o mesmo e-mail não causa nenhum problema no login do sistema."
+      ], correta: 0, explicacao: "Antes de inserir, consulta-se o banco (SELECT). Se o e-mail já existe → não cadastra e mostra \"E-mail já cadastrado\"." },
+    { tema: "Estoque · baixo", pergunta: "Na tela de estoque, quando o aviso \"ESTOQUE BAIXO\" deve aparecer em um produto?",
       opcoes: [
-        "Verificar no <code>onPressed</code> se <code>nomeController.text.isEmpty || produtoController.text.isEmpty</code> e, nesse caso, exibir um SnackBar de erro em vez de enviar.",
-        "Envolver o corpo do botão em um <code>try/catch</code>, pois os campos de texto vazios lançam exceção automaticamente no momento em que o valor deles é lido.",
-        "Deixar o envio sempre liberado no app e fazer a validação somente no servidor, que devolve a mensagem de erro apropriada para cada campo que estiver vazio.",
-        "Bloquear o teclado do usuário por código até que todos os campos obrigatórios sejam preenchidos, impedindo fisicamente que o formulário seja enviado incompleto."
-      ],
-      correta: 0,
-      explicacao: "Checar <code>.text.isEmpty</code> e dar feedback com SnackBar é a validação básica da atividade. Campo vazio não lança exceção — <code>try/catch</code> não captura nada ali."
-    },
-    {
-      tema: "AnimatedContainer",
-      pergunta: "Para o card do produto crescer suavemente ao ser tocado usando <code>AnimatedContainer</code>, o que é necessário?",
+        "Quando a quantidade for menor ou igual a 3 (<code>quantidade &lt;= 3</code>).",
+        "Quando a quantidade for exatamente igual a zero, indicando que o produto acabou completamente no estoque da loja.",
+        "Quando o preço do produto for maior que R$ 200,00, sinalizando que reabastecê-lo terá um custo elevado para a loja.",
+        "Quando o produto for cadastrado há mais de 30 dias sem nenhuma alteração de quantidade registrada no banco de dados."
+      ], correta: 0, explicacao: "\"ESTOQUE BAIXO\" aparece quando <code>quantidade &lt;= 3</code>. É uma verificação sobre o valor da coluna quantidade." },
+    { tema: "Firebase · CRUD", pergunta: "Quais métodos do Firestore correspondem às operações da MissaoService?",
       opcoes: [
-        "Definir uma <code>duration</code> no widget e alterar a propriedade desejada (ex.: <code>width</code>) dentro de um <code>setState</code> — a transição é animada sozinha.",
-        "Apenas trocar o <code>Container</code> por <code>AnimatedContainer</code> no código, sem nenhuma configuração extra, pois todas as animações já vêm ativadas por padrão.",
-        "Criar e configurar um <code>AnimationController</code> manualmente com <code>vsync</code>, procedimento obrigatório para qualquer tipo de animação existente no Flutter.",
-        "Chamar <code>Navigator.push</code> para recarregar a tela inteira já com o novo tamanho do card, deixando a transição por conta da animação padrão de troca de rotas."
-      ],
-      correta: 0,
-      explicacao: "<code>AnimatedContainer</code> é animação implícita: mudou a propriedade via <code>setState</code> + tem <code>duration</code>, ele interpola sozinho. <code>AnimationController</code> só é necessário em animações explícitas."
-    },
-    {
-      tema: "Layout · rolagem",
-      pergunta: "Sua <code>Column</code> com os produtos ficou maior que a tela e apareceu a faixa amarela e preta de <b>overflow</b>. Qual a solução mais direta?",
+        "<code>.add()</code> para adicionar, <code>.get()</code> para buscar, <code>.update()</code> para atualizar e <code>.delete()</code> para excluir.",
+        "<code>.insert()</code>, <code>.select()</code>, <code>.change()</code> e <code>.remove()</code>, os mesmos nomes usados nas consultas SQL do SQLite.",
+        "<code>.push()</code>, <code>.read()</code>, <code>.save()</code> e <code>.drop()</code>, específicos do Realtime Database do Firebase.",
+        "<code>.create()</code>, <code>.find()</code>, <code>.patch()</code> e <code>.destroy()</code>, seguindo o padrão de rotas REST de uma API."
+      ], correta: 0, explicacao: "Firestore usa <code>.add()</code>, <code>.get()</code>, <code>.update()</code> e <code>.delete()</code> — o CRUD da MissaoService." },
+    { tema: "Firebase · pontuação", pergunta: "Na Central de Missões, quais missões contam na pontuação total?",
       opcoes: [
-        "Envolver a <code>Column</code> em um <code>SingleChildScrollView</code> (ou trocar por um <code>ListView</code>), permitindo que o conteúdo excedente seja acessado por rolagem.",
-        "Diminuir gradualmente a fonte de todos os textos e o tamanho das imagens até que o conteúdo inteiro caiba de uma só vez na área visível da tela do dispositivo.",
-        "Trocar a <code>Column</code> por uma <code>Row</code>, que distribui os itens na horizontal e por esse motivo não sofre com o problema de estouro de espaço na vertical.",
-        "Adicionar um segundo <code>Scaffold</code> aninhado dentro do primeiro para dividir o conteúdo em duas estruturas independentes, cada uma com a sua área de exibição."
-      ],
-      correta: 0,
-      explicacao: "Overflow em <code>Column</code> se resolve dando rolagem ao conteúdo. <code>Row</code> sofre o mesmo problema (só que na horizontal) e encolher fonte não é solução, é gambiarra."
-    },
-    {
-      tema: "Widgets personalizados",
-      pergunta: "Na atividade, criamos o <code>CardProduto</code> como widget separado em vez de repetir o mesmo código 4 vezes. Qual a principal vantagem?",
+        "Somente as missões com <code>concluida: true</code>; as pendentes não entram na soma dos pontos conquistados.",
+        "Todas as missões cadastradas, concluídas ou não, pois o total representa o potencial de pontos disponíveis no app.",
+        "Apenas as missões de dificuldade Difícil, já que são as únicas que valem pontos suficientes para alterar o total.",
+        "As missões pendentes, cujos pontos são somados como meta a alcançar e removidos do total quando são concluídas."
+      ], correta: 0, explicacao: "Só as concluídas (<code>concluida: true</code>) contam. Uma missão pendente não entra na soma da pontuação total." },
+    { tema: "Model · toMap", pergunta: "Na Central de Missões, para que servem os métodos <code>toMap()</code> e <code>fromMap()</code> do Model?",
       opcoes: [
-        "Reutilização e organização: um único widget parametrizado (nome, preço, imagem) exibe qualquer produto, e as mudanças de layout passam a ser feitas em um só lugar.",
-        "Performance: cada widget personalizado roda em uma thread separada do restante da interface, dobrando a velocidade de renderização geral do aplicativo em execução.",
-        "Obrigação: o analisador do Flutter marca erro de compilação sempre que detecta blocos de código de widgets repetidos mais de duas vezes dentro do mesmo projeto.",
-        "Tamanho: o binário final do aplicativo compilado fica consideravelmente menor quando os widgets são separados em arquivos independentes dentro da pasta lib."
-      ],
-      correta: 0,
-      explicacao: "Componentizar evita duplicação: os dados variam via parâmetros e a manutenção fica centralizada. Não há thread separada por widget nem limite de repetição no compilador."
-    }
+        "Para converter os dados entre o objeto Dart e o formato do Firebase — <code>toMap</code> para salvar, <code>fromMap</code> para ler.",
+        "Para exibir a missão na tela em forma de mapa visual, com <code>toMap</code> desenhando e <code>fromMap</code> atualizando o widget.",
+        "Para calcular a pontuação total, somando os pontos com <code>toMap</code> e subtraindo os excluídos com <code>fromMap</code>.",
+        "Para criar as regras de segurança do Firestore, definindo em <code>toMap</code> quem pode escrever e em <code>fromMap</code> quem pode ler."
+      ], correta: 0, explicacao: "<code>toMap()</code> converte o objeto Dart em Map para salvar no Firebase; <code>fromMap()</code> reconstrói o objeto a partir dos dados lidos." },
+    { tema: "device_preview", pergunta: "Na atividade de voos, o endereço da API no Flutter Web costuma ser semelhante a qual?",
+      opcoes: [
+        "<code>http://127.0.0.1:5001/api/voos?aeroporto=SBGR&tipo=chegadas</code>, apontando para o backend Python local.",
+        "<code>https://api.voos.com/v2/flights</code>, um endereço público na nuvem que dispensa rodar o backend Python localmente.",
+        "<code>flutter://localhost/voos</code>, um esquema interno do Flutter que acessa os dados sem precisar de um servidor HTTP.",
+        "<code>http://firebase.google.com/voos</code>, pois os dados de voos são servidos pelo Firestore em vez de um backend Python."
+      ], correta: 0, explicacao: "O Flask roda em <code>127.0.0.1:5001</code>, então a Service acessa <code>http://127.0.0.1:5001/api/voos?aeroporto=...&tipo=...</code>." },
+    { tema: "Navegação", pergunta: "Ao tocar em um voo (ou filme/missão) para abrir a tela de detalhes, qual comando é usado?",
+      opcoes: [
+        "<code>Navigator.push()</code>, que empilha a tela de detalhes por cima da tela atual mantendo a possibilidade de voltar.",
+        "<code>notifyListeners()</code>, que redesenha a tela atual já mostrando os detalhes do item selecionado pelo usuário.",
+        "<code>setState()</code>, que substitui todo o conteúdo da tela inicial pelos detalhes sem criar uma nova tela no app.",
+        "<code>runApp()</code>, que reinicia o aplicativo carregando diretamente a tela de detalhes do item que foi tocado."
+      ], correta: 0, explicacao: "<code>Navigator.push()</code> abre a tela de detalhes por cima da atual. É a navegação padrão entre lista e detalhes." },
+    { tema: "PokéAPI · JSON", pergunta: "Na Parte 2 da Pokédex (mostrar mais infos), qual é a sequência correta de passos?",
+      opcoes: [
+        "Localizar o dado no JSON da PokéAPI, modificar a rota Python, devolver pelo Flask, receber no Flutter e mostrar na tela.",
+        "Modificar apenas o Flutter para ler diretamente o novo campo da PokéAPI, sem precisar alterar a rota Python do backend.",
+        "Adicionar o campo primeiro no banco de dados SQLite e depois deixar o Flask copiá-lo automaticamente da PokéAPI.",
+        "Alterar somente o Provider, que passa a solicitar o novo dado à PokéAPI sem envolver a Service nem o backend Flask."
+      ], correta: 0, explicacao: "A sequência é: achar no JSON → mudar a rota Python → devolver pelo Flask → receber no Flutter → exibir. O dado sempre passa pelo Flask." },
+    { tema: "Estrutura · pastas", pergunta: "Na atividade de voos, onde as chamadas HTTP (<code>http.get</code>) devem ficar?",
+      opcoes: [
+        "Dentro da pasta <code>services/</code>; nunca diretamente na HomePage ou em qualquer outra tela do aplicativo.",
+        "Dentro da pasta <code>pages/</code>, junto ao código da tela que exibe os dados, para facilitar a leitura do projeto.",
+        "No arquivo <code>main.dart</code>, centralizando todas as requisições da aplicação em um único ponto de entrada.",
+        "Na pasta <code>providers/</code>, já que é o Provider quem realmente faz a requisição e depois repassa para a Service."
+      ], correta: 0, explicacao: "As chamadas HTTP ficam em <code>services/</code>. Evite <code>http.get(...)</code> dentro da HomePage — a tela acessa dados via Provider." },
+    { tema: "SQLite · tabela", pergunta: "Na tabela <code>filmes</code>, como o campo <code>id</code> costuma ser definido?",
+      opcoes: [
+        "<code>INTEGER PRIMARY KEY AUTOINCREMENT</code>, para que o SQLite gere o id automaticamente a cada novo filme.",
+        "<code>TEXT NOT NULL</code>, pois o id de cada filme é um código de texto único digitado pelo usuário no cadastro.",
+        "<code>INTEGER NOT NULL</code> apenas, cabendo ao aplicativo Flutter calcular e informar o próximo id disponível.",
+        "<code>REAL PRIMARY KEY</code>, permitindo ids fracionários para diferenciar filmes cadastrados no mesmo instante."
+      ], correta: 0, explicacao: "O <code>id</code> é <code>INTEGER PRIMARY KEY AUTOINCREMENT</code> — o SQLite cria e incrementa sozinho a cada INSERT." },
+    { tema: "Estoque · quantidade", pergunta: "Ao clicar em [ + ] ou [ - ] para alterar a quantidade de um produto, o que é obrigatório?",
+      opcoes: [
+        "Salvar a nova quantidade no SQLite com UPDATE — não basta alterar apenas o número mostrado na tela.",
+        "Excluir o produto e cadastrá-lo novamente com a quantidade atualizada, pois o SQLite não permite editar um registro.",
+        "Recarregar a página inteira do navegador a cada clique, para que o Flutter releia a quantidade atual do banco de dados.",
+        "Alterar somente o valor exibido na interface; a persistência acontece sozinha quando o app é fechado pelo usuário."
+      ], correta: 0, explicacao: "A alteração tem que ir pro banco via UPDATE. Mudar só na tela não persiste — ao recarregar, volta ao valor antigo." },
+    { tema: "Firebase · concluir", pergunta: "Na Central de Missões, o que acontece no Firestore ao concluir uma missão?",
+      opcoes: [
+        "O campo <code>concluida</code> muda de <code>false</code> para <code>true</code> no documento correspondente, via update.",
+        "O documento da missão é excluído do Firestore e recriado em uma collection separada chamada <code>concluidas</code>.",
+        "Um novo documento é adicionado à collection com os mesmos dados, mantendo o original como registro histórico pendente.",
+        "Nada muda no Firestore; a conclusão fica salva apenas na memória do aplicativo até que ele seja fechado pelo usuário."
+      ], correta: 0, explicacao: "Concluir → <code>concluida</code> vira <code>true</code> no documento (update no Firestore). A alteração precisa refletir na nuvem." },
+    { tema: "Estoque · Provider", pergunta: "Por que a atividade proíbe acessar o SQLite diretamente dentro da página (tela)?",
+      opcoes: [
+        "Para manter a separação de responsabilidades: a tela acessa dados pelo Provider, e só o Service fala com o SQLite.",
+        "Porque o SQLite só pode ser acessado a partir do arquivo <code>main.dart</code>, nunca de dentro de uma página do app.",
+        "Porque acessar o banco na tela deixa o aplicativo mais rápido, e a atividade quer que os alunos pratiquem otimização.",
+        "Porque o SQLite no Flutter Web não funciona dentro de páginas, apenas dentro de Providers ligados ao ChangeNotifier."
+      ], correta: 0, explicacao: "Separação de responsabilidades: View → Provider → Service → SQLite. A tela nunca fala direto com o banco." }
   ];
 
-  /* =========================== MODO DIFÍCIL =========================== */
+  /* =========================== MODO DIFÍCIL (20) =========================== */
   const dificil = [
-    {
-      tema: "Scaffold",
-      pergunta: "Sobre o <code>Scaffold</code>, qual afirmação está <b>incorreta</b>?",
+    { tema: "Arquitetura", pergunta: "Qual frase resume corretamente a responsabilidade de cada camada na arquitetura das atividades?",
       opcoes: [
-        "Ele fornece uma estrutura visual padrão do Material Design, com espaços dedicados para a AppBar, o body, o FloatingActionButton, o Drawer e a BottomNavigationBar.",
-        "É possível ter mais de um <code>Scaffold</code> na árvore de widgets da aplicação, um aninhado dentro do outro, cada um mantendo a sua própria estrutura visual.",
-        "O <code>SnackBar</code> só pode ser exibido através do <code>Scaffold</code> mais próximo na árvore de widgets, nunca através de um <code>ScaffoldMessenger</code> ou outro mecanismo.",
-        "O <code>Scaffold</code> gerencia automaticamente o espaço reservado para a barra de status e o notch do aparelho, aplicando <code>SafeArea</code> interno em partes do layout."
-      ],
-      correta: 2,
-      explicacao: "A afirmação é falsa — o recomendado é justamente o <code>ScaffoldMessenger</code>, que gerencia SnackBars independente de qual <code>Scaffold</code> está na árvore."
-    },
-    {
-      tema: "setState · ciclo de vida",
-      pergunta: "No trecho abaixo, o que acontece quando o botão é pressionado a primeira vez?<pre>class _ContadorPedidosState extends State&lt;ContadorPedidos&gt; {\n  int total = 0;\n\n  void _incrementar() {\n    total++;\n    setState(() {});\n  }\n}</pre>",
+        "TELA MOSTRA, PROVIDER CONTROLA, SERVICE SE COMUNICA, FLASK RESPONDE — cada camada com um papel único e bem definido.",
+        "A tela faz o HTTP, o Provider desenha os widgets, a Service guarda o estado e o Flask apenas registra logs de acesso.",
+        "Todas as camadas fazem tudo de forma compartilhada, sem divisão fixa, para que o código fique mais flexível e enxuto.",
+        "O Flask controla o estado do app, o Provider se comunica com a API e a tela é quem executa as consultas no banco."
+      ], correta: 0, explicacao: "\"TELA MOSTRA. PROVIDER CONTROLA. SERVICE SE COMUNICA. FLASK RESPONDE.\" Entender o caminho dos dados é o objetivo principal." },
+    { tema: "Fluxo · direção", pergunta: "Por que a atividade insiste que o Flutter nunca acesse a API externa (PokéAPI/voos) diretamente?",
       opcoes: [
-        "O código não compila, pois o <code>setState</code> exige obrigatoriamente que a alteração da variável de estado seja feita dentro do callback passado como argumento.",
-        "Funciona normalmente: o <code>total++</code> já foi executado antes do <code>setState</code>, e o <code>setState(() {})</code> vazio apenas agenda a reexecução do <code>build()</code>.",
-        "Gera erro em tempo de execução, porque variáveis alteradas fora do callback do <code>setState</code> invalidam o objeto <code>State</code> e corrompem o ciclo de vida.",
-        "O <code>total</code> incrementa normalmente na memória, mas a tela nunca reflete a mudança, porque o callback vazio não informa ao Flutter qual variável foi alterada."
-      ],
-      correta: 1,
-      explicacao: "O callback do <code>setState</code> só precisa <i>existir</i>; alterar a variável dentro ou fora dele dá no mesmo — o Flutter não rastreia variáveis, só agenda o rebuild."
-    },
-    {
-      tema: "setState",
-      pergunta: "Qual é a real função do <code>setState()</code> no Flutter?",
+        "Para manter a separação de camadas e centralizar a lógica no backend — o Flutter só conhece o próprio Flask, que fala com a API externa.",
+        "Porque o Flutter é tecnicamente incapaz de fazer requisições HTTP para servidores que estejam fora da rede local do dispositivo.",
+        "Porque acessar a API direto do Flutter faria o aplicativo travar, já que o Dart não consegue processar respostas em formato JSON.",
+        "Porque a PokéAPI e a API de voos cobram por cada acesso, e passar pelo Flask elimina completamente esse custo por requisição."
+      ], correta: 0, explicacao: "É arquitetura: o Flutter fala só com o próprio backend (Service → Flask), que intermedia a API externa. Mantém as camadas separadas." },
+    { tema: "notifyListeners", pergunta: "Em um Provider que estende ChangeNotifier, o que acontece se você atualizar a lista mas <b>esquecer</b> o <code>notifyListeners()</code>?",
       opcoes: [
-        "Ele persiste o novo valor da variável automaticamente em um banco de dados local, garantindo que o estado da tela sobreviva até ao fechamento do aplicativo.",
-        "Ele marca o widget como \"sujo\" (dirty) e agenda a reconstrução do <code>build()</code> para o próximo frame — ele <b>não</b> altera nenhuma variável por conta própria.",
-        "Ele impede que o widget pai seja reconstruído junto com o filho, isolando o rebuild apenas no widget atual como uma otimização automática de performance.",
-        "Ele descarta a instância atual do <code>State</code> e cria uma nova do zero, reexecutando o <code>initState</code> e reiniciando todas as variáveis declaradas na classe."
-      ],
-      correta: 1,
-      explicacao: "<code>setState</code> não muda dados sozinho: quem altera a variável é o seu código; ele apenas agenda a reconstrução do <code>build()</code> no próximo frame."
-    },
-    {
-      tema: "Ciclo de vida",
-      pergunta: "Chamar <code>setState()</code> dentro do método <code>dispose()</code> de um <code>State</code>:",
+        "Os dados mudam na memória, mas as telas ouvintes não são reconstruídas, então a interface continua mostrando o valor antigo.",
+        "O aplicativo lança uma exceção em tempo de execução, pois o ChangeNotifier exige o notify após qualquer alteração de lista.",
+        "As telas se atualizam normalmente, pois o Provider detecta sozinho qualquer mudança na lista e reconstrói os widgets ouvintes.",
+        "A lista é revertida ao estado anterior automaticamente, já que uma alteração sem notify é considerada inválida pelo framework."
+      ], correta: 0, explicacao: "Sem <code>notifyListeners()</code>, os ouvintes não sabem que mudou — a UI congela no valor antigo. Não dá erro, só não atualiza." },
+    { tema: "SQLite · persistência", pergunta: "No teste obrigatório da lista de filmes, você cadastra 3 filmes, fecha e reabre o app, e eles somem. O que isso indica?",
       opcoes: [
-        "É considerada uma boa prática, pois garante que a tela seja atualizada uma última vez com os valores finais antes de o widget ser removido da árvore.",
-        "Lança uma exceção em tempo de execução, pois o widget já foi (ou está sendo) removido da árvore e não existe mais nenhuma interface para ser redesenhada.",
-        "É simplesmente ignorado pelo framework, que detecta o contexto de destruição do widget e descarta a chamada sem produzir efeito colateral nem erro.",
-        "Funciona normalmente, pois o <code>dispose()</code> também participa do ciclo de build do widget e pode disparar uma última reconstrução antes da remoção."
-      ],
-      correta: 1,
-      explicacao: "Não existe mais tela para redesenhar — o Flutter lança a exceção <code>setState() called after dispose()</code>."
-    },
-    {
-      tema: "setState + async",
-      pergunta: "Um aluno escreveu este código e o app \"trava\" com erro no console. Qual é o problema mais provável?<pre>void _fetchDadosAsync() async {\n  await Future.delayed(const Duration(seconds: 3));\n  setState(() { destaque = true; }); // usuário já saiu da tela\n}</pre>",
+        "Que a persistência não está funcionando — provavelmente os filmes estão só na List, sem serem gravados no SQLite.",
+        "Que o SQLite apaga automaticamente os dados a cada reinício, sendo necessário reconfigurá-lo para modo permanente.",
+        "Que o teste foi bem-sucedido, pois o esperado é justamente que a lista seja reiniciada toda vez que o app abrir.",
+        "Que faltou chamar <code>notifyListeners()</code>, único responsável por manter os dados salvos entre as execuções do app."
+      ], correta: 0, explicacao: "Se somem ao reabrir, não estão sendo persistidos no SQLite — ficaram só na List (memória). O Service não gravou de fato." },
+    { tema: "Firebase × SQLite", pergunta: "Qual é a diferença fundamental entre usar Firestore (Central de Missões) e SQLite (Lista de Filmes)?",
       opcoes: [
-        "<code>Future.delayed</code> não existe no Flutter — o correto seria usar a classe <code>Timer</code> do Dart, que é a única forma suportada de agendar execução de código.",
-        "O <code>setState</code> é chamado após o widget ter sido desmontado, pois o usuário saiu da tela antes dos 3 segundos — falta verificar <code>if (mounted)</code> antes da chamada.",
-        "<code>async</code>/<code>await</code> não pode ser usado dentro de métodos de um <code>State</code>, pois operações assíncronas conflitam diretamente com o ciclo de vida dos widgets.",
-        "O erro está na falta de um <code>await</code> antes do <code>setState</code>, necessário para sincronizar a atualização da tela com o término do <code>Future</code> anterior."
-      ],
-      correta: 1,
-      explicacao: "Clássico <code>setState() called after dispose()</code>: o widget foi desmontado (<code>unmounted</code>) durante o <code>await</code>. Checar <code>mounted</code> antes resolve."
-    },
-    {
-      tema: "Stateless × Stateful",
-      pergunta: "Sobre a diferença entre <code>StatelessWidget</code> e <code>StatefulWidget</code>, marque a alternativa <b>mais precisa</b>:",
+        "O Firestore é um banco na nuvem (dados sincronizados e acessíveis remotamente); o SQLite é um banco local, no próprio dispositivo.",
+        "O Firestore guarda dados em tabelas relacionais e o SQLite em documentos, sendo essa a única diferença entre os dois bancos.",
+        "O SQLite exige conexão constante com a internet, enquanto o Firestore funciona totalmente offline dentro do aparelho do usuário.",
+        "Não há diferença real: ambos salvam os dados exatamente da mesma forma, mudando apenas o nome do pacote importado no Flutter."
+      ], correta: 0, explicacao: "Firestore = nuvem (documents, sincronizado). SQLite = local, no dispositivo. É a diferença entre persistência remota e local." },
+    { tema: "Estoque · fluxo login", pergunta: "No login do controle de estoque, qual é a sequência correta de verificação?",
       opcoes: [
-        "<code>StatelessWidget</code> nunca pode receber parâmetros no construtor, já que qualquer dado vindo de fora caracterizaria uma forma disfarçada de estado mutável.",
-        "A imutabilidade é do próprio objeto widget: ele pode disparar rebuilds do pai por meio de callbacks (como <code>VoidCallback aoClicar</code>), mas não guarda estado via <code>State</code>.",
-        "<code>StatefulWidget</code> é sempre mais lento que <code>StatelessWidget</code> por manter um objeto extra na memória, e por isso deve ser evitado em todas as situações.",
-        "Um <code>StatelessWidget</code> não pode conter um <code>StatefulWidget</code> como filho, pois um pai imutável não teria como acomodar mudanças de estado na sua subárvore."
-      ],
-      correta: 1,
-      explicacao: "Um <code>StatelessWidget</code> recebe parâmetros e dispara callbacks normalmente — o que ele não tem é estado mutável interno. E stateless contendo stateful é perfeitamente comum."
-    },
-    {
-      tema: "Widgets personalizados",
-      pergunta: "No <code>CardProduto</code>, por que é boa prática declarar o construtor como <code>const CardProduto({super.key, ...})</code> sempre que possível?",
+        "Usuário digita → Provider → Service → SQLite → SELECT buscando e-mail e senha → usuário encontrado libera o acesso.",
+        "Usuário digita → SQLite direto na tela → se achar o e-mail, o Provider é criado depois só para guardar o nome do usuário.",
+        "Usuário digita → Service faz um INSERT do login → SELECT confirma → e o Provider decide se a senha estava correta.",
+        "Usuário digita → Flask valida no servidor → retorna ao Flutter, pois o controle de estoque usa backend Python como os voos."
+      ], correta: 0, explicacao: "Login: tela → Provider → Service → SQLite (SELECT por e-mail e senha). Se encontrar, entra; senão, \"E-mail ou senha incorretos\"." },
+    { tema: "Firebase · excluir concluída", pergunta: "Na Central de Missões, o que acontece com a pontuação se você excluir uma missão que estava concluída?",
       opcoes: [
-        "Porque o <code>const</code> é obrigatório em qualquer widget personalizado do projeto: sem ele o analisador do Dart acusa erro e a compilação do aplicativo falha.",
-        "Porque construtores <code>const</code> permitem ao Flutter reutilizar a mesma instância do widget entre rebuilds quando os parâmetros não mudam, evitando reconstruções.",
-        "Porque, sem o <code>const</code>, o widget é criado mas não chega a ser renderizado na primeira build da tela, aparecendo somente após o primeiro <code>setState</code>.",
-        "Porque o <code>const</code> converte automaticamente o widget em um <code>StatefulWidget</code> otimizado, com gerenciamento de estado embutido gerado pelo compilador."
-      ],
-      correta: 1,
-      explicacao: "Quando os parâmetros não mudam, o Flutter reaproveita a instância <code>const</code> em vez de reconstruí-la — menos trabalho por frame. É recomendação, não obrigação."
-    },
-    {
-      tema: "Navigator",
-      pergunta: "Qual é a diferença fundamental entre <code>Navigator.push</code> e <code>Navigator.pushReplacement</code>?",
+        "A pontuação dela deixa de aparecer no total, pois o documento é removido do Firestore e não conta mais na soma.",
+        "A pontuação permanece no total como registro histórico, mesmo que a missão não apareça mais na lista da tela inicial.",
+        "A exclusão é bloqueada pelo app, que não permite remover missões concluídas justamente para não alterar a pontuação total.",
+        "A pontuação dobra temporariamente como bônus de conclusão antes de a missão ser finalmente removida da collection."
+      ], correta: 0, explicacao: "Excluir remove o documento do Firestore. Se era concluída, seus pontos somem do total — a soma recalcula sem ela." },
+    { tema: "PokéAPI · camadas", pergunta: "Ao adicionar \"buscar por ID\" na Pokédex, quais camadas precisam ser tocadas?",
       opcoes: [
-        "Não há nenhuma diferença prática entre os dois métodos: são apenas sinônimos mantidos por compatibilidade histórica com as primeiras versões do framework.",
-        "<code>push</code> empilha a nova rota mantendo a anterior na pilha (permite voltar); <code>pushReplacement</code> substitui a rota atual, removendo a anterior da pilha.",
-        "<code>pushReplacement</code> só funciona com rotas nomeadas registradas previamente no <code>MaterialApp</code>, enquanto o <code>push</code> aceita qualquer rota criada em tempo real.",
-        "<code>push</code> não aceita passagem de dados entre as telas, enquanto o <code>pushReplacement</code> foi criado justamente para transportar argumentos durante a navegação."
-      ],
-      correta: 1,
-      explicacao: "Com <code>push</code> dá pra voltar (a anterior segue na pilha); com <code>pushReplacement</code> não há retorno — típico de login → home. Ambos aceitam dados e rotas anônimas."
-    },
-    {
-      tema: "Navigator",
-      pergunta: "Como capturar um valor retornado pela tela de detalhes quando o usuário volta usando <code>Navigator.pop(context, valor)</code>?",
+        "Rota Python (Flask), método na Service, dado guardado no Provider e a exibição na tela — o fluxo completo entre as camadas.",
+        "Apenas a tela em Flutter, que passa a chamar a PokéAPI diretamente com o ID informado pelo usuário no campo de busca.",
+        "Somente o Provider, que armazena o ID e o envia à PokéAPI sem precisar de rota nova no Flask nem método na Service.",
+        "Apenas o backend Flask, pois uma vez criada a rota o Flutter reconhece e exibe o novo Pokémon automaticamente sozinho."
+      ], correta: 0, explicacao: "Toda funcionalidade nova passa pelas camadas: rota Flask → método na Service → dado no Provider → exibição na tela." },
+    { tema: "async · await", pergunta: "Métodos que acessam a API ou o banco (ex.: buscar voos, ler o SQLite) normalmente retornam o quê?",
       opcoes: [
-        "Isso não é possível no Flutter: o <code>pop</code> apenas remove a rota da pilha de navegação e qualquer valor extra passado a ele é descartado pelo framework.",
-        "Usando <code>await</code> no push — <code>final resultado = await Navigator.push(...)</code> — pois o <code>push</code> retorna um <code>Future</code> resolvido com o valor do <code>pop</code>.",
-        "Somente através de uma variável global compartilhada entre as duas telas, já que rotas diferentes não possuem nenhum canal direto de comunicação entre si.",
-        "O valor só pode ser recuperado por meio de <code>SharedPreferences</code>, persistindo o dado em disco antes do <code>pop</code> e lendo-o de volta na tela anterior."
-      ],
-      correta: 1,
-      explicacao: "O <code>Future</code> do <code>push</code> resolve com o que foi passado ao <code>pop</code> — sem variável global e sem persistência em disco."
-    },
-    {
-      tema: "Navigator",
-      pergunta: "Sobre <code>Navigator.pop(context)</code> chamado sem nenhuma tela para voltar (na rota raiz da aplicação):",
+        "Um <code>Future</code>, pois são operações assíncronas — usa-se <code>async</code>/<code>await</code> para esperar o resultado chegar.",
+        "Um valor imediato e síncrono, já que tanto o HTTP quanto o SQLite respondem instantaneamente sem qualquer espera.",
+        "Um <code>Stream</code> infinito, que precisa ser cancelado manualmente após a primeira resposta para não travar o aplicativo.",
+        "Um <code>void</code>, pois operações de rede e banco nunca devolvem dados diretamente — elas só disparam efeitos colaterais."
+      ], correta: 0, explicacao: "Rede e banco são assíncronos: retornam <code>Future</code>. Por isso os métodos são <code>async</code> e usam <code>await</code> para esperar." },
+    { tema: "Estoque · terminal", pergunta: "Por que a atividade de estoque pede <code>print()</code> no terminal para cada operação de banco?",
       opcoes: [
-        "Fecha a rota raiz normalmente e o aplicativo continua rodando em segundo plano, aguardando o usuário reabri-lo pela lista de aplicativos recentes do sistema.",
-        "Não tem efeito nenhum e não gera erro — mas boas práticas recomendam checar <code>Navigator.canPop(context)</code> antes, especialmente ao customizar o botão de voltar.",
-        "Dispara automaticamente um <code>showModalBottomSheet</code> de confirmação perguntando ao usuário se ele realmente deseja sair do aplicativo naquele momento.",
-        "Encerra o aplicativo imediatamente em qualquer plataforma, de forma equivalente a chamar <code>SystemNavigator.pop()</code> ou finalizar o processo do app manualmente."
-      ],
-      correta: 1,
-      explicacao: "Na raiz, o <code>pop</code> simplesmente não faz nada — mas ao customizar botão de voltar, cheque <code>Navigator.canPop(context)</code> antes de chamar."
-    },
-    {
-      tema: "TextEditingController",
-      pergunta: "Por que é obrigatório chamar <code>controller.dispose()</code> no <code>dispose()</code> do <code>State</code> ao usar um <code>TextEditingController</code>?",
+        "Para verificar se os dados realmente foram salvos/alterados no SQLite, acompanhando INSERT, SELECT, UPDATE e DELETE.",
+        "Porque o SQLite no Flutter Web só grava os dados de fato quando um <code>print()</code> é executado logo após a operação.",
+        "Para que o usuário final consiga ler no terminal as mensagens e confirmar cada ação antes de ela ser efetivada no banco.",
+        "Porque sem os <code>print()</code> o Flutter não consegue compilar um projeto que utilize o pacote de acesso ao SQLite."
+      ], correta: 0, explicacao: "Os <code>print()</code> servem para depurar/confirmar que a operação chegou ao banco. É uma checagem, não um requisito técnico do SQLite." },
+    { tema: "MVVM × MVC", pergunta: "A lista de filmes usa MVVM (Model-View-ViewModel). Qual o papel da ViewModel nesse padrão?",
       opcoes: [
-        "Porque sem essa chamada o aplicativo não compila em modo release: o analisador do Dart exige que todo controller declarado seja explicitamente descartado no código.",
-        "Porque ele é um <code>ChangeNotifier</code> que mantém listeners e recursos ativos; não descartá-lo causa memory leak, pois continua \"vivo\" mesmo após a tela ser destruída.",
-        "Porque o <code>dispose()</code> é quem de fato inicializa o controller internamente, liberando-o para ser usado com segurança na próxima vez em que a tela for aberta.",
-        "Porque essa chamada limpa automaticamente o texto digitado nos campos antes do envio do pedido, evitando que dados antigos sejam reaproveitados indevidamente."
-      ],
-      correta: 1,
-      explicacao: "O controller continua segurando recursos e listeners mesmo após a tela morrer — vazamento de memória clássico. Compila normalmente sem o descarte; o problema é em execução."
-    },
-    {
-      tema: "TextEditingController",
-      pergunta: "O que acontece se você tentar usar <code>meuController.text</code> <b>depois</b> de já ter chamado <code>meuController.dispose()</code>?",
+        "Faz a ponte entre a View e o Service: guarda a lista em memória, pede os dados ao Service e avisa a View com notifyListeners.",
+        "É o banco de dados em si, sendo a camada que executa diretamente os comandos SQL de INSERT, SELECT e UPDATE no SQLite.",
+        "É apenas a tela visual, responsável por desenhar os widgets e receber os toques do usuário, sem lógica de dados alguma.",
+        "Substitui completamente o Service, acumulando tanto o acesso ao banco quanto a exibição dos dados em uma única camada."
+      ], correta: 0, explicacao: "A ViewModel (equivalente ao Provider) intermedeia View e Service: mantém a lista, pede dados ao Service e notifica a View." },
+    { tema: "Firestore · id", pergunta: "No Model <code>Missao</code>, por que o campo <code>id</code> é declarado como <code>String? id</code> (com ?)?",
       opcoes: [
-        "Retorna uma string vazia silenciosamente, pois o descarte apaga o conteúdo interno do controller mas mantém o objeto utilizável para leituras posteriores.",
-        "Lança uma exceção em tempo de execução, pois o controller já foi destruído, seus recursos internos foram liberados e ele não deve mais ser utilizado pelo app.",
-        "Retorna o último valor digitado pelo usuário, mantido em um cache interno do framework justamente para permitir consultas feitas após o descarte do controller.",
-        "O Flutter detecta o acesso indevido, recria o controller automaticamente em segundo plano e devolve o texto normalmente, como se nada tivesse acontecido."
-      ],
-      correta: 1,
-      explicacao: "Objeto descartado é objeto morto — qualquer uso posterior lança exceção. Não há cache nem recriação automática."
-    },
-    {
-      tema: "Validação",
-      pergunta: "Na validação do pedido (nome e produto obrigatórios), qual abordagem é <b>mais robusta</b> que apenas <code>if (nome.isEmpty || produto.isEmpty)</code>?",
+        "Porque uma missão nova ainda não tem id antes de ser salva — o id só existe depois que o Firestore cria o documento.",
+        "Porque o id de uma missão pode ser tanto texto quanto número, e o <code>?</code> permite alternar livremente entre os dois tipos.",
+        "Porque o <code>?</code> torna o id secreto, escondendo-o da tela de detalhes por questões de segurança dos dados do usuário.",
+        "Porque toda variável em Dart precisa terminar com <code>?</code> para poder ser usada dentro de uma classe de modelo."
+      ], correta: 0, explicacao: "<code>String?</code> (nullable) porque antes de salvar a missão não tem id — ele só é atribuído quando o Firestore cria o documento." },
+    { tema: "Voos · dois terminais", pergunta: "Na atividade de voos, por que é preciso manter dois terminais abertos ao mesmo tempo?",
       opcoes: [
-        "Não existe abordagem melhor do que essa: o <code>if</code> simples com <code>isEmpty</code> já é considerado o padrão ideal de validação para aplicativos de qualquer porte.",
-        "Usar <code>Form</code> com <code>GlobalKey&lt;FormState&gt;</code> e <code>TextFormField</code> com <code>validator</code>, chamando <code>validate()</code>: centraliza a validação e mostra erro em cada campo.",
-        "Envolver o <code>Scaffold</code> inteiro da tela em um <code>try/catch</code>, capturando as exceções que os campos de formulário lançam automaticamente quando vazios.",
-        "Remover a validação do aplicativo por completo e realizá-la apenas no backend, que é o único lugar realmente seguro e confiável para verificar dados de formulário."
-      ],
-      correta: 1,
-      explicacao: "<code>formKey.currentState!.validate()</code> centraliza a validação, mostra erro visual em cada campo e escala pra quantos campos precisar. Campo vazio não lança exceção."
-    },
-    {
-      tema: "SnackBar",
-      pergunta: "Qual é a forma <b>recomendada atualmente</b> de exibir um <code>SnackBar</code>, evitando o erro <i>\"Scaffold.of() called with a context that does not contain a Scaffold\"</i>?",
+        "Um roda o backend Python (Flask) e o outro roda o Flutter; se o terminal do Python fechar, o Flutter não recebe mais dados.",
+        "Um terminal compila o Flutter e o outro serve apenas para digitar comandos git, mantendo o histórico do projeto atualizado.",
+        "Porque o Flutter precisa de dois processos idênticos rodando em paralelo para conseguir renderizar as telas em Flutter Web.",
+        "Um terminal roda o app em modo mobile e o outro em modo web, permitindo testar as duas versões simultaneamente."
+      ], correta: 0, explicacao: "Terminal 1 = <code>python app.py</code> (backend); Terminal 2 = <code>flutter run</code>. Sem o Python rodando, o Flutter não carrega os dados." },
+    { tema: "Estoque · SELECT antes INSERT", pergunta: "Por que, no cadastro de usuário, é preciso um SELECT antes do INSERT?",
       opcoes: [
-        "<code>Scaffold.of(context).showSnackBar(...)</code>, que continua sendo a única forma válida e suportada de exibir SnackBars em qualquer versão do framework Flutter.",
-        "<code>ScaffoldMessenger.of(context).showSnackBar(SnackBar(...))</code>, pois o <code>ScaffoldMessenger</code> gerencia a fila de SnackBars independente da posição do <code>Scaffold</code>.",
-        "<code>Navigator.of(context).showSnackBar(...)</code>, já que o SnackBar é internamente tratado como uma rota transparente empilhada por cima da tela atual.",
-        "Instanciar o <code>SnackBar</code> diretamente no <code>body</code> do <code>Scaffold</code>, pois o widget se posiciona e se exibe sozinho assim que é adicionado à árvore."
-      ],
-      correta: 1,
-      explicacao: "O <code>ScaffoldMessenger</code> gerencia SnackBars sem depender da posição exata do <code>Scaffold</code> na árvore — o método antigo via <code>Scaffold.of</code> foi descontinuado."
-    },
-    {
-      tema: "SnackBar",
-      pergunta: "Se dois <code>SnackBar</code>s forem disparados em sequência muito rápida, qual é o comportamento padrão do <code>ScaffoldMessenger</code>?",
+        "Para verificar se o e-mail já existe no banco e, se existir, bloquear o cadastro mostrando \"E-mail já cadastrado\".",
+        "Porque o SQLite exige um SELECT imediatamente antes de qualquer INSERT, senão a inserção é rejeitada pelo banco de dados.",
+        "Para carregar a lista de todos os usuários na tela antes de adicionar o novo, mantendo a interface sempre atualizada.",
+        "Porque o SELECT gera o id do novo usuário, que precisa ser conhecido antes de o registro ser inserido na tabela."
+      ], correta: 0, explicacao: "O SELECT checa se o e-mail já está cadastrado. Se sim, não insere (evita duplicata); se não, faz o INSERT." },
+    { tema: "PokéAPI · JSON path", pergunta: "Para adicionar \"ataque especial\" na tela de detalhes, onde esse dado deve ser localizado primeiro?",
       opcoes: [
-        "Os dois aparecem sobrepostos na tela ao mesmo tempo, um por cima do outro, e cada um desaparece de forma independente ao fim da sua respectiva duração.",
-        "O segundo entra em uma fila e é exibido após o primeiro terminar — ou você pode chamar <code>hideCurrentSnackBar()</code> / <code>removeCurrentSnackBar()</code> antes de mostrar o novo.",
-        "O aplicativo lança uma exceção de SnackBar duplicado, pois o <code>ScaffoldMessenger</code> não permite duas requisições de exibição registradas no mesmo frame.",
-        "Apenas o primeiro é exibido na tela e o segundo é descartado silenciosamente pelo framework, cabendo ao desenvolvedor reagendar manualmente a mensagem perdida."
-      ],
-      correta: 1,
-      explicacao: "Fila por padrão. Pra pular a espera: <code>hideCurrentSnackBar()</code> ou <code>removeCurrentSnackBar()</code> antes de mostrar o novo."
-    },
-    {
-      tema: "showModalBottomSheet",
-      pergunta: "Sobre <code>showModalBottomSheet</code>, qual afirmação é verdadeira?",
+        "No JSON retornado pela PokéAPI — é preciso achar o campo no JSON antes de passá-lo pela rota Python até o Flutter.",
+        "Diretamente no código do Flutter, criando um campo novo e preenchendo com um valor fixo escolhido pelo desenvolvedor.",
+        "Na tabela do SQLite, já que os atributos dos Pokémon são armazenados localmente e não vêm da PokéAPI em tempo real.",
+        "No próprio Provider, que calcula o ataque especial a partir da altura e do peso do Pokémon já recebidos na busca."
+      ], correta: 0, explicacao: "Primeiro localiza-se o dado no JSON da PokéAPI; depois ele é devolvido pela rota Flask e exibido no Flutter. O dado vem da API." },
+    { tema: "Estado · loading", pergunta: "Por que o Provider costuma guardar uma variável booleana de \"carregando\" (loading)?",
       opcoes: [
-        "Ele bloqueia toda a navegação do aplicativo até que o dispositivo seja reiniciado pelo usuário, sendo indicado somente para avisos críticos de segurança.",
-        "Por padrão é modal (bloqueia interação com o conteúdo atrás até ser fechado) e retorna um <code>Future</code>, permitindo capturar um valor via <code>Navigator.pop(context, valor)</code>.",
-        "Ele não pode conter widgets com estado próprio (<code>StatefulWidget</code>), pois o painel é reconstruído a cada frame de animação e perderia todos os valores internos.",
-        "Ele substitui totalmente o <code>Scaffold</code> da tela atual enquanto permanece aberto, assumindo o controle da AppBar, do body e dos botões flutuantes existentes."
-      ],
-      correta: 1,
-      explicacao: "Bloqueia o conteúdo atrás até fechar, e <code>Navigator.pop(context, valor)</code> dentro dele resolve o <code>Future</code> com esse valor. Pode conter StatefulWidget normalmente."
-    },
-    {
-      tema: "AnimatedContainer",
-      pergunta: "Por que, ao usar <code>AnimatedContainer</code>, é indispensável definir a propriedade <code>duration</code>?",
+        "Para a tela saber se deve mostrar um indicador de progresso enquanto a busca (assíncrona) ainda não terminou.",
+        "Para contar quantas vezes a API foi chamada durante a sessão, limitando o número de requisições permitidas por minuto.",
+        "Para armazenar o resultado da última requisição, servindo de cache e evitando novas chamadas à API para o mesmo dado.",
+        "Para decidir qual tela abrir primeiro ao iniciar o app, alternando entre a lista de voos e a tela de detalhes."
+      ], correta: 0, explicacao: "A flag de loading permite à tela mostrar o indicador de carregamento enquanto o Future não resolve, e escondê-lo ao terminar." },
+    { tema: "Firebase · pontuação Provider", pergunta: "Na Central de Missões, quem é o responsável mais indicado por calcular a pontuação total?",
       opcoes: [
-        "Porque sem a <code>duration</code> o container não pode receber cor de fundo nem decoração, já que essas propriedades dependem do sistema interno de animação.",
-        "Porque ele é um widget de animação implícita: interpola automaticamente as mudanças de propriedades (tamanho, cor, borda, padding) ao longo do tempo definido em <code>duration</code>.",
-        "Porque a <code>duration</code> é opcional na prática e afeta somente a transição da cor de fundo, sendo completamente ignorada nas mudanças de tamanho e de posição.",
-        "Porque a <code>duration</code> define o intervalo mínimo exigido entre chamadas consecutivas de <code>setState</code>, protegendo a animação contra rebuilds excessivos."
-      ],
-      correta: 1,
-      explicacao: "Ele interpola automaticamente as mudanças de tamanho, cor, borda e padding — mas precisa saber em quanto tempo a transição deve acontecer. Por isso <code>duration</code> é obrigatória."
-    },
-    {
-      tema: "AnimatedContainer",
-      pergunta: "O que diferencia <code>AnimatedContainer</code> de simplesmente usar um <code>Container</code> normal dentro de um <code>setState</code>?",
+        "O Provider, que já guarda a lista de missões e pode somar os pontos das que estão com <code>concluida: true</code>.",
+        "A HomePage, que deve percorrer os documentos do Firestore diretamente e somar os pontos ali mesmo dentro do build.",
+        "O Firebase, através de uma função automática que devolve a soma já pronta sempre que um documento é modificado.",
+        "O Model <code>Missao</code>, cujo método <code>toMap()</code> retorna também o total acumulado de todas as missões concluídas."
+      ], correta: 0, explicacao: "O Provider guarda a lista e o estado, então é onde a soma dos pontos das concluídas naturalmente se encaixa. A tela só exibe." },
+    { tema: "Web · SQLite", pergunta: "Na atividade de estoque (Flutter Web), por que os arquivos <code>sqlite3.wasm</code> e <code>sqflite_sw.js</code> vão na pasta <code>web/</code>?",
       opcoes: [
-        "Não há diferença nenhuma entre os dois na prática: ambos redesenham a interface exatamente da mesma forma quando uma propriedade visual do widget é alterada.",
-        "Com <code>Container</code> + <code>setState</code>, a mudança acontece instantaneamente entre frames; o <code>AnimatedContainer</code> anima a transição entre os valores usando uma <code>curve</code>.",
-        "O <code>AnimatedContainer</code> não aceita <code>BoxDecoration</code> nem bordas arredondadas, uma limitação imposta pelo seu mecanismo interno de interpolação de valores.",
-        "É o oposto do esperado: o <code>Container</code> comum sempre anima as suas mudanças, enquanto o <code>AnimatedContainer</code> exige um controller manual para poder animar."
-      ],
-      correta: 1,
-      explicacao: "Com <code>Container</code> a mudança salta entre frames; o <code>AnimatedContainer</code> anima a transição do valor antigo pro novo — e aceita <code>BoxDecoration</code> normalmente."
-    },
-    {
-      tema: "Column × ListView",
-      pergunta: "Qual é a principal diferença de comportamento (e performance) entre <code>Column</code> dentro de <code>SingleChildScrollView</code> e um <code>ListView</code> para exibir os 4+ produtos?",
+        "Porque o SQLite não roda nativamente no navegador; esses arquivos permitem que ele funcione via WebAssembly no Flutter Web.",
+        "Porque a pasta <code>web/</code> é onde o Flutter guarda o banco de dados em si, com os dados dos usuários e produtos salvos.",
+        "Porque esses arquivos substituem o pacote sqflite, dispensando qualquer dependência adicional no <code>pubspec.yaml</code>.",
+        "Porque o navegador só executa arquivos JavaScript, então todo o código Dart do projeto precisa ser copiado para essa pasta."
+      ], correta: 0, explicacao: "No navegador o SQLite roda via WebAssembly: <code>sqlite3.wasm</code> + <code>sqflite_sw.js</code> em <code>web/</code> tornam isso possível." },
+    { tema: "Separação · HTTP", pergunta: "Colocar <code>http.get(...)</code> diretamente na HomePage viola qual princípio das atividades?",
       opcoes: [
-        "São idênticos em comportamento e em performance: ambos constroem e renderizam os widgets filhos exatamente da mesma forma, mudando apenas a sintaxe do código.",
-        "<code>Column</code>/<code>SingleChildScrollView</code> constrói <b>todos</b> os filhos de uma vez, visíveis ou não; <code>ListView.builder</code> constrói os itens <b>sob demanda</b> (lazy loading).",
-        "<code>ListView</code> não pode ser rolado pelo usuário — a rolagem é uma exclusividade do <code>SingleChildScrollView</code>, que existe no framework justamente para isso.",
-        "<code>SingleChildScrollView</code> é mais rápido que <code>ListView</code> para qualquer quantidade de itens, pois não precisa gerenciar o ciclo de vida dos builders de cada item."
-      ],
-      correta: 1,
-      explicacao: "O lazy loading do <code>ListView.builder</code> só constrói o que está visível — decisivo em listas longas. Com 4 itens tanto faz; com 400, faz toda a diferença."
-    },
-    {
-      tema: "Arquitetura",
-      pergunta: "Um colega colocou toda a lógica da tela num único <code>main.dart</code> com 2000+ linhas, sem widgets personalizados. Qual é o <b>principal problema técnico</b> (além de legibilidade)?",
+        "A separação de responsabilidades: a requisição HTTP pertence à Service; a tela só deve acessar dados pelo Provider.",
+        "O princípio de que toda tela deve ser um StatelessWidget, incompatível com chamadas de rede feitas dentro dela.",
+        "A regra de que o Flutter Web não aceita requisições HTTP, exigindo que todas passem obrigatoriamente pelo Firebase.",
+        "Nenhum: colocar o <code>http.get</code> na tela é a forma recomendada, pois reduz a quantidade de arquivos do projeto."
+      ], correta: 0, explicacao: "HTTP na tela quebra a separação de camadas. O certo: Service faz o HTTP, Provider guarda o estado, a tela só exibe." },
+    { tema: "CRUD · mapeamento", pergunta: "Relacionando as operações CRUD com as ações do app de estoque, qual associação está correta?",
       opcoes: [
-        "O aplicativo não compila com mais de 500 linhas por arquivo, um limite imposto pelo analisador do Dart justamente para forçar a modularização adequada do código.",
-        "Widgets monolíticos reconstroem blocos inteiros de UI a cada <code>setState</code>, pois o Flutter reconstrói toda a subárvore do <code>build()</code>; widgets menores isolam rebuilds.",
-        "Arquivos <code>.dart</code> têm um limite técnico de 2000 linhas imposto pelo compilador, e ultrapassar esse número gera avisos de performance no console durante o build.",
-        "Não há nenhum problema técnico real nessa abordagem: a separação do código em widgets menores é apenas uma convenção estética adotada pela comunidade Flutter."
-      ],
-      correta: 1,
-      explicacao: "O Flutter reconstrói toda a subárvore do <code>build()</code> do widget que chamou <code>setState</code> — separar em widgets menores isola rebuilds e permite reutilizar código. Não existe limite de linhas."
-    }
+        "Cadastrar = INSERT, login = SELECT, alterar quantidade = UPDATE, excluir produto = DELETE.",
+        "Cadastrar = SELECT, login = INSERT, alterar quantidade = DELETE, excluir produto = UPDATE.",
+        "Cadastrar = UPDATE, login = DELETE, alterar quantidade = INSERT, excluir produto = SELECT.",
+        "Todas as ações usam INSERT, pois qualquer interação com o banco no SQLite é considerada uma inserção de dados."
+      ], correta: 0, explicacao: "CRUD: cadastrar → INSERT, login/listar → SELECT, alterar quantidade → UPDATE, excluir → DELETE. As quatro operações do banco." }
   ];
 
-  /* =========================== MODO CÓDIGO =========================== */
-  /* mostra um trecho e pergunta o que ele faz */
+  /* =========================== MODO CÓDIGO (16) =========================== */
   const codigo = [
-    {
-      tema: "setState",
-      trecho: `<span class="kw">int</span> contador = <span class="num">0</span>;
-
-<span class="fn">void</span> _somar() {
-  <span class="fn">setState</span>(() {
-    contador++;
-  });
-}`,
-      pergunta: "O que este código faz quando <code>_somar()</code> é chamado?",
-      opcoes: [
-        "Incrementa a variável <code>contador</code> em 1 e redesenha a tela para exibir o novo valor, pois a alteração está dentro do callback do <code>setState</code>.",
-        "Salva o valor de <code>contador</code> permanentemente no armazenamento do dispositivo e só atualiza a tela quando o aplicativo for reaberto pelo usuário.",
-        "Cria uma nova variável <code>contador</code> a cada chamada, sempre reiniciando o valor em zero antes de somar 1, de modo que o resultado nunca ultrapassa 1.",
-        "Incrementa a variável, mas não atualiza a tela, pois o <code>setState</code> só funciona quando recebe o novo valor diretamente como argumento entre parênteses."
-      ],
-      correta: 0,
-      explicacao: "<code>setState</code> executa o <code>contador++</code> e agenda o rebuild — o novo valor aparece na tela. A variável é de instância, não é recriada a cada chamada."
-    },
-    {
-      tema: "Navigator",
-      trecho: `<span class="fn">Navigator</span>.push(
-  context,
-  <span class="fn">MaterialPageRoute</span>(
-    builder: (context) => <span class="fn">DetalhesProduto</span>(nome: <span class="str">"X-Burger"</span>),
-  ),
-);`,
+    { tema: "Provider", trecho: `<span class="kw">class</span> <span class="fn">VooProvider</span> <span class="kw">extends</span> <span class="fn">ChangeNotifier</span> {\n  List&lt;Voo&gt; voos = [];\n\n  <span class="fn">void</span> setVoos(List&lt;Voo&gt; novos) {\n    voos = novos;\n    <span class="fn">notifyListeners</span>();\n  }\n}`,
       pergunta: "O que este código faz?",
       opcoes: [
-        "Abre a tela <code>DetalhesProduto</code> por cima da atual, passando o texto \"X-Burger\" para o parâmetro <code>nome</code> do construtor dela, e mantém a tela anterior na pilha.",
-        "Substitui a tela atual pela <code>DetalhesProduto</code> e remove a anterior da pilha, de forma que o usuário não consegue mais voltar para a tela que estava antes.",
-        "Cria uma variável chamada <code>DetalhesProduto</code> com o valor \"X-Burger\" e a exibe em um SnackBar na parte inferior da tela atual, sem trocar de tela.",
-        "Apenas registra a rota <code>DetalhesProduto</code> na tabela de rotas do <code>MaterialApp</code> para uso futuro, sem abrir nenhuma tela nova neste momento."
-      ],
-      correta: 0,
-      explicacao: "<code>push</code> empilha a nova tela e o argumento <code>nome: \"X-Burger\"</code> é passado ao construtor de <code>DetalhesProduto</code>. Pra substituir sem retorno seria <code>pushReplacement</code>."
-    },
-    {
-      tema: "Stateless",
-      trecho: `<span class="kw">class</span> <span class="fn">Saudacao</span> <span class="kw">extends</span> <span class="fn">StatelessWidget</span> {
-  <span class="kw">final</span> <span class="fn">String</span> nome;
-  <span class="kw">const</span> <span class="fn">Saudacao</span>({<span class="kw">super</span>.key, <span class="kw">required</span> <span class="kw">this</span>.nome});
-
-  @override
-  <span class="fn">Widget</span> build(<span class="fn">BuildContext</span> context) {
-    <span class="kw">return</span> <span class="fn">Text</span>(<span class="str">"Olá, </span>$nome<span class="str">!"</span>);
-  }
-}`,
-      pergunta: "O que este widget faz?",
+        "Define um Provider que guarda a lista de voos e, ao recebê-la, chama <code>notifyListeners()</code> para atualizar as telas ouvintes.",
+        "Cria uma tela que exibe os voos, redesenhando-se automaticamente sempre que o método <code>setVoos</code> é chamado pela API.",
+        "Faz a requisição HTTP para buscar os voos e converte o JSON recebido em uma lista de objetos <code>Voo</code> do aplicativo.",
+        "Cria uma tabela <code>voos</code> no banco SQLite e insere cada voo recebido como um novo registro dentro dela."
+      ], correta: 0, explicacao: "É um Provider (ChangeNotifier): guarda <code>voos</code> e, ao atualizar, chama <code>notifyListeners()</code> para as telas se redesenharem." },
+    { tema: "Service · HTTP", trecho: `<span class="kw">Future</span>&lt;List&lt;Voo&gt;&gt; <span class="fn">buscarVoos</span>(String aeroporto) <span class="kw">async</span> {\n  <span class="kw">final</span> url = <span class="fn">Uri</span>.parse(\n    <span class="str">"http://127.0.0.1:5001/api/voos?aeroporto="</span> + aeroporto);\n  <span class="kw">final</span> resp = <span class="kw">await</span> http.get(url);\n  <span class="kw">final</span> dados = jsonDecode(resp.body);\n  <span class="kw">return</span> dados.map((v) => <span class="fn">Voo</span>.fromJson(v)).toList();\n}`,
+      pergunta: "O que este método da Service faz?",
       opcoes: [
-        "Recebe um texto <code>nome</code> pelo construtor e exibe \"Olá, [nome]!\" na tela. É um widget sem estado interno, que só mostra o valor recebido de fora.",
-        "Cria um campo de texto editável onde o usuário digita o próprio nome, e atualiza a saudação em tempo real conforme cada letra vai sendo digitada na tela.",
-        "Guarda o nome em uma variável de estado interna e permite alterá-lo depois com <code>setState</code>, redesenhando a saudação sempre que o valor mudar.",
-        "Exibe a palavra \"Olá\" fixa na tela, ignorando o parâmetro <code>nome</code>, pois <code>StatelessWidget</code> não consegue acessar valores recebidos pelo construtor."
-      ],
-      correta: 0,
-      explicacao: "É um <code>StatelessWidget</code>: recebe <code>nome</code> pelo construtor e exibe interpolado no <code>Text</code>. Sem estado interno, sem edição — só mostra o que chega de fora."
-    },
-    {
-      tema: "TextEditingController",
-      trecho: `<span class="kw">final</span> nomeController = <span class="fn">TextEditingController</span>();
-
-<span class="fn">ElevatedButton</span>(
-  onPressed: () {
-    <span class="fn">print</span>(nomeController.text);
-  },
-  child: <span class="kw">const</span> <span class="fn">Text</span>(<span class="str">"Enviar"</span>),
-)`,
-      pergunta: "O que acontece ao tocar no botão \"Enviar\"?",
+        "Faz a requisição HTTP para a API Python, decodifica o JSON da resposta e devolve uma lista de objetos <code>Voo</code>.",
+        "Exibe a lista de voos na tela, montando um widget para cada voo retornado pela API do backend em Python.",
+        "Guarda os voos no Provider e avisa as telas com <code>notifyListeners()</code> assim que os dados forem recebidos.",
+        "Cria a rota <code>/api/voos</code> no Flask, definindo qual código Python roda quando o endereço é acessado."
+      ], correta: 0, explicacao: "É a Service: faz o <code>http.get</code>, <code>jsonDecode</code> na resposta e converte em <code>List&lt;Voo&gt;</code>. Só comunicação, sem UI nem estado." },
+    { tema: "Flask · rota", trecho: `@app.route(<span class="str">"/pokemons/nome/&lt;nome&gt;"</span>)\n<span class="kw">def</span> <span class="fn">buscar_por_nome</span>(nome):\n    r = requests.get(<span class="str">f"https://pokeapi.co/api/v2/pokemon/{nome}"</span>)\n    dados = r.json()\n    <span class="kw">return</span> jsonify({\n        <span class="str">"id"</span>: dados[<span class="str">"id"</span>],\n        <span class="str">"nome"</span>: dados[<span class="str">"name"</span>],\n        <span class="str">"peso"</span>: dados[<span class="str">"weight"</span>]\n    })`,
+      pergunta: "O que esta rota Flask faz?",
       opcoes: [
-        "Imprime no console o texto que estiver digitado no campo ligado ao <code>nomeController</code> naquele momento, através da propriedade <code>.text</code> do controller.",
-        "Imprime no console a palavra literal \"nomeController.text\", pois o Flutter não substitui o valor da variável dentro da chamada da função <code>print</code>.",
-        "Limpa o campo de texto ligado ao controller e imprime uma string vazia no console, já que ler <code>.text</code> apaga automaticamente o conteúdo do campo.",
-        "Abre uma nova tela exibindo o texto digitado em tamanho grande, pois o <code>print</code> em Flutter renderiza o conteúdo visualmente na interface do app."
-      ],
-      correta: 0,
-      explicacao: "<code>nomeController.text</code> lê o conteúdo atual do campo associado e o <code>print</code> joga no console. Ler o <code>.text</code> não apaga nada."
-    },
-    {
-      tema: "ListView.builder",
-      trecho: `<span class="fn">ListView</span>.builder(
-  itemCount: produtos.length,
-  itemBuilder: (context, i) {
-    <span class="kw">return</span> <span class="fn">ListTile</span>(
-      title: <span class="fn">Text</span>(produtos[i]),
-    );
-  },
-)`,
-      pergunta: "O que este código constrói?",
+        "Recebe um nome na URL, consulta a PokéAPI, extrai alguns campos do JSON e devolve um JSON próprio para o Flutter.",
+        "Salva o Pokémon pesquisado no banco SQLite e retorna uma mensagem de sucesso para a tela do aplicativo Flutter.",
+        "Renderiza uma página HTML com os detalhes do Pokémon, exibindo o id, o nome e o peso diretamente no navegador.",
+        "Acessa a PokéAPI diretamente do Flutter, sem intermediar nada, apenas repassando o endereço da API para o app."
+      ], correta: 0, explicacao: "A rota <code>/pokemons/nome/&lt;nome&gt;</code> consulta a PokéAPI, pega os campos do JSON e devolve com <code>jsonify</code>. É o Flask intermediando." },
+    { tema: "SQLite · INSERT", trecho: `<span class="kw">Future</span>&lt;void&gt; <span class="fn">inserirFilme</span>(Filme f) <span class="kw">async</span> {\n  <span class="kw">final</span> db = <span class="kw">await</span> banco;\n  <span class="kw">await</span> db.insert(<span class="str">"filmes"</span>, {\n    <span class="str">"titulo"</span>: f.titulo,\n    <span class="str">"assistido"</span>: f.assistido ? <span class="num">1</span> : <span class="num">0</span>,\n  });\n}`,
+      pergunta: "O que este método faz e por que o <code>? 1 : 0</code>?",
       opcoes: [
-        "Uma lista rolável em que cada item da lista <code>produtos</code> vira um <code>ListTile</code> com o nome do produto, construídos sob demanda conforme a rolagem.",
-        "Um único <code>ListTile</code> exibindo apenas o primeiro produto da lista, pois o <code>itemBuilder</code> só é executado uma vez, para o índice zero do array.",
-        "Uma grade de produtos organizados em várias colunas lado a lado, já que o <code>ListView.builder</code> distribui os itens automaticamente pela largura da tela.",
-        "Uma lista fixa que constrói de uma só vez todos os <code>ListTile</code> na memória, independentemente de estarem ou não visíveis na área da tela do aparelho."
-      ],
-      correta: 0,
-      explicacao: "<code>ListView.builder</code> gera um <code>ListTile</code> por item de <code>produtos</code>, sob demanda (lazy). Não é grade (isso seria <code>GridView</code>) nem constrói tudo de uma vez."
-    },
-    {
-      tema: "Ternário / condicional",
-      trecho: `<span class="fn">Container</span>(
-  color: ativo ? <span class="fn">Colors</span>.green : <span class="fn">Colors</span>.grey,
-  child: <span class="fn">Text</span>(ativo ? <span class="str">"Aberto"</span> : <span class="str">"Fechado"</span>),
-)`,
-      pergunta: "O que este código faz dependendo da variável <code>ativo</code>?",
+        "Insere um filme na tabela do SQLite; o ternário converte o booleano <code>assistido</code> em 1 (true) ou 0 (false).",
+        "Busca um filme já existente e o marca como assistido, usando 1 ou 0 para escolher qual coluna da tabela atualizar.",
+        "Cria a tabela <code>filmes</code> com uma coluna de nome 1 e outra 0, correspondentes aos filmes vistos e não vistos.",
+        "Exclui o filme do banco se ele já foi assistido (1) e o mantém caso ainda não tenha sido assistido (0) pelo usuário."
+      ], correta: 0, explicacao: "É um INSERT. O SQLite não tem booleano, então <code>assistido ? 1 : 0</code> converte true/false em 1/0 para a coluna INTEGER." },
+    { tema: "SQLite · SELECT", trecho: `<span class="kw">Future</span>&lt;List&lt;Filme&gt;&gt; <span class="fn">listarFilmes</span>() <span class="kw">async</span> {\n  <span class="kw">final</span> db = <span class="kw">await</span> banco;\n  <span class="kw">final</span> linhas = <span class="kw">await</span> db.query(<span class="str">"filmes"</span>);\n  <span class="kw">return</span> linhas.map((l) => <span class="fn">Filme</span>.fromMap(l)).toList();\n}`,
+      pergunta: "O que este método retorna?",
       opcoes: [
-        "Mostra um container verde com o texto \"Aberto\" quando <code>ativo</code> for <code>true</code>, e um container cinza com o texto \"Fechado\" quando for <code>false</code>.",
-        "Mostra sempre um container verde com o texto \"Aberto\", pois o operador ternário no Flutter considera qualquer variável booleana como verdadeira por padrão.",
-        "Alterna sozinho entre verde e cinza a cada poucos segundos, animando a troca de cores e textos automaticamente sem precisar que a variável <code>ativo</code> mude.",
-        "Gera um erro de compilação, pois não é permitido usar o operador ternário diretamente dentro das propriedades <code>color</code> e <code>child</code> de um <code>Container</code>."
-      ],
-      correta: 0,
-      explicacao: "O ternário <code>condição ? A : B</code> escolhe o valor conforme <code>ativo</code>: verde/\"Aberto\" se true, cinza/\"Fechado\" se false. É estático — só muda se <code>ativo</code> mudar (via setState)."
-    },
-    {
-      tema: "SnackBar",
-      trecho: `<span class="fn">ScaffoldMessenger</span>.of(context).showSnackBar(
-  <span class="kw">const</span> <span class="fn">SnackBar</span>(
-    content: <span class="fn">Text</span>(<span class="str">"Pedido confirmado!"</span>),
-  ),
-);`,
+        "Uma lista com todos os filmes salvos no SQLite, convertendo cada linha da tabela em um objeto <code>Filme</code>.",
+        "Apenas o último filme cadastrado, pois <code>db.query</code> sempre retorna somente o registro mais recente da tabela.",
+        "O número total de filmes na tabela, funcionando como um contador em vez de devolver os dados dos filmes em si.",
+        "Uma lista de filmes vinda da API Python, já que <code>db.query</code> faz uma requisição HTTP ao backend Flask."
+      ], correta: 0, explicacao: "É um SELECT (<code>db.query</code>): busca todas as linhas de <code>filmes</code> e converte cada uma em <code>Filme</code> com <code>fromMap</code>." },
+    { tema: "SQLite · UPDATE", trecho: `<span class="kw">await</span> db.update(\n  <span class="str">"produtos"</span>,\n  {<span class="str">"quantidade"</span>: novaQtd},\n  where: <span class="str">"id = ?"</span>,\n  whereArgs: [produto.id],\n);`,
       pergunta: "O que este código faz?",
       opcoes: [
-        "Exibe uma mensagem temporária \"Pedido confirmado!\" na parte inferior da tela, que desaparece sozinha após alguns segundos, usando o ScaffoldMessenger.",
-        "Abre uma nova tela cheia com o texto \"Pedido confirmado!\" centralizado, exigindo que o usuário toque em um botão de \"OK\" para poder voltar à tela anterior.",
-        "Cria um alerta no centro da tela que bloqueia toda a interface até o usuário confirmar, funcionando de forma equivalente a um <code>AlertDialog</code> padrão.",
-        "Registra a mensagem \"Pedido confirmado!\" apenas no console de depuração para o desenvolvedor, sem exibir absolutamente nada na tela para o usuário final."
-      ],
-      correta: 0,
-      explicacao: "É a forma correta de mostrar um SnackBar: aviso temporário na base da tela que some sozinho. Não bloqueia a tela (isso seria <code>AlertDialog</code>) nem é só console."
-    },
-    {
-      tema: "dispose",
-      trecho: `@override
-<span class="fn">void</span> dispose() {
-  nomeController.dispose();
-  <span class="kw">super</span>.dispose();
-}`,
-      pergunta: "Por que este código é importante?",
+        "Atualiza a quantidade de um produto específico no SQLite, identificando qual pela cláusula <code>where: \"id = ?\"</code>.",
+        "Insere um novo produto na tabela com a quantidade informada, criando um registro sempre que a função é chamada.",
+        "Exclui o produto cujo id corresponde ao informado, removendo sua linha inteira da tabela de produtos do banco.",
+        "Busca o produto pelo id e apenas exibe sua quantidade atual, sem alterar nenhum valor gravado no banco de dados."
+      ], correta: 0, explicacao: "É um UPDATE: altera <code>quantidade</code> só no produto com aquele <code>id</code> (o <code>?</code> é substituído por <code>whereArgs</code>). Persiste a mudança." },
+    { tema: "Firestore · add", trecho: `<span class="kw">Future</span>&lt;void&gt; <span class="fn">adicionar</span>(Missao m) <span class="kw">async</span> {\n  <span class="kw">await</span> FirebaseFirestore.instance\n    .collection(<span class="str">"missoes"</span>)\n    .add(m.toMap());\n}`,
+      pergunta: "O que este método da Service faz?",
       opcoes: [
-        "Ele libera os recursos do <code>nomeController</code> quando a tela é fechada, evitando vazamento de memória, e chama <code>super.dispose()</code> para completar a limpeza.",
-        "Ele inicializa o <code>nomeController</code> no momento em que a tela é aberta pela primeira vez, preparando o campo de texto para receber a digitação do usuário.",
-        "Ele salva o texto digitado no <code>nomeController</code> em um banco de dados local antes de a tela ser fechada, para que o valor não seja perdido pelo usuário.",
-        "Ele impede que o usuário feche a tela enquanto houver texto digitado no campo, exibindo um alerta de confirmação sempre que o botão de voltar for pressionado."
-      ],
-      correta: 0,
-      explicacao: "O <code>dispose()</code> é chamado quando a tela é destruída — descartar o controller ali libera recursos e evita memory leak. Inicialização seria no <code>initState</code>."
-    },
-    {
-      tema: "Validação",
-      trecho: `onPressed: () {
-  <span class="kw">if</span> (nomeController.text.isEmpty) {
-    <span class="fn">ScaffoldMessenger</span>.of(context).showSnackBar(
-      <span class="kw">const</span> <span class="fn">SnackBar</span>(content: <span class="fn">Text</span>(<span class="str">"Preencha o nome"</span>)),
-    );
-    <span class="kw">return</span>;
-  }
-  _enviarPedido();
-}`,
-      pergunta: "Qual é o comportamento deste botão?",
+        "Adiciona um novo documento na collection <code>missoes</code> do Firestore, convertendo a missão com <code>toMap()</code>.",
+        "Busca todas as missões da collection <code>missoes</code> e as devolve como uma lista de objetos <code>Missao</code>.",
+        "Atualiza uma missão existente no Firestore, alterando o campo <code>concluida</code> para true no documento correto.",
+        "Cria a collection <code>missoes</code> no banco SQLite local e insere a missão como um novo registro na tabela."
+      ], correta: 0, explicacao: "<code>.collection(\"missoes\").add(m.toMap())</code> cria um novo documento no Firestore. O <code>toMap()</code> converte o objeto Dart em Map." },
+    { tema: "Firestore · get", trecho: `<span class="kw">final</span> snap = <span class="kw">await</span> FirebaseFirestore.instance\n  .collection(<span class="str">"missoes"</span>)\n  .get();\n<span class="kw">return</span> snap.docs\n  .map((d) => <span class="fn">Missao</span>.fromMap(d.data())..id = d.id)\n  .toList();`,
+      pergunta: "O que este código retorna?",
       opcoes: [
-        "Se o campo de nome estiver vazio, mostra o aviso \"Preencha o nome\" e interrompe a execução com <code>return</code>; caso contrário, chama <code>_enviarPedido()</code>.",
-        "Sempre chama <code>_enviarPedido()</code> primeiro e só depois verifica se o campo estava vazio, exibindo o aviso mesmo quando o pedido já tiver sido enviado.",
-        "Mostra o aviso \"Preencha o nome\" toda vez que o botão é tocado, independentemente de o campo estar preenchido ou não, pois o <code>if</code> é sempre verdadeiro.",
-        "Bloqueia permanentemente o botão assim que o campo é detectado vazio uma vez, impedindo qualquer novo toque até que o aplicativo seja completamente reiniciado."
-      ],
-      correta: 0,
-      explicacao: "O <code>if</code> + <code>return</code> é um \"guard clause\": campo vazio → mostra aviso e sai antes de enviar. Preenchido → pula o <code>if</code> e chama <code>_enviarPedido()</code>."
-    },
-    {
-      tema: "AnimatedContainer",
-      trecho: `<span class="fn">AnimatedContainer</span>(
-  duration: <span class="kw">const</span> <span class="fn">Duration</span>(milliseconds: <span class="num">300</span>),
-  width: expandido ? <span class="num">200</span> : <span class="num">100</span>,
-  height: <span class="num">100</span>,
-  color: <span class="fn">Colors</span>.orange,
-)`,
-      pergunta: "O que acontece quando <code>expandido</code> muda de <code>false</code> para <code>true</code> (via setState)?",
+        "Uma lista de todas as missões da collection, convertendo cada documento em <code>Missao</code> e guardando seu id.",
+        "Apenas a missão mais recente da collection, pois <code>.get()</code> retorna somente o último documento adicionado.",
+        "Um número indicando quantas missões existem no Firestore, sem devolver os dados de cada missão individualmente.",
+        "Uma única missão escolhida aleatoriamente entre todos os documentos existentes na collection <code>missoes</code>."
+      ], correta: 0, explicacao: "<code>.get()</code> traz todos os documentos; o <code>.map</code> converte cada um em <code>Missao</code> via <code>fromMap</code>, guardando o <code>id</code> do documento." },
+    { tema: "Consumer", trecho: `<span class="fn">Consumer</span>&lt;VooProvider&gt;(\n  builder: (context, provider, _) {\n    <span class="kw">if</span> (provider.carregando) {\n      <span class="kw">return</span> <span class="fn">CircularProgressIndicator</span>();\n    }\n    <span class="kw">return</span> <span class="fn">Text</span>(<span class="str">"Voos: "</span> + provider.voos.length.toString());\n  },\n)`,
+      pergunta: "O que este widget exibe?",
       opcoes: [
-        "A largura do container transita suavemente de 100 para 200 ao longo de 300 milissegundos, animando a mudança em vez de saltar instantaneamente para o novo valor.",
-        "A largura muda instantaneamente de 100 para 200 sem nenhuma animação, pois a propriedade <code>duration</code> só afeta transições de cor, nunca de tamanho.",
-        "O container pisca alternando entre 100 e 200 de largura a cada 300 milissegundos indefinidamente, criando um efeito de animação contínua e repetitiva na tela.",
-        "Nada acontece na tela, pois o <code>AnimatedContainer</code> exige um <code>AnimationController</code> configurado à parte para que qualquer transição visual funcione."
-      ],
-      correta: 0,
-      explicacao: "<code>AnimatedContainer</code> é animação implícita: mudou a <code>width</code> via setState, ele interpola de 100 a 200 em 300ms sozinho. Sem piscar e sem controller manual."
-    }
+        "Mostra um indicador de carregamento enquanto <code>carregando</code> for true; caso contrário, exibe a quantidade de voos.",
+        "Sempre exibe a quantidade de voos, ignorando o estado de carregamento, pois o <code>Consumer</code> não lê variáveis booleanas.",
+        "Faz a requisição HTTP dos voos toda vez que a tela é reconstruída e mostra o resultado assim que ele chega da API.",
+        "Salva os voos no SQLite e mostra uma mensagem de confirmação de que os dados foram persistidos com sucesso."
+      ], correta: 0, explicacao: "O <code>Consumer</code> ouve o Provider e reconstrói: se <code>carregando</code>, mostra o spinner; senão, mostra o número de voos." },
+    { tema: "Navigator", trecho: `<span class="fn">Navigator</span>.push(\n  context,\n  <span class="fn">MaterialPageRoute</span>(\n    builder: (_) => <span class="fn">DetalhesVoo</span>(voo: voo),\n  ),\n);`,
+      pergunta: "O que este código faz ao ser executado?",
+      opcoes: [
+        "Abre a tela <code>DetalhesVoo</code> por cima da atual, passando o objeto <code>voo</code> pelo construtor da nova tela.",
+        "Substitui a tela atual por <code>DetalhesVoo</code> sem permitir voltar, removendo a lista de voos da pilha de navegação.",
+        "Guarda o voo selecionado no Provider e avisa as outras telas com <code>notifyListeners()</code> para se atualizarem.",
+        "Faz uma requisição à API buscando os detalhes daquele voo específico e depois exibe o resultado em um SnackBar."
+      ], correta: 0, explicacao: "<code>Navigator.push</code> empilha a tela de detalhes, passando o <code>voo</code> pelo construtor. Dá pra voltar (a lista segue na pilha)." },
+    { tema: "SQLite · login", trecho: `<span class="kw">final</span> res = <span class="kw">await</span> db.query(\n  <span class="str">"usuarios"</span>,\n  where: <span class="str">"email = ? AND senha = ?"</span>,\n  whereArgs: [email, senha],\n);\n<span class="kw">return</span> res.isNotEmpty;`,
+      pergunta: "O que este código verifica?",
+      opcoes: [
+        "Se existe um usuário com aquele e-mail e senha no banco — se a consulta trouxe algo, o login é válido (retorna true).",
+        "Se o e-mail já está cadastrado, para impedir que dois usuários usem o mesmo endereço no momento do cadastro.",
+        "Quantos usuários existem no banco no total, retornando true apenas quando há mais de um usuário registrado.",
+        "Se a senha tem o formato correto, validando o texto digitado antes mesmo de consultar o banco de dados SQLite."
+      ], correta: 0, explicacao: "SELECT por <code>email</code> e <code>senha</code>. Se <code>res.isNotEmpty</code>, achou o usuário → login válido. É a verificação de login." },
+    { tema: "Firestore · update", trecho: `<span class="kw">await</span> FirebaseFirestore.instance\n  .collection(<span class="str">"missoes"</span>)\n  .doc(id)\n  .update({<span class="str">"concluida"</span>: <span class="kw">true</span>});`,
+      pergunta: "O que este código faz?",
+      opcoes: [
+        "Marca uma missão como concluída no Firestore, alterando o campo <code>concluida</code> para true no documento com aquele id.",
+        "Adiciona uma nova missão concluída à collection, criando um documento com o campo <code>concluida</code> igual a true.",
+        "Exclui do Firestore a missão cujo id foi informado, removendo permanentemente o documento da collection missoes.",
+        "Busca uma missão específica pelo id e retorna se ela já está concluída, sem alterar nenhum dado no banco da nuvem."
+      ], correta: 0, explicacao: "<code>.doc(id).update({\"concluida\": true})</code> altera só aquele documento no Firestore — é como se conclui uma missão na nuvem." },
+    { tema: "Model · fromMap", trecho: `factory <span class="fn">Filme</span>.fromMap(Map m) {\n  <span class="kw">return</span> <span class="fn">Filme</span>(\n    id: m[<span class="str">"id"</span>],\n    titulo: m[<span class="str">"titulo"</span>],\n    assistido: m[<span class="str">"assistido"</span>] == <span class="num">1</span>,\n  );\n}`,
+      pergunta: "O que este construtor faz com o campo <code>assistido</code>?",
+      opcoes: [
+        "Converte o inteiro do banco de volta em booleano: <code>== 1</code> vira true, qualquer outro valor (0) vira false.",
+        "Converte o texto \"assistido\" em um número inteiro para poder ser salvo corretamente na tabela do SQLite.",
+        "Marca todo filme lido do banco como assistido, já que a comparação <code>== 1</code> é sempre verdadeira no Dart.",
+        "Ignora o campo assistido ao ler do banco, deixando-o sempre com o valor padrão definido no construtor da classe."
+      ], correta: 0, explicacao: "<code>fromMap</code> reconstrói o objeto a partir da linha do banco. <code>m[\"assistido\"] == 1</code> converte o INTEGER de volta em booleano." },
+    { tema: "Estoque · print", trecho: `<span class="kw">await</span> db.insert(<span class="str">"usuarios"</span>, dados);\n<span class="fn">print</span>(<span class="str">"INSERT → Usuário cadastrado: "</span> + nome);`,
+      pergunta: "Qual é o objetivo do <code>print</code> logo após o <code>insert</code>?",
+      opcoes: [
+        "Confirmar no terminal que o cadastro chegou ao banco, ajudando a depurar e verificar se o INSERT funcionou.",
+        "Enviar a mensagem de cadastro para a tela do usuário, exibindo uma confirmação visual de que a conta foi criada.",
+        "Fazer o SQLite efetivar a gravação, pois sem o <code>print</code> o INSERT anterior não é confirmado no banco de dados.",
+        "Cadastrar um segundo usuário automaticamente com o mesmo nome, usado apenas em ambiente de testes do aplicativo."
+      ], correta: 0, explicacao: "O <code>print</code> mostra no terminal que o INSERT aconteceu — é depuração/confirmação, como pede a atividade de estoque." },
+    { tema: "Provider · carregar", trecho: `<span class="fn">void</span> <span class="fn">carregarVoos</span>(String aeroporto) <span class="kw">async</span> {\n  carregando = <span class="kw">true</span>;\n  <span class="fn">notifyListeners</span>();\n  voos = <span class="kw">await</span> service.buscarVoos(aeroporto);\n  carregando = <span class="kw">false</span>;\n  <span class="fn">notifyListeners</span>();\n}`,
+      pergunta: "Por que há dois <code>notifyListeners()</code> neste método?",
+      opcoes: [
+        "O primeiro mostra o carregamento na tela; o segundo, após os dados chegarem, esconde o loading e exibe os voos.",
+        "É um erro de código: chamar <code>notifyListeners()</code> duas vezes trava a tela e deve ser evitado nos Providers.",
+        "O primeiro salva os voos no SQLite e o segundo os envia para o Firestore, sincronizando os dois bancos de dados.",
+        "Os dois são idênticos e um deles é opcional; o método funcionaria exatamente igual com apenas um deles presente."
+      ], correta: 0, explicacao: "Primeiro notify: <code>carregando = true</code> → tela mostra o spinner. Segundo: dados chegaram e <code>carregando = false</code> → tela mostra os voos." },
+    { tema: "Firestore · delete", trecho: `<span class="kw">await</span> FirebaseFirestore.instance\n  .collection(<span class="str">"missoes"</span>)\n  .doc(id)\n  .delete();`,
+      pergunta: "O que este código faz?",
+      opcoes: [
+        "Exclui do Firestore o documento (missão) cujo id foi informado, removendo-o permanentemente da collection.",
+        "Marca a missão como concluída, alterando o campo <code>concluida</code> para true no documento correspondente.",
+        "Busca a missão pelo id e a devolve como objeto <code>Missao</code>, sem remover nada do banco de dados na nuvem.",
+        "Remove apenas o campo <code>concluida</code> do documento, mantendo o restante dos dados da missão intactos."
+      ], correta: 0, explicacao: "<code>.doc(id).delete()</code> apaga aquele documento do Firestore. Se a missão era concluída, seus pontos também somem do total." }
   ];
 
-  /* =========================== MODO RESUMO =========================== */
+  /* =========================== MODO RESUMO (11) =========================== */
   const resumo = [
-    {
-      titulo: "Scaffold & AppBar",
-      tag: "estrutura da tela",
-      corpo: `<p>O <b>Scaffold</b> é o esqueleto de toda tela Material. Ele te dá slots prontos: <code>appBar</code> (barra do topo), <code>body</code> (conteúdo principal), <code>floatingActionButton</code>, <code>drawer</code> (menu lateral) e <code>bottomNavigationBar</code>.</p>
-<span class="destaque">Scaffold(<br>&nbsp;&nbsp;appBar: AppBar(title: Text("Lanchonete")),<br>&nbsp;&nbsp;body: Center(child: Text("Cardápio")),<br>)</span>
-<p>O conteúdo que você quer mostrar vai <b>sempre no body</b>. A <b>AppBar</b> costuma ter <code>title</code>, e pode ter <code>actions</code> (botões à direita) e <code>leading</code> (ícone à esquerda).</p>`
-    },
-    {
-      titulo: "StatelessWidget × StatefulWidget",
-      tag: "tipos de widget",
-      corpo: `<p>Se a tela <b>nunca muda sozinha</b> depois de construída (só exibe dados), use <b>StatelessWidget</b>. Se algo muda durante o uso — um contador, um switch, um campo — use <b>StatefulWidget</b>.</p>
-<p>O <b>StatefulWidget</b> vem em duas classes: a do widget (imutável) e a <code>State</code> (onde ficam as variáveis que mudam e o <code>build()</code>).</p>
-<span class="destaque">class Contador extends StatefulWidget { ... }<br>class _ContadorState extends State&lt;Contador&gt; {<br>&nbsp;&nbsp;int total = 0; // o estado mora aqui<br>}</span>
-<p><b>Regra prática:</b> as variáveis que mudam ficam na classe <code>State</code>, nunca dentro do <code>build()</code> (senão zeram a cada redesenho).</p>`
-    },
-    {
-      titulo: "setState",
-      tag: "atualizar a tela",
-      corpo: `<p><b>setState</b> é como você avisa o Flutter: "mudei uma variável, redesenha a tela". Sem ele, o valor até muda na memória, mas a tela continua mostrando o valor antigo.</p>
-<span class="destaque">void _somar() {<br>&nbsp;&nbsp;setState(() {<br>&nbsp;&nbsp;&nbsp;&nbsp;total++;<br>&nbsp;&nbsp;});<br>}</span>
-<p>Ele <b>não salva nada em disco</b> e <b>não muda a variável sozinho</b> — quem faz isso é o seu código dentro do callback. Ele só agenda a reconstrução do <code>build()</code>.</p>
-<p><b>Cuidado:</b> nunca chame <code>setState</code> depois que a tela foi fechada (em código <code>async</code>, cheque <code>if (mounted)</code> antes) nem dentro do <code>dispose()</code> — dá erro.</p>`
-    },
-    {
-      titulo: "Navigator (navegação)",
-      tag: "trocar de tela",
-      corpo: `<p>As telas ficam numa <b>pilha</b>. <code>push</code> coloca uma tela nova por cima; <code>pop</code> tira a de cima e volta pra anterior.</p>
-<span class="destaque">// abrir<br>Navigator.push(context, MaterialPageRoute(<br>&nbsp;&nbsp;builder: (context) => Detalhes(nome: "X-Burger"),<br>));<br><br>// voltar<br>Navigator.pop(context);</span>
-<p><b>Passar dado adiante:</b> pelo construtor da tela (<code>Detalhes(nome: ...)</code>). <b>Receber dado de volta:</b> <code>final r = await Navigator.push(...)</code>, e a outra tela fecha com <code>Navigator.pop(context, valor)</code>.</p>
-<p><code>pushReplacement</code> troca a tela sem deixar voltar (típico de login → home).</p>`
-    },
-    {
-      titulo: "TextEditingController",
-      tag: "campos de texto",
-      corpo: `<p>Pra ler o que o usuário digita num <code>TextField</code>, você usa um <b>controller</b>. Você o cria na classe <code>State</code>, liga no campo, e lê com <code>.text</code>.</p>
-<span class="destaque">final nomeController = TextEditingController();<br><br>TextField(controller: nomeController),<br><br>// ler:<br>print(nomeController.text);</span>
-<p><b>Sempre descarte no dispose()</b> pra não vazar memória:</p>
-<span class="destaque">@override<br>void dispose() {<br>&nbsp;&nbsp;nomeController.dispose();<br>&nbsp;&nbsp;super.dispose();<br>}</span>`
-    },
-    {
-      titulo: "Validação de formulário",
-      tag: "checar campos",
-      corpo: `<p>Forma <b>simples</b>: no <code>onPressed</code>, cheque se os campos estão vazios e mostre um aviso, saindo com <code>return</code> antes de enviar.</p>
-<span class="destaque">if (nomeController.text.isEmpty) {<br>&nbsp;&nbsp;// mostrar SnackBar de erro<br>&nbsp;&nbsp;return;<br>}<br>_enviarPedido();</span>
-<p>Forma <b>robusta</b>: use <code>Form</code> com <code>GlobalKey&lt;FormState&gt;</code> e <code>TextFormField</code> com <code>validator</code>. Chamando <code>formKey.currentState!.validate()</code>, cada campo mostra seu próprio erro na tela.</p>`
-    },
-    {
-      titulo: "SnackBar",
-      tag: "avisos rápidos",
-      corpo: `<p>É a mensagem que sobe na base da tela e some sozinha. A forma correta e atual usa o <b>ScaffoldMessenger</b>:</p>
-<span class="destaque">ScaffoldMessenger.of(context).showSnackBar(<br>&nbsp;&nbsp;SnackBar(content: Text("Pedido enviado!")),<br>);</span>
-<p>Evite o antigo <code>Scaffold.of(context)</code> — ele dá o erro "não contém um Scaffold". Se disparar vários, eles entram numa <b>fila</b>; pra pular, use <code>hideCurrentSnackBar()</code> antes.</p>`
-    },
-    {
-      titulo: "showModalBottomSheet",
-      tag: "painel deslizante",
-      corpo: `<p>Abre um painel que sobe de baixo, bloqueando o conteúdo atrás até fechar. Muito usado pra detalhes, filtros e confirmações.</p>
-<span class="destaque">showModalBottomSheet(<br>&nbsp;&nbsp;context: context,<br>&nbsp;&nbsp;builder: (context) => Container(<br>&nbsp;&nbsp;&nbsp;&nbsp;child: Text("Detalhes do pedido"),<br>&nbsp;&nbsp;),<br>);</span>
-<p>Ele retorna um <code>Future</code> — dá pra capturar um valor com <code>await</code> se você fechar o painel com <code>Navigator.pop(context, valor)</code> lá dentro.</p>`
-    },
-    {
-      titulo: "AnimatedContainer",
-      tag: "animação fácil",
-      corpo: `<p>É um <code>Container</code> que <b>anima sozinho</b> quando você muda uma propriedade dele (tamanho, cor, borda, padding). Basta ter uma <code>duration</code> e mudar o valor via <code>setState</code>.</p>
-<span class="destaque">AnimatedContainer(<br>&nbsp;&nbsp;duration: Duration(milliseconds: 300),<br>&nbsp;&nbsp;width: expandido ? 200 : 100,<br>&nbsp;&nbsp;color: Colors.orange,<br>)</span>
-<p>É chamado de <b>animação implícita</b>: você não mexe em controller nenhum, o Flutter interpola do valor antigo pro novo dentro do tempo da <code>duration</code>.</p>`
-    },
-    {
-      titulo: "Column, ListView & rolagem",
-      tag: "organizar na tela",
-      corpo: `<p><b>Column</b> empilha widgets na vertical. Se o conteúdo passa da tela, aparece a faixa amarela e preta de <b>overflow</b> — resolva com <code>SingleChildScrollView</code> ou <code>ListView</code>.</p>
-<p><b>ListView</b> já rola sozinho. Pra listas grandes, o <code>ListView.builder</code> é o ideal: constrói os itens <b>sob demanda</b> (lazy), só o que está visível.</p>
-<span class="destaque">ListView.builder(<br>&nbsp;&nbsp;itemCount: produtos.length,<br>&nbsp;&nbsp;itemBuilder: (context, i) => ListTile(<br>&nbsp;&nbsp;&nbsp;&nbsp;title: Text(produtos[i]),<br>&nbsp;&nbsp;),<br>)</span>`
-    },
-    {
-      titulo: "Widgets personalizados",
-      tag: "organizar o código",
-      corpo: `<p>Em vez de repetir o mesmo bloco de código 4 vezes (um por produto), crie um widget reutilizável e passe os dados por parâmetro.</p>
-<span class="destaque">class CardProduto extends StatelessWidget {<br>&nbsp;&nbsp;final String nome;<br>&nbsp;&nbsp;final double preco;<br>&nbsp;&nbsp;const CardProduto({super.key, required this.nome, required this.preco});<br>&nbsp;&nbsp;// ...<br>}</span>
-<p><b>Vantagens:</b> menos repetição, manutenção num lugar só, e usar <code>const</code> no construtor ajuda a performance (o Flutter reaproveita a instância entre rebuilds). Separar em widgets menores também <b>isola os rebuilds</b> do <code>setState</code>.</p>`
-    }
+    { titulo: "Arquitetura em camadas", tag: "o mapa de tudo", corpo: `<p>Todas as atividades seguem a mesma ideia: separar responsabilidades em camadas.</p>
+<span class="destaque">TELA MOSTRA.<br>PROVIDER CONTROLA.<br>SERVICE SE COMUNICA.<br>FLASK / BANCO RESPONDE.</span>
+<p><b>Page</b> → só exibe os dados. <b>Provider</b> → guarda o estado, controla loading/erro, avisa as telas. <b>Service</b> → faz o HTTP ou acessa o banco. <b>Backend/Banco</b> → responde com os dados.</p>
+<p>Regra de ouro: a tela <b>nunca</b> faz <code>http.get</code> nem acessa o banco direto. Tudo passa pelas camadas.</p>` },
+    { titulo: "Provider & ChangeNotifier", tag: "controle de estado", corpo: `<p>O Provider é uma classe que <code>extends ChangeNotifier</code>. Ele guarda os dados e avisa as telas quando algo muda.</p>
+<span class="destaque">class VooProvider extends ChangeNotifier {<br>&nbsp;&nbsp;List&lt;Voo&gt; voos = [];<br>&nbsp;&nbsp;bool carregando = false;<br><br>&nbsp;&nbsp;void setVoos(lista) {<br>&nbsp;&nbsp;&nbsp;&nbsp;voos = lista;<br>&nbsp;&nbsp;&nbsp;&nbsp;notifyListeners();<br>&nbsp;&nbsp;}<br>}</span>
+<p><b>notifyListeners()</b> é o que redesenha as telas ouvintes. Esqueceu de chamar? Os dados mudam mas a tela congela no valor antigo.</p>` },
+    { titulo: "Service — comunicação", tag: "HTTP e banco", corpo: `<p>A Service é a única camada que fala com o mundo externo: faz o <b>HTTP</b> (API) ou acessa o <b>banco</b> (SQLite/Firebase).</p>
+<span class="destaque">Future&lt;List&lt;Voo&gt;&gt; buscarVoos(aeroporto) async {<br>&nbsp;&nbsp;final r = await http.get(url);<br>&nbsp;&nbsp;final dados = jsonDecode(r.body);<br>&nbsp;&nbsp;return dados.map((v) => Voo.fromJson(v)).toList();<br>}</span>
+<p>As chamadas HTTP ficam sempre em <code>services/</code> — nunca dentro da tela. Métodos de rede/banco são <code>async</code> e retornam <code>Future</code>.</p>` },
+    { titulo: "Integração Flutter + Flask", tag: "PokéAPI e voos", corpo: `<p>O Flutter <b>nunca</b> acessa a API externa direto. O fluxo é sempre:</p>
+<span class="destaque">Flutter → Provider → Service → Flask → API externa</span>
+<p>O Flask cria rotas que consultam a API e devolvem um JSON próprio. Ex. da Pokédex: <code>GET /pokemons/nome/&lt;nome&gt;</code>.</p>
+<p>Na atividade de voos, o Flask roda em <code>127.0.0.1:5001</code> e a rota é <code>/api/voos?aeroporto=SBGR&tipo=chegadas</code>. Precisa de <b>dois terminais</b>: um pro Python, um pro Flutter.</p>` },
+    { titulo: "SQLite — persistência local", tag: "dados que ficam salvos", corpo: `<p>Uma <code>List</code> some quando o app fecha. O <b>SQLite</b> salva os dados no dispositivo — eles sobrevivem ao reinício.</p>
+<span class="destaque">id → INTEGER PRIMARY KEY AUTOINCREMENT<br>titulo → TEXT NOT NULL<br>assistido → INTEGER NOT NULL</span>
+<p>O SQLite não tem booleano: <b>false = 0, true = 1</b>. Converte na ida (<code>? 1 : 0</code>) e na volta (<code>== 1</code>).</p>` },
+    { titulo: "CRUD no SQLite", tag: "as 4 operações", corpo: `<p>Toda manipulação do banco cai em uma das quatro operações:</p>
+<span class="destaque">INSERT → cadastrar (db.insert)<br>SELECT → buscar (db.query)<br>UPDATE → alterar (db.update)<br>DELETE → excluir (db.delete)</span>
+<p>No estoque: cadastrar usuário/produto = INSERT, login = SELECT, mudar quantidade = UPDATE, excluir = DELETE. E lembre: alterar só na tela não persiste — tem que gravar no banco.</p>` },
+    { titulo: "Login & validação", tag: "controle de estoque", corpo: `<p>O login consulta o banco: se existir um usuário com aquele e-mail <b>e</b> senha, libera o acesso.</p>
+<span class="destaque">Usuário digita → Provider → Service → SQLite<br>→ SELECT (email = ? AND senha = ?)<br>→ encontrou? entra : "E-mail ou senha incorretos"</span>
+<p>Para não repetir e-mail: antes do INSERT, faça um SELECT. Se o e-mail já existe → "E-mail já cadastrado".</p>` },
+    { titulo: "MVVM — Lista de Filmes", tag: "Model-View-ViewModel", corpo: `<p>Variação da arquitetura: a <b>ViewModel</b> faz o papel do Provider.</p>
+<p><b>Model</b> (<code>Filme</code>: id, titulo, assistido) → <b>View</b> (a tela) → <b>ViewModel</b> (guarda a List, avisa a View) → <b>Service</b> (SQLite).</p>
+<span class="destaque">A List&lt;Filme&gt; da ViewModel NÃO persiste.<br>Quem salva é o FilmeService (SQLite).</span>
+<p>A ViewModel carrega, adiciona e altera status, sempre chamando <code>notifyListeners()</code> para atualizar a tela.</p>` },
+    { titulo: "Firebase Cloud Firestore", tag: "banco na nuvem", corpo: `<p>O Firestore é um banco de <b>documentos</b> na nuvem. Estrutura: collection → documents → campos.</p>
+<span class="destaque">missoes (collection)<br>&nbsp;└ documento1<br>&nbsp;&nbsp;&nbsp;├ titulo: "Estudar Firebase"<br>&nbsp;&nbsp;&nbsp;├ dificuldade: "Difícil"<br>&nbsp;&nbsp;&nbsp;├ pontos: 30<br>&nbsp;&nbsp;&nbsp;└ concluida: false</span>
+<p>Diferente do SQLite (local), o Firestore é remoto e sincronizado. Toda alteração no app deve refletir na nuvem.</p>` },
+    { titulo: "CRUD no Firestore", tag: "métodos do Firebase", corpo: `<p>As operações da Service usam os métodos do Firestore:</p>
+<span class="destaque">.add() → adicionar documento<br>.get() → buscar todos<br>.update() → atualizar campo<br>.delete() → excluir documento</span>
+<p>Concluir missão = <code>.doc(id).update({"concluida": true})</code>. Excluir = <code>.doc(id).delete()</code>. Os pontos só contam para missões com <code>concluida: true</code>.</p>` },
+    { titulo: "Model: toMap & fromMap", tag: "converter dados", corpo: `<p>Para salvar objetos Dart no Firebase (ou SQLite), converte-se entre objeto e Map.</p>
+<span class="destaque">toMap() → objeto Dart vira Map (para salvar)<br>fromMap() → Map vira objeto Dart (ao ler)</span>
+<p>No Firestore o <code>id</code> costuma ser <code>String? id</code> (nullable), porque a missão só ganha id depois que o documento é criado. Ao ler, guarda-se o id com <code>d.id</code>.</p>` }
   ];
 
   const modos = {
@@ -1128,17 +698,9 @@
     resumo:  { nome: "Resumo",  tipo: "resumo", questoes: resumo }
   };
 
-  const temasChips = ["Scaffold", "setState", "Navigator", "Controllers", "Validação", "SnackBar", "BottomSheet", "AnimatedContainer", "ListView"];
+  const temasChips = ["Arquitetura", "Provider", "Service", "Flask + API", "SQLite", "CRUD", "Firebase", "MVVM"];
 
-  let modoAtual = null;
-  let questoes = [];
-  let atual = 0;
-  let acertos = 0;
-  let ordemAtual = [];
-  let respondida = false;
-  let erros = [];
-  let iniciado = false;
-  let respostasDadas = []; // guarda qual índice foi clicado em cada questão
+  let modoAtual = null, questoes = [], atual = 0, acertos = 0, ordemAtual = [], respondida = false, erros = [], iniciado = false, respostasDadas = [];
 
   const navbar = document.getElementById("navbar");
   const card = document.getElementById("card");
@@ -1148,14 +710,10 @@
 
   function embaralhar(n) {
     const arr = [...Array(n).keys()];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
+    for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
     return arr;
   }
 
-  /* ---------- navbar ---------- */
   function renderNavbar() {
     if (!iniciado) { navbar.innerHTML = ""; return; }
     const ehResumo = modos[modoAtual].tipo === "resumo";
@@ -1164,72 +722,39 @@
       <button class="nav-btn home" onclick="telaInicial()">⌂ Início</button>
       <button class="nav-btn" onclick="voltarQuestao()" ${podeVoltar ? "" : "disabled"}>← ${ehResumo ? "Anterior" : "Questão anterior"}</button>
       <span class="nav-spacer"></span>
-      <span class="nav-modo">modo: <b>${modos[modoAtual].nome}</b></span>
-    `;
+      <span class="nav-modo">modo: <b>${modos[modoAtual].nome}</b></span>`;
   }
 
   function telaInicial() {
-    iniciado = false;
-    modoAtual = null;
-    renderNavbar();
-    barra.style.width = "0%";
-    contador.textContent = "";
-    placar.textContent = "";
+    iniciado = false; modoAtual = null; renderNavbar();
+    barra.style.width = "0%"; contador.textContent = ""; placar.textContent = "";
     card.innerHTML = `
       <div class="hero">
-        <h1>&gt; Quiz Flutter<br><span>Lanchonete Express 🍔</span></h1>
-        <p class="desc">Escolha o modo. Nos quizzes, as alternativas embaralham a cada tentativa e você vê a explicação na hora. O modo Resumo é só material de estudo.</p>
+        <h1>&gt; Prova Flutter<br><span>Integração & Persistência</span></h1>
+        <p class="desc">API + Flask (PokéAPI, voos), SQLite (filmes, estoque com login) e Firebase Firestore (missões). Nos quizzes as alternativas embaralham e a explicação aparece na hora. O modo Resumo é material de estudo.</p>
         <div class="chips">${temasChips.map(t => `<span class="chip">${t}</span>`).join("")}</div>
         <div class="modos">
-          <button class="modo facil" onclick="iniciar('facil')">
-            <span class="m-icone">🟢</span>
-            <span class="m-nome">Fácil</span>
-            <span class="m-desc">10 questões · conceitos e definições básicas</span>
-          </button>
-          <button class="modo medio" onclick="iniciar('medio')">
-            <span class="m-icone">🟠</span>
-            <span class="m-nome">Médio</span>
-            <span class="m-desc">10 questões · aplicação prática no código</span>
-          </button>
-          <button class="modo dificil" onclick="iniciar('dificil')">
-            <span class="m-icone">🔴</span>
-            <span class="m-nome">Difícil</span>
-            <span class="m-desc">20 questões · ciclo de vida, performance e pegadinhas</span>
-          </button>
-          <button class="modo codigo" onclick="iniciar('codigo')">
-            <span class="m-icone">💻</span>
-            <span class="m-nome">Código</span>
-            <span class="m-desc">11 trechos · leia o código e acerte o que ele faz</span>
-          </button>
-          <button class="modo resumo" onclick="iniciar('resumo')">
-            <span class="m-icone">📖</span>
-            <span class="m-nome">Resumo</span>
-            <span class="m-desc">11 tópicos · material de estudo, sem quiz</span>
-          </button>
+          <button class="modo facil" onclick="iniciar('facil')"><span class="m-icone">🟢</span><span class="m-nome">Fácil</span><span class="m-desc">18 questões · conceitos e definições básicas</span></button>
+          <button class="modo medio" onclick="iniciar('medio')"><span class="m-icone">🟡</span><span class="m-nome">Médio</span><span class="m-desc">18 questões · aplicação prática dos conceitos</span></button>
+          <button class="modo dificil" onclick="iniciar('dificil')"><span class="m-icone">🔴</span><span class="m-nome">Difícil</span><span class="m-desc">20 questões · justificativas técnicas e pegadinhas</span></button>
+          <button class="modo codigo" onclick="iniciar('codigo')"><span class="m-icone">💻</span><span class="m-nome">Código</span><span class="m-desc">16 trechos · leia o código e acerte o que ele faz</span></button>
+          <button class="modo resumo" onclick="iniciar('resumo')"><span class="m-icone">📖</span><span class="m-nome">Resumo</span><span class="m-desc">11 tópicos · material de estudo, sem quiz</span></button>
         </div>
-        <p class="dica-teclado">atalhos nos quizzes: 1–4 responde · Enter avança</p>
-      </div>
-    `;
+        <p class="dica-teclado">atalhos nos quizzes: 1–4 responde · Enter avança · ← volta</p>
+      </div>`;
   }
 
   function iniciar(modo) {
-    modoAtual = modo;
-    questoes = modos[modo].questoes;
-    iniciado = true;
-    atual = 0;
-    acertos = 0;
-    erros = [];
+    modoAtual = modo; questoes = modos[modo].questoes; iniciado = true;
+    atual = 0; acertos = 0; erros = [];
     respostasDadas = new Array(questoes.length).fill(null);
-    if (modos[modo].tipo === "resumo") mostrarResumo();
-    else mostrarQuestao();
+    if (modos[modo].tipo === "resumo") mostrarResumo(); else mostrarQuestao();
   }
 
-  /* ---------- navegar pra trás ---------- */
   function voltarQuestao() {
     if (atual === 0) return;
     atual--;
     if (modos[modoAtual].tipo === "resumo") { mostrarResumo(); return; }
-    // ao voltar num quiz, se aquela questão já foi respondida, desconta do placar pra poder responder de novo
     if (respostasDadas[atual] !== null) {
       const q = questoes[atual];
       if (respostasDadas[atual] === q.correta) acertos = Math.max(0, acertos - 1);
@@ -1239,7 +764,6 @@
     mostrarQuestao();
   }
 
-  /* ---------- quiz ---------- */
   function mostrarQuestao() {
     const q = questoes[atual];
     respondida = false;
@@ -1259,8 +783,7 @@
           <span class="txt">${q.opcoes[idxOriginal]}</span>
         </button>`).join("")}
       <div class="explicacao" id="explicacao"></div>
-      <button class="botao" id="proxima" onclick="proxima()">Próxima →</button>
-    `;
+      <button class="botao" id="proxima" onclick="proxima()">Próxima →</button>`;
   }
 
   function responder(idxOriginal) {
@@ -1270,28 +793,15 @@
     respostasDadas[atual] = idxOriginal;
     const botoes = card.querySelectorAll(".opcao");
     botoes.forEach(b => b.disabled = true);
-
     const posCorreta = ordemAtual.indexOf(q.correta);
     const posClicada = ordemAtual.indexOf(idxOriginal);
     const acertou = idxOriginal === q.correta;
-
     botoes[posCorreta].classList.add("correta");
-    botoes.forEach((b, i) => {
-      if (i !== posCorreta && i !== posClicada) b.classList.add("apagada");
-    });
-
+    botoes.forEach((b, i) => { if (i !== posCorreta && i !== posClicada) b.classList.add("apagada"); });
     const exp = document.getElementById("explicacao");
-    if (acertou) {
-      acertos++;
-      exp.innerHTML = `<span class="tag">✓ ACERTOU</span>${q.explicacao}`;
-    } else {
-      botoes[posClicada].classList.add("errada");
-      exp.classList.add("err");
-      exp.innerHTML = `<span class="tag">✗ ERROU</span>${q.explicacao}`;
-      erros.push(q);
-    }
+    if (acertou) { acertos++; exp.innerHTML = `<span class="tag">✓ ACERTOU</span>${q.explicacao}`; }
+    else { botoes[posClicada].classList.add("errada"); exp.classList.add("err"); exp.innerHTML = `<span class="tag">✗ ERROU</span>${q.explicacao}`; erros.push(q); }
     exp.style.display = "block";
-
     const btn = document.getElementById("proxima");
     if (atual === questoes.length - 1) btn.textContent = "Ver resultado →";
     btn.classList.add("mostrar");
@@ -1300,8 +810,7 @@
 
   function proxima() {
     atual++;
-    if (atual < questoes.length) mostrarQuestao();
-    else mostrarResultado();
+    if (atual < questoes.length) mostrarQuestao(); else mostrarResultado();
   }
 
   function mostrarResultado() {
@@ -1312,16 +821,12 @@
     const pct = Math.round((acertos / questoes.length) * 100);
     let veredito, sub;
     if (pct >= 90)      { veredito = "Monstro. 🏆";                sub = modoAtual === "dificil" ? "Pode fazer a prova de olhos fechados." : "Bora subir de nível — tenta o próximo modo."; }
-    else if (pct >= 70) { veredito = "Tá pronto pra prova. 🍔";    sub = "Só dá uma olhada nos erros abaixo."; }
+    else if (pct >= 70) { veredito = "Tá pronto pra prova. 🚀";    sub = "Só dá uma olhada nos erros abaixo."; }
     else if (pct >= 50) { veredito = "Na média, mas dá pra mais."; sub = "Revisa os tópicos das questões erradas."; }
     else                { veredito = "Volta pra teoria. 📚";       sub = "Dá uma passada no modo Resumo e refaz."; }
-
     card.innerHTML = `
       <div class="resultado">
-        <div class="anel" style="--pct: ${pct}">
-          <span class="num">${acertos}/${questoes.length}</span>
-          <span class="sub">${pct}%</span>
-        </div>
+        <div class="anel" style="--pct: ${pct}"><span class="num">${acertos}/${questoes.length}</span><span class="sub">${pct}%</span></div>
         <p class="veredito">${veredito}</p>
         <p class="veredito-sub">${sub}</p>
         <button class="botao mostrar" onclick="iniciar(modoAtual)">Refazer ↻</button>
@@ -1335,11 +840,9 @@
               <div class="q">◆ [${q.tema}] ${q.pergunta.split("<pre>")[0]}</div>
               <div class="r"><b>Resposta:</b> ${q.opcoes[q.correta]}</div>
             </div>`).join("")}
-        </div>` : ""}
-    `;
+        </div>` : ""}`;
   }
 
-  /* ---------- resumo ---------- */
   function mostrarResumo() {
     const r = resumo[atual];
     renderNavbar();
@@ -1348,24 +851,17 @@
     placar.textContent = "";
     const ehUltimo = atual === resumo.length - 1;
     card.innerHTML = `
-      <div class="resumo-topo">
-        <h2>${r.titulo}</h2>
-        <span class="resumo-tag">${r.tag}</span>
-      </div>
+      <div class="resumo-topo"><h2>${r.titulo}</h2><span class="resumo-tag">${r.tag}</span></div>
       <div class="resumo-corpo">${r.corpo}</div>
       <div class="resumo-lista">
         ${resumo.map((t, i) => `<button class="resumo-nav ${i === atual ? "ativo" : ""}" onclick="irResumo(${i})">${i + 1}. ${t.titulo}</button>`).join("")}
       </div>
-      <button class="botao mostrar" onclick="${ehUltimo ? "telaInicial()" : "proximoResumo()"}">${ehUltimo ? "Concluir ✓" : "Próximo tópico →"}</button>
-    `;
+      <button class="botao mostrar" onclick="${ehUltimo ? "telaInicial()" : "proximoResumo()"}">${ehUltimo ? "Concluir ✓" : "Próximo tópico →"}</button>`;
   }
 
-  function proximoResumo() {
-    if (atual < resumo.length - 1) { atual++; mostrarResumo(); }
-  }
+  function proximoResumo() { if (atual < resumo.length - 1) { atual++; mostrarResumo(); } }
   function irResumo(i) { atual = i; mostrarResumo(); }
 
-  /* ---------- teclado ---------- */
   document.addEventListener("keydown", (e) => {
     if (!iniciado) {
       const map = { "1": "facil", "2": "medio", "3": "dificil", "4": "codigo", "5": "resumo" };
@@ -1381,11 +877,8 @@
     if (!respondida && ["1","2","3","4"].includes(e.key)) {
       const pos = parseInt(e.key) - 1;
       if (pos < ordemAtual.length) responder(ordemAtual[pos]);
-    } else if (respondida && e.key === "Enter") {
-      proxima();
-    } else if (e.key === "ArrowLeft") {
-      voltarQuestao();
-    }
+    } else if (respondida && e.key === "Enter") { proxima(); }
+    else if (e.key === "ArrowLeft") { voltarQuestao(); }
   });
 
   telaInicial();
