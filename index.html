@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Flutter — Integração & Persistência</title>
+<title>Quiz Python & Pandas — Análise de Dados</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -116,578 +116,582 @@
 <script>
   /* =========================== MODO FÁCIL (18) =========================== */
   const facil = [
-    { tema: "Arquitetura", pergunta: "No fluxo Service → Provider → Page, qual é a responsabilidade da <b>Page</b> (tela)?",
+    { tema: "Pandas · o que é", pergunta: "Para que serve a biblioteca <b>Pandas</b> em Python?",
       opcoes: [
-        "Mostrar os dados para o usuário na interface — a tela apenas exibe o que recebe do Provider, sem buscar dados por conta própria.",
-        "Fazer a requisição HTTP diretamente para a API, receber o JSON e converter os dados antes de exibi-los na interface do aplicativo.",
-        "Guardar o estado do aplicativo e controlar o carregamento, avisando as outras telas sempre que os dados forem alterados.",
-        "Comunicar-se com o banco de dados SQLite, executando os comandos de INSERT, SELECT, UPDATE e DELETE conforme a necessidade."
-      ], correta: 0, explicacao: "\"TELA MOSTRA. PROVIDER CONTROLA. SERVICE SE COMUNICA.\" A Page só exibe; quem busca dado é o Service e quem guarda estado é o Provider." },
-    { tema: "Arquitetura", pergunta: "Qual é a responsabilidade da camada <b>Service</b> em um projeto Flutter que consome uma API?",
+        "Para análise e manipulação de dados — carregar, explorar, limpar e transformar tabelas de dados de forma eficiente.",
+        "Para criar interfaces gráficas e telas de aplicativos desktop, definindo botões, janelas e menus do programa.",
+        "Para treinar redes neurais e modelos de inteligência artificial diretamente, sem precisar de nenhuma outra biblioteca.",
+        "Para gerenciar o sistema operacional, controlando processos, arquivos e permissões da máquina onde o código roda."
+      ], correta: 0, explicacao: "Pandas é a biblioteca padrão de análise de dados em Python: manipula, explora e transforma tabelas (DataFrames e Series)." },
+    { tema: "Vetor · NumPy", pergunta: "O que é um <b>vetor</b> (1 dimensão) no NumPy?",
       opcoes: [
-        "Fazer a comunicação: realizar a requisição HTTP, acessar a rota da API, receber o JSON e devolver os dados convertidos ao Provider.",
-        "Exibir os dados na tela de forma organizada, montando os widgets e cuidando de todo o visual apresentado ao usuário final.",
-        "Armazenar a lista de dados em memória e avisar as telas com <code>notifyListeners()</code> sempre que algo mudar no aplicativo.",
-        "Definir as classes que representam as tabelas do banco, com seus campos e tipos, servindo de molde para os dados salvos."
-      ], correta: 0, explicacao: "A Service sabe como buscar os dados: faz o HTTP, acessa a API e converte o JSON. As chamadas HTTP ficam sempre na pasta <code>services/</code>." },
-    { tema: "Arquitetura", pergunta: "Qual é a responsabilidade da camada <b>Provider</b>?",
+        "Uma sequência de dados em uma única dimensão — só tem comprimento, com shape no formato <code>(n,)</code>.",
+        "Uma estrutura de duas dimensões, com linhas e colunas, usada para representar tabelas completas de dados.",
+        "Um dicionário que associa cada chave a um valor, permitindo acesso aos dados apenas por nome, nunca por posição.",
+        "Um gráfico de setas que representa direção e sentido, usado somente para cálculos de física e geometria."
+      ], correta: 0, explicacao: "Vetor = 1 dimensão, só comprimento, shape <code>(n,)</code>. É um <code>ndarray</code> do NumPy com um único tipo de dado." },
+    { tema: "Matriz · NumPy", pergunta: "Qual é o shape de uma <b>matriz</b> (2 dimensões) no NumPy?",
       opcoes: [
-        "Guardar os dados, controlar o carregamento e os erros, chamar a Service e avisar as telas quando algo muda.",
-        "Fazer diretamente a requisição HTTP para a API, dispensando qualquer outra camada intermediária no processo de busca de dados.",
-        "Montar os widgets visuais da tela, definindo cores, botões e a disposição dos elementos exibidos ao usuário do aplicativo.",
-        "Criar fisicamente as tabelas no banco de dados e executar os comandos SQL necessários para persistir cada registro do sistema."
-      ], correta: 0, explicacao: "\"PROVIDER CONTROLA.\" Ele guarda os dados, controla estado/carregamento/erro, chama a Service e avisa as telas com <code>notifyListeners()</code>." },
-    { tema: "Provider", pergunta: "De qual classe um Provider deve herdar para conseguir avisar as telas sobre mudanças?",
+        "<code>(linhas, colunas)</code>, pois a matriz organiza os dados em duas dimensões: linhas e colunas.",
+        "<code>(n,)</code>, exatamente igual ao de um vetor, já que matriz e vetor são a mesma estrutura no NumPy.",
+        "<code>(colunas,)</code>, informando apenas a quantidade de colunas, pois o número de linhas é sempre igual a 1.",
+        "<code>(0, 0)</code> sempre, pois o shape de uma matriz só é calculado depois que ela é preenchida com dados."
+      ], correta: 0, explicacao: "Matriz 2D tem shape <code>(linhas, colunas)</code>. O acesso exige dois índices: <code>matriz[linha, coluna]</code>." },
+    { tema: "Series", pergunta: "O que é uma <code>pd.Series</code> no Pandas?",
       opcoes: [
-        "De <code>ChangeNotifier</code>, que fornece o mecanismo para notificar os widgets ouvintes quando os dados mudam.",
-        "De <code>StatelessWidget</code>, pois o Provider é apenas uma tela sem estado que exibe os dados recebidos da Service.",
-        "De <code>HttpClient</code>, já que a principal função do Provider é realizar as requisições HTTP para a API do projeto.",
-        "De <code>Database</code>, porque o Provider é o responsável direto por abrir e manipular o banco de dados SQLite."
-      ], correta: 0, explicacao: "O Provider usa <code>extends ChangeNotifier</code> e chama <code>notifyListeners()</code> para avisar as telas quando os dados mudam." },
-    { tema: "Provider", pergunta: "Qual método o Provider chama para avisar as telas de que os dados foram atualizados?",
+        "Um vetor rotulado: os dados (values) acompanhados de um índice (index) que dá um nome a cada posição.",
+        "Uma tabela completa com várias colunas e linhas, equivalente a uma planilha inteira do Excel.",
+        "Uma função que gera números aleatórios em sequência para preencher testes de análise de dados.",
+        "Um tipo de gráfico de linha usado para exibir a evolução de um valor ao longo do tempo."
+      ], correta: 0, explicacao: "Series = um vetor NumPy \"turbinado\" com um índice. Tem <code>values</code> (dados), <code>index</code> (rótulos) e <code>name</code> (nome opcional)." },
+    { tema: "Series · index", pergunta: "Numa Series, o que é o <b>index</b>?",
       opcoes: [
-        "<code>notifyListeners()</code>, que dispara a reconstrução dos widgets que estão ouvindo aquele Provider.",
-        "<code>setState()</code>, que é chamado dentro do próprio Provider para forçar todas as telas do app a se redesenharem juntas.",
-        "<code>refresh()</code>, método padrão do <code>ChangeNotifier</code> usado especificamente para recarregar dados vindos de uma API.",
-        "<code>update()</code>, que percorre a lista de widgets abertos e atualiza manualmente cada um deles um por vez na tela."
-      ], correta: 0, explicacao: "<code>notifyListeners()</code> avisa os ouvintes. Dentro de um Provider (ChangeNotifier) não se usa <code>setState</code> — esse é dos widgets." },
-    { tema: "PokéAPI · rota", pergunta: "Na atividade da Pokédex, qual rota Flask busca um Pokémon pelo nome?",
+        "O rótulo (nome) de cada posição da estrutura — permite acessar um valor por nome, não só por posição.",
+        "O valor máximo armazenado na Series, calculado automaticamente pelo Pandas na hora da criação.",
+        "O tipo de dado da Series (int, float, string), definido uma única vez para toda a estrutura.",
+        "A quantidade total de elementos da Series, equivalente ao resultado da função <code>len()</code>."
+      ], correta: 0, explicacao: "O <code>index</code> são os rótulos de cada posição. Ex.: em vez de acessar pela posição 3, você acessa pelo rótulo \"Diego\"." },
+    { tema: "head", pergunta: "O que o método <code>df.head()</code> faz?",
       opcoes: [
-        "<code>GET /pokemons/nome/&lt;nome&gt;</code>, por exemplo <code>/pokemons/nome/pikachu</code>, que consulta a PokéAPI e devolve os dados do Pokémon.",
-        "<code>POST /pokemons/buscar</code>, enviando o nome do Pokémon no corpo da requisição para a API retornar seus dados completos.",
-        "<code>GET /pokeapi/pikachu</code>, que o Flutter acessa diretamente na PokéAPI sem passar pelo backend Flask do projeto.",
-        "<code>GET /nome?pokemon=pikachu</code>, informando o nome como parâmetro de query string em vez de fazer parte do caminho da URL."
-      ], correta: 0, explicacao: "A rota é <code>GET /pokemons/nome/&lt;nome&gt;</code>. O Flask consulta a PokéAPI e devolve id, nome, imagem, tipo, altura e peso." },
-    { tema: "Fluxo · regra", pergunta: "Na atividade da Pokédex, o Flutter pode acessar a PokéAPI diretamente?",
+        "Mostra as primeiras linhas do DataFrame, para uma visão rápida da estrutura dos dados.",
+        "Mostra as últimas linhas do DataFrame, exibindo os registros mais recentes da tabela.",
+        "Remove o cabeçalho (nomes das colunas) do DataFrame, deixando apenas os valores puros.",
+        "Retorna o número total de linhas do DataFrame, funcionando como um contador de registros."
+      ], correta: 0, explicacao: "<code>head()</code> mostra as primeiras linhas. Para as últimas, use <code>tail()</code>." },
+    { tema: "tail", pergunta: "O que o método <code>df.tail()</code> faz?",
       opcoes: [
-        "Não. O fluxo deve ser Flutter → Provider → Service → Flask → PokéAPI; o Flutter nunca acessa a PokéAPI diretamente.",
-        "Sim, desde que a requisição seja feita dentro da tela inicial para agilizar o carregamento dos dados dos Pokémon.",
-        "Sim, o Flutter deve acessar a PokéAPI diretamente e usar o Flask apenas para salvar os Pokémon favoritos do usuário.",
-        "Não, mas apenas em Flutter Web; no aplicativo mobile o acesso direto à PokéAPI é permitido e recomendado pela atividade."
-      ], correta: 0, explicacao: "Regra importante: o Flutter não acessa a PokéAPI direto. Todo o HTTP passa pela Service, que fala com o Flask, que fala com a PokéAPI." },
-    { tema: "SQLite · Model", pergunta: "Na atividade \"Minha Lista de Filmes\", quais campos a classe <code>Filme</code> deve possuir?",
+        "Mostra as últimas linhas do DataFrame.",
+        "Mostra as primeiras linhas do DataFrame, igual ao <code>head()</code>, apenas com outro nome.",
+        "Ordena o DataFrame do maior para o menor valor da última coluna existente na tabela.",
+        "Apaga as últimas linhas do DataFrame permanentemente, reduzindo o tamanho da tabela."
+      ], correta: 0, explicacao: "<code>tail()</code> mostra as últimas linhas. O oposto de <code>head()</code>." },
+    { tema: "info", pergunta: "O que o método <code>df.info()</code> mostra?",
       opcoes: [
-        "<code>id</code>, <code>titulo</code> e <code>assistido</code>, sendo o id criado pelo SQLite e o assistido um valor true ou false.",
-        "<code>nome</code>, <code>ano</code> e <code>nota</code>, todos obrigatórios e digitados manualmente pelo usuário no momento do cadastro.",
-        "<code>id</code>, <code>categoria</code> e <code>preco</code>, seguindo a mesma estrutura usada na tabela de produtos do controle de estoque.",
-        "Apenas <code>titulo</code>, já que o SQLite não permite armazenar valores booleanos como o status de assistido de um filme."
-      ], correta: 0, explicacao: "O Model <code>Filme</code> tem <code>id</code> (gerado pelo SQLite), <code>titulo</code> (nome do filme) e <code>assistido</code> (true/false)." },
-    { tema: "SQLite · booleano", pergunta: "No SQLite, como o valor booleano <code>assistido</code> costuma ser armazenado?",
+        "Um resumo das colunas e seus tipos de dados, além da contagem de valores não nulos.",
+        "Apenas o número de linhas e colunas do DataFrame, sem nenhuma outra informação adicional.",
+        "As estatísticas descritivas (média, desvio, mínimo, máximo) de cada coluna numérica da tabela.",
+        "O conteúdo completo de todas as linhas e colunas do DataFrame, exibindo a tabela inteira na tela."
+      ], correta: 0, explicacao: "<code>info()</code> resume as colunas, seus tipos e a contagem de não nulos. Para estatísticas use <code>describe()</code>." },
+    { tema: "describe", pergunta: "O que o método <code>df.describe()</code> retorna?",
       opcoes: [
-        "Como um número inteiro (INTEGER): <code>0</code> para false e <code>1</code> para true, pois o SQLite não tem um tipo booleano próprio.",
-        "Como um texto (TEXT) contendo literalmente as palavras \"true\" e \"false\", que são convertidas em booleano na hora de exibir.",
-        "Como um tipo BOOLEAN nativo do SQLite, que aceita diretamente os valores <code>true</code> e <code>false</code> sem conversão.",
-        "Como um valor REAL, usando <code>0.0</code> para false e <code>1.0</code> para true por questões de compatibilidade entre bancos."
-      ], correta: 0, explicacao: "O SQLite guarda o booleano como INTEGER: false → 0, true → 1. A coluna <code>assistido</code> é <code>INTEGER NOT NULL</code>." },
-    { tema: "SQLite · CRUD", pergunta: "Qual comando SQL é usado para <b>cadastrar</b> um novo registro (ex.: um novo filme ou produto)?",
+        "Estatísticas descritivas das colunas numéricas: contagem, média, desvio padrão, mínimo, máximo e quartis.",
+        "Uma descrição em texto do que o DataFrame representa, escrita automaticamente pelo Pandas.",
+        "A lista dos nomes de todas as colunas do DataFrame, uma embaixo da outra, sem valores.",
+        "O tipo de dado de cada coluna (int, float, object), sem nenhum cálculo estatístico envolvido."
+      ], correta: 0, explicacao: "<code>describe()</code> traz estatísticas descritivas (média, desvio, min, max, quartis) das colunas numéricas." },
+    { tema: "shape", pergunta: "O que <code>df.shape</code> retorna?",
       opcoes: [
-        "<code>INSERT</code>, usado para inserir uma nova linha na tabela do banco de dados.",
-        "<code>SELECT</code>, usado para adicionar um registro ao mesmo tempo em que consulta os dados já existentes na tabela.",
-        "<code>UPDATE</code>, que cria o registro caso ele ainda não exista e atualiza seus dados caso já esteja cadastrado.",
-        "<code>CREATE</code>, comando responsável por inserir cada novo item dentro de uma tabela já criada anteriormente no banco."
-      ], correta: 0, explicacao: "INSERT = cadastrar. SELECT = buscar, UPDATE = alterar, DELETE = excluir. São as quatro operações do CRUD." },
-    { tema: "SQLite · CRUD", pergunta: "Qual comando SQL é usado para <b>buscar</b> registros já salvos no banco?",
+        "A quantidade de linhas e colunas do DataFrame, na forma de uma tupla <code>(linhas, colunas)</code>.",
+        "O formato do gráfico que será desenhado a partir dos dados do DataFrame na tela.",
+        "O tipo de cada coluna do DataFrame, indicando se é numérica, texto ou data.",
+        "Apenas o número de colunas do DataFrame, sem informar a quantidade de linhas."
+      ], correta: 0, explicacao: "<code>shape</code> devolve <code>(linhas, colunas)</code> — a quantidade de linhas e colunas da tabela." },
+    { tema: "columns", pergunta: "O que <code>df.columns</code> retorna?",
       opcoes: [
-        "<code>SELECT</code>, que consulta e retorna os registros da tabela conforme os critérios informados.",
-        "<code>GET</code>, comando padrão do SQLite para recuperar todas as linhas de uma determinada tabela do banco de dados.",
-        "<code>FIND</code>, usado especificamente para localizar um único registro a partir do seu id dentro da tabela consultada.",
-        "<code>READ</code>, que faz parte do CRUD e é o comando responsável por ler os dados persistidos em qualquer tabela SQLite."
-      ], correta: 0, explicacao: "SELECT = buscar/ler registros. No CRUD, o \"R\" (Read) corresponde ao comando SELECT do SQL." },
-    { tema: "Firebase", pergunta: "Na atividade \"Central de Missões\", qual serviço do Firebase é usado para armazenar as missões?",
+        "A lista dos nomes das colunas do DataFrame.",
+        "A soma de todos os valores de cada coluna do DataFrame, coluna por coluna.",
+        "O número total de colunas do DataFrame, como um único valor inteiro.",
+        "Os valores da primeira coluna do DataFrame, do primeiro ao último registro."
+      ], correta: 0, explicacao: "<code>columns</code> lista os nomes das colunas da tabela." },
+    { tema: "loc", pergunta: "Como o <code>df.loc[]</code> seleciona os dados?",
       opcoes: [
-        "O Cloud Firestore, um banco de dados de documentos onde as missões ficam em uma collection chamada <code>missoes</code>.",
-        "O Firebase Authentication, responsável por guardar cada missão vinculada ao login do usuário que a cadastrou no app.",
-        "O Firebase Storage, usado para salvar as missões em arquivos separados e recuperá-los quando o aplicativo for aberto.",
-        "O Realtime Database local, que mantém as missões apenas no dispositivo e nunca as sincroniza com a nuvem do projeto."
-      ], correta: 0, explicacao: "É o Cloud Firestore, banco de documentos. As missões ficam numa collection <code>missoes</code>, cada uma como um documento." },
-    { tema: "Firebase · estrutura", pergunta: "No Cloud Firestore, como os dados são organizados?",
+        "Pelo rótulo (nome) explícito do índice — ex.: <code>notas.loc[\"Ana\"]</code>.",
+        "Pela posição inteira (0, 1, 2...) na memória, ignorando totalmente os rótulos do índice.",
+        "Por ordem alfabética dos valores, sempre retornando o primeiro em ordem crescente.",
+        "Por uma busca aleatória entre todas as linhas, escolhendo uma qualquer a cada chamada."
+      ], correta: 0, explicacao: "<code>loc[]</code> seleciona pelo rótulo (nome) do índice. Já <code>iloc[]</code> seleciona pela posição inteira." },
+    { tema: "iloc", pergunta: "Como o <code>df.iloc[]</code> seleciona os dados?",
       opcoes: [
-        "Em collections que contêm documents, e cada document guarda campos (ex.: titulo, dificuldade, pontos, concluida).",
-        "Em tabelas com linhas e colunas fixas, exatamente como em um banco de dados relacional tradicional como o SQLite.",
-        "Em arquivos de texto separados por vírgula, um para cada registro, agrupados dentro de pastas no servidor do Firebase.",
-        "Em uma única lista global na memória do aplicativo, que é enviada inteira para a nuvem sempre que algo é alterado."
-      ], correta: 0, explicacao: "Firestore = collections → documents → campos. Na Central de Missões, a collection <code>missoes</code> tem um documento por missão." },
-    { tema: "Estoque · login", pergunta: "Na atividade de Controle de Estoque, o que acontece quando o login está correto?",
+        "Pela posição inteira (0, 1, 2...) na memória — ex.: <code>notas.iloc[0]</code>.",
+        "Pelo rótulo (nome) do índice, exatamente igual ao <code>loc[]</code>, apenas com outro nome.",
+        "Pelo valor da coluna, retornando a primeira linha cujo dado corresponde ao que foi buscado.",
+        "Por uma condição lógica escrita entre os colchetes, funcionando como um filtro booleano."
+      ], correta: 0, explicacao: "<code>iloc[]</code> seleciona pela posição inteira (0, 1, 2...). Já <code>loc[]</code> usa o rótulo." },
+    { tema: "NaN", pergunta: "No Pandas, o que representa o valor <b>NaN</b>?",
       opcoes: [
-        "O usuário acessa a tela principal, que exibe uma saudação com o nome encontrado no SQLite (ex.: \"Olá, Lucas!\").",
-        "O aplicativo cadastra automaticamente um novo usuário no banco e depois libera o acesso à tela de controle de estoque.",
-        "O sistema mostra a mensagem \"E-mail ou senha incorretos\" e permanece na tela de login aguardando uma nova tentativa.",
-        "O aplicativo apaga os dados antigos do usuário e recria a tabela <code>usuarios</code> antes de liberar o acesso ao estoque."
-      ], correta: 0, explicacao: "Login correto → tela principal com \"Olá, [nome]!\", usando o nome encontrado no SELECT do SQLite. Login errado → mensagem de erro." },
-    { tema: "Estoque · terminal", pergunta: "Na atividade de Controle de Estoque, além de gravar no banco, o que o app deve fazer a cada operação?",
+        "Uma falha ou ausência de dado (\"Not a Number\") — informação que não existe ou não foi coletada.",
+        "Um valor igual a zero, usado como padrão sempre que uma coluna numérica é criada vazia.",
+        "O maior número possível que o Pandas consegue armazenar em uma célula da tabela.",
+        "Um texto com a palavra literal \"NaN\" digitada pelo usuário em uma célula da planilha."
+      ], correta: 0, explicacao: "NaN (Not a Number) representa uma falha/ausência de dado. Dados reais raramente são perfeitos — o NaN marca os buracos." },
+    { tema: "fillna", pergunta: "O que o método <code>df.fillna(0)</code> faz?",
       opcoes: [
-        "Usar <code>print()</code> para mostrar no terminal o que aconteceu (ex.: <code>INSERT → Usuário cadastrado: Maria</code>).",
-        "Enviar um e-mail de confirmação ao usuário informando que a operação no banco de dados foi concluída com sucesso.",
-        "Criar um arquivo de log em disco com a data e hora de cada INSERT, SELECT, UPDATE e DELETE realizado no sistema.",
-        "Exibir um SnackBar na tela repetindo o comando SQL executado para que o usuário confirme cada alteração feita no banco."
-      ], correta: 0, explicacao: "A atividade pede <code>print()</code> no terminal para cada operação: INSERT, SELECT, UPDATE e DELETE — para conferir se salvou de fato." },
-    { tema: "Voos · ICAO", pergunta: "Na atividade da API de voos, o que o usuário informa para filtrar os voos de um aeroporto?",
+        "Preenche os valores ausentes (NaN) com o valor informado — nesse caso, com 0.",
+        "Remove todas as linhas que contêm valores ausentes (NaN) do DataFrame.",
+        "Identifica e conta quantos valores ausentes existem em cada coluna da tabela.",
+        "Substitui todos os valores da tabela por 0, apagando os dados originais existentes."
+      ], correta: 0, explicacao: "<code>fillna(x)</code> preenche os buracos (NaN) com o valor <code>x</code>. Para remover linhas com NaN, usa-se <code>dropna()</code>." },
+    { tema: "groupby", pergunta: "Para que serve o método <code>df.groupby()</code>?",
       opcoes: [
-        "O código ICAO do aeroporto (ex.: <code>SBGR</code> para Guarulhos), que é enviado para a API na requisição.",
-        "O nome completo do aeroporto por extenso, que a API converte internamente no código correspondente antes de buscar.",
-        "O número do voo desejado, a partir do qual a API descobre automaticamente de qual aeroporto ele parte ou chega.",
-        "A cidade de origem digitada em texto livre, sem necessidade de código, pois a API aceita qualquer formato de busca."
-      ], correta: 0, explicacao: "O usuário informa o código ICAO (SBGR, SBSP, SBBR, SBCF...) e ele é enviado à API na rota <code>/api/voos?aeroporto=SBGR</code>." },
-    { tema: "Voos · tipo", pergunta: "Na API de voos, quais são as opções de <code>tipo</code> que o usuário pode escolher?",
+        "Para agrupar os dados por uma coluna (ex.: categoria), permitindo depois somar ou tirar média por grupo.",
+        "Para juntar dois DataFrames diferentes em uma única tabela, combinando suas linhas.",
+        "Para ordenar as linhas do DataFrame em grupos de tamanho fixo, de cima para baixo.",
+        "Para remover as colunas duplicadas do DataFrame, mantendo apenas uma de cada grupo."
+      ], correta: 0, explicacao: "<code>groupby('categoria')</code> agrupa os dados por essa coluna — depois se aplica <code>sum()</code>, <code>mean()</code>, <code>count()</code> etc. por grupo." },
+    { tema: "sort_values", pergunta: "O que o método <code>df.sort_values('idade')</code> faz?",
       opcoes: [
-        "<code>chegadas</code>, <code>partidas</code> e <code>todos</code>, enviadas na query string (ex.: <code>?tipo=chegadas</code>).",
-        "<code>nacional</code>, <code>internacional</code> e <code>regional</code>, que filtram os voos conforme o alcance de cada rota aérea.",
-        "<code>manhã</code>, <code>tarde</code> e <code>noite</code>, permitindo ao usuário escolher o período do dia dos voos exibidos.",
-        "<code>atrasados</code>, <code>no horário</code> e <code>cancelados</code>, filtrando os voos de acordo com o seu status atual."
-      ], correta: 0, explicacao: "As opções são <code>chegadas</code>, <code>partidas</code> e <code>todos</code>, passadas em <code>?aeroporto=SBGR&tipo=chegadas</code>." },
-    { tema: "Firebase · pontos", pergunta: "Na Central de Missões, como os pontos de uma missão são definidos?",
+        "Ordena as linhas do DataFrame com base nos valores da coluna informada (nesse caso, idade).",
+        "Soma todos os valores da coluna idade e retorna o total como um único número.",
+        "Filtra o DataFrame, mantendo apenas as linhas cuja idade for maior que a média.",
+        "Renomeia a coluna idade para outro nome escolhido automaticamente pelo Pandas."
+      ], correta: 0, explicacao: "<code>sort_values('coluna')</code> ordena as linhas pelos valores daquela coluna (crescente por padrão)." },
+    { tema: "Ética · NaN humano", pergunta: "Segundo a aula \"Dados e Responsabilidade\", quem toma as decisões éticas na análise de dados?",
       opcoes: [
-        "Automaticamente pela dificuldade: Fácil → 10, Médio → 20, Difícil → 30 pontos.",
-        "Manualmente pelo usuário, que digita a quantidade de pontos desejada no momento do cadastro de cada nova missão.",
-        "Aleatoriamente pelo aplicativo, que sorteia um valor entre 10 e 30 pontos toda vez que uma missão é cadastrada.",
-        "Pelo número de missões já concluídas, aumentando 10 pontos a cada missão finalizada anteriormente pelo usuário."
-      ], correta: 0, explicacao: "Os pontos vêm da dificuldade: Fácil = 10, Médio = 20, Difícil = 30. O app define automaticamente ao cadastrar." }
+        "As pessoas. \"Dados não tomam decisões éticas. Pessoas tomam.\" — a responsabilidade é de quem usa os dados.",
+        "Os próprios dados, que já vêm com regras de ética embutidas e escolhem sozinhos o que é certo.",
+        "O algoritmo de inteligência artificial, que é sempre neutro e imparcial por ser baseado em matemática.",
+        "O computador, que segue apenas a lógica e por isso nunca comete erros de julgamento ético."
+      ], correta: 0, explicacao: "A frase da reflexão final: \"Dados não tomam decisões éticas. Pessoas tomam.\" A responsabilidade é humana." }
   ];
 
   /* =========================== MODO MÉDIO (18) =========================== */
   const medio = [
-    { tema: "Provider · fluxo", pergunta: "Ao pesquisar um Pokémon pelo nome, qual é a ordem correta do fluxo de dados?",
+    { tema: "loc × iloc", pergunta: "Você quer a linha do índice rotulado \"Ana\". Qual comando usar?",
       opcoes: [
-        "Tela → Provider → Service → GET /pokemons/nome/pikachu → Flask, e o resultado volta pelo mesmo caminho até a tela.",
-        "Tela → Service → PokéAPI direto, e depois o Provider apenas guarda o resultado para exibir na próxima abertura do app.",
-        "Flask → Provider → Tela → Service, pois é o backend que inicia o fluxo e envia os dados diretamente para a interface.",
-        "Provider → Tela → Flask → Service, com a tela intermediando a comunicação entre o Provider e o servidor Python."
-      ], correta: 0, explicacao: "Tela → Provider → Service → Flask (→ PokéAPI). O dado volta pelo caminho inverso até a tela exibir." },
-    { tema: "Loading · erro", pergunta: "Na tela inicial da atividade de voos, o que deve ser exibido enquanto os dados estão sendo buscados?",
+        "<code>df.loc[\"Ana\"]</code>, pois <code>loc</code> busca pelo rótulo (nome) do índice.",
+        "<code>df.iloc[\"Ana\"]</code>, pois <code>iloc</code> aceita tanto nomes quanto posições inteiras.",
+        "<code>df[\"Ana\"]</code>, que com colchetes simples sempre retorna a linha de rótulo informado.",
+        "<code>df.get(\"Ana\")</code>, o único método capaz de buscar uma linha por nome no Pandas."
+      ], correta: 0, explicacao: "Rótulo → <code>loc</code>. <code>iloc</code> só aceita posição inteira; colchetes simples em Series buscam por rótulo, mas <code>loc</code> é o recomendado." },
+    { tema: "Máscara booleana", pergunta: "O que <code>df[df['idade'] > 18]</code> faz?",
       opcoes: [
-        "Um indicador de carregamento; e uma mensagem de erro caso a API não responda, além da lista de voos quando chegarem.",
-        "A lista de voos já preenchida com dados de exemplo, substituídos pelos dados reais assim que a API terminar de responder.",
-        "Uma tela em branco sem nenhum aviso, pois mostrar carregamento deixaria o aplicativo visualmente mais poluído para o usuário.",
-        "Diretamente a tela de detalhes do primeiro voo, que serve como pré-visualização enquanto o restante da lista é carregado."
-      ], correta: 0, explicacao: "A tela deve ter: indicador de carregamento durante a busca, mensagem de erro se a API falhar, e a lista quando os voos chegarem." },
-    { tema: "SQLite · persistência", pergunta: "Por que usar SQLite em vez de apenas uma <code>List</code> na memória para guardar os filmes?",
+        "Filtra o DataFrame, retornando apenas as linhas em que a idade é maior que 18 (máscara booleana).",
+        "Substitui todas as idades maiores que 18 pelo valor 18, limitando o máximo permitido na coluna.",
+        "Ordena o DataFrame pela coluna idade, colocando primeiro quem tem mais de 18 anos.",
+        "Conta quantas pessoas têm mais de 18 anos e retorna esse número como resultado."
+      ], correta: 0, explicacao: "<code>df['idade'] > 18</code> cria uma máscara de True/False; jogá-la no DataFrame extrai só as linhas True. É filtro booleano." },
+    { tema: "Operações vetoriais", pergunta: "No NumPy/Pandas, o que acontece ao fazer <code>notas + 1</code> em um vetor de notas?",
       opcoes: [
-        "Porque dados em uma List desaparecem quando o app é fechado; o SQLite mantém os dados salvos entre execuções.",
-        "Porque a List do Dart tem um limite máximo de registros, enquanto o SQLite consegue armazenar uma quantidade ilimitada.",
-        "Porque o SQLite renderiza a lista na tela automaticamente, dispensando a criação de widgets para exibir cada filme.",
-        "Porque a List não permite marcar itens como assistidos, recurso que só existe quando os dados estão em um banco SQLite."
-      ], correta: 0, explicacao: "List vive só na memória e some ao fechar o app. O SQLite persiste: os filmes continuam lá ao reabrir." },
-    { tema: "MVVM", pergunta: "Na atividade de filmes (MVVM), a <code>List&lt;Filme&gt;</code> da ViewModel é responsável por persistir os dados?",
+        "Todas as notas aumentam 1 ao mesmo tempo — a operação ocorre elemento a elemento, sem loop.",
+        "Apenas a primeira nota do vetor aumenta 1; as demais permanecem exatamente iguais.",
+        "É gerado um erro, pois não é possível somar um número inteiro a um vetor no NumPy.",
+        "O número 1 é adicionado como um novo elemento ao final do vetor de notas."
+      ], correta: 0, explicacao: "Operações em vetores são elemento a elemento (vetorizadas): <code>notas + 1</code> soma 1 em todas as notas de uma vez, sem <code>for</code>." },
+    { tema: "Series · dicionário", pergunta: "Ao criar <code>pd.Series({\"BH\": 22, \"SP\": 19})</code>, o que acontece?",
       opcoes: [
-        "Não. A List só mantém os dados em memória; a persistência é feita pelo FilmeService, que acessa o SQLite.",
-        "Sim. A List da ViewModel grava automaticamente cada filme no SQLite sempre que um item é adicionado a ela.",
-        "Sim, mas apenas os filmes marcados como assistidos; os não assistidos ficam somente na memória temporária do app.",
-        "Não, pois a ViewModel não pode ter listas — os dados devem ficar exclusivamente dentro dos widgets da interface."
-      ], correta: 0, explicacao: "A List da ViewModel NÃO persiste — ela busca via FilmeService. A persistência é responsabilidade do Service (SQLite)." },
-    { tema: "SQLite · UPDATE", pergunta: "Ao marcar um filme como assistido, qual operação SQL é usada e por que salvar no banco?",
+        "As chaves (\"BH\", \"SP\") viram o índice, e os valores (22, 19) viram os dados da Series.",
+        "As chaves viram os dados e os valores viram o índice, ao contrário do que aparece no dicionário.",
+        "O Pandas ignora as chaves e cria um índice numérico automático (0, 1) para os valores.",
+        "É gerado um erro, pois a <code>pd.Series</code> só aceita listas, nunca dicionários como entrada."
+      ], correta: 0, explicacao: "Criando Series a partir de dicionário: as chaves viram o índice e os valores viram os dados. Forma mais \"orgânica\"." },
+    { tema: "Series · sem index", pergunta: "Se você criar uma Series a partir de uma lista <b>sem</b> informar o index, o que ocorre?",
       opcoes: [
-        "<code>UPDATE</code>, para alterar o campo <code>assistido</code> no banco — não basta mudar só o valor mostrado na tela.",
-        "<code>INSERT</code>, criando um novo registro do filme marcado como assistido e mantendo o antigo como não assistido.",
-        "<code>SELECT</code>, que ao buscar o filme já atualiza o seu status automaticamente dentro do banco de dados SQLite.",
-        "Nenhuma; marcar como assistido é uma mudança apenas visual e não precisa ser gravada no banco de dados do app."
-      ], correta: 0, explicacao: "UPDATE altera o status no banco. Se você mudar só na tela, ao reabrir o app o filme volta ao estado antigo — não persistiu." },
-    { tema: "Estoque · e-mail único", pergunta: "Na atividade de estoque, como impedir o cadastro de dois usuários com o mesmo e-mail?",
+        "O Pandas gera uma numeração automática como índice: 0, 1, 2, 3...",
+        "A Series não é criada e o Pandas lança um erro exigindo que o índice seja informado.",
+        "Cada valor da lista vira também o seu próprio índice, duplicando os dados na estrutura.",
+        "O índice fica vazio, e os valores só podem ser acessados com <code>iloc</code>, nunca com <code>loc</code>."
+      ], correta: 0, explicacao: "Sem index informado, o Pandas cria numeração automática 0, 1, 2, 3... — igual às posições." },
+    { tema: "isna", pergunta: "O que <code>df.isna().sum()</code> retorna?",
       opcoes: [
-        "Antes do INSERT, fazer um SELECT para verificar se o e-mail já existe; se existir, mostrar \"E-mail já cadastrado\".",
-        "Deixar o SQLite cadastrar os dois e depois apagar o mais antigo automaticamente na próxima vez que o app for aberto.",
-        "Confiar que o usuário não vai repetir o e-mail, pois o SQLite bloqueia sozinho qualquer duplicata sem precisar de código.",
-        "Cadastrar ambos normalmente, já que ter dois usuários com o mesmo e-mail não causa nenhum problema no login do sistema."
-      ], correta: 0, explicacao: "Antes de inserir, consulta-se o banco (SELECT). Se o e-mail já existe → não cadastra e mostra \"E-mail já cadastrado\"." },
-    { tema: "Estoque · baixo", pergunta: "Na tela de estoque, quando o aviso \"ESTOQUE BAIXO\" deve aparecer em um produto?",
+        "A quantidade de valores ausentes (NaN) em cada coluna do DataFrame.",
+        "A soma de todos os valores numéricos de cada coluna, ignorando os NaN.",
+        "Um valor True se houver qualquer NaN na tabela e False caso contrário.",
+        "As linhas que contêm valores ausentes, prontas para serem removidas."
+      ], correta: 0, explicacao: "<code>isna()</code> marca True onde há NaN; <code>.sum()</code> conta esses True por coluna — total de ausências em cada uma." },
+    { tema: "dropna", pergunta: "Qual a diferença entre <code>fillna()</code> e <code>dropna()</code>?",
       opcoes: [
-        "Quando a quantidade for menor ou igual a 3 (<code>quantidade &lt;= 3</code>).",
-        "Quando a quantidade for exatamente igual a zero, indicando que o produto acabou completamente no estoque da loja.",
-        "Quando o preço do produto for maior que R$ 200,00, sinalizando que reabastecê-lo terá um custo elevado para a loja.",
-        "Quando o produto for cadastrado há mais de 30 dias sem nenhuma alteração de quantidade registrada no banco de dados."
-      ], correta: 0, explicacao: "\"ESTOQUE BAIXO\" aparece quando <code>quantidade &lt;= 3</code>. É uma verificação sobre o valor da coluna quantidade." },
-    { tema: "Firebase · CRUD", pergunta: "Quais métodos do Firestore correspondem às operações da MissaoService?",
+        "<code>fillna()</code> preenche os buracos (NaN) com um valor; <code>dropna()</code> remove as linhas que têm NaN.",
+        "<code>fillna()</code> remove as linhas com NaN; <code>dropna()</code> preenche os buracos com zero.",
+        "Os dois fazem a mesma coisa: preencher NaN com a média da coluna correspondente.",
+        "<code>fillna()</code> conta os NaN e <code>dropna()</code> apenas os identifica, sem alterar a tabela."
+      ], correta: 0, explicacao: "<code>fillna(x)</code> tapa os buracos com um valor; <code>dropna()</code> descarta as linhas falhas. Escolha conforme o caso." },
+    { tema: "rename", pergunta: "O que <code>df.rename(columns={'old':'new'})</code> faz?",
       opcoes: [
-        "<code>.add()</code> para adicionar, <code>.get()</code> para buscar, <code>.update()</code> para atualizar e <code>.delete()</code> para excluir.",
-        "<code>.insert()</code>, <code>.select()</code>, <code>.change()</code> e <code>.remove()</code>, os mesmos nomes usados nas consultas SQL do SQLite.",
-        "<code>.push()</code>, <code>.read()</code>, <code>.save()</code> e <code>.drop()</code>, específicos do Realtime Database do Firebase.",
-        "<code>.create()</code>, <code>.find()</code>, <code>.patch()</code> e <code>.destroy()</code>, seguindo o padrão de rotas REST de uma API."
-      ], correta: 0, explicacao: "Firestore usa <code>.add()</code>, <code>.get()</code>, <code>.update()</code> e <code>.delete()</code> — o CRUD da MissaoService." },
-    { tema: "Firebase · pontuação", pergunta: "Na Central de Missões, quais missões contam na pontuação total?",
+        "Renomeia a coluna \"old\" para \"new\", mantendo os dados no lugar.",
+        "Cria uma nova coluna chamada \"new\" copiando os dados da coluna \"old\".",
+        "Remove a coluna \"old\" e a coluna \"new\" de uma só vez do DataFrame.",
+        "Troca os valores da coluna \"old\" pelos valores da coluna \"new\"."
+      ], correta: 0, explicacao: "<code>rename(columns={...})</code> troca o nome das colunas conforme o dicionário — chave = nome atual, valor = novo nome." },
+    { tema: "drop", pergunta: "O que <code>df.drop(columns=['coluna'])</code> faz?",
       opcoes: [
-        "Somente as missões com <code>concluida: true</code>; as pendentes não entram na soma dos pontos conquistados.",
-        "Todas as missões cadastradas, concluídas ou não, pois o total representa o potencial de pontos disponíveis no app.",
-        "Apenas as missões de dificuldade Difícil, já que são as únicas que valem pontos suficientes para alterar o total.",
-        "As missões pendentes, cujos pontos são somados como meta a alcançar e removidos do total quando são concluídas."
-      ], correta: 0, explicacao: "Só as concluídas (<code>concluida: true</code>) contam. Uma missão pendente não entra na soma da pontuação total." },
-    { tema: "Model · toMap", pergunta: "Na Central de Missões, para que servem os métodos <code>toMap()</code> e <code>fromMap()</code> do Model?",
+        "Remove a coluna informada do DataFrame.",
+        "Renomeia a coluna informada, dando a ela um nome padrão gerado pelo Pandas.",
+        "Move a coluna informada para a primeira posição da tabela, à esquerda de todas.",
+        "Preenche os valores ausentes da coluna informada com a média dos demais valores."
+      ], correta: 0, explicacao: "<code>drop(columns=[...])</code> remove colunas. Também dá pra remover linhas passando os índices delas." },
+    { tema: "astype", pergunta: "Para que serve <code>df['ano'].astype(int)</code>?",
       opcoes: [
-        "Para converter os dados entre o objeto Dart e o formato do Firebase — <code>toMap</code> para salvar, <code>fromMap</code> para ler.",
-        "Para exibir a missão na tela em forma de mapa visual, com <code>toMap</code> desenhando e <code>fromMap</code> atualizando o widget.",
-        "Para calcular a pontuação total, somando os pontos com <code>toMap</code> e subtraindo os excluídos com <code>fromMap</code>.",
-        "Para criar as regras de segurança do Firestore, definindo em <code>toMap</code> quem pode escrever e em <code>fromMap</code> quem pode ler."
-      ], correta: 0, explicacao: "<code>toMap()</code> converte o objeto Dart em Map para salvar no Firebase; <code>fromMap()</code> reconstrói o objeto a partir dos dados lidos." },
-    { tema: "device_preview", pergunta: "Na atividade de voos, o endereço da API no Flutter Web costuma ser semelhante a qual?",
+        "Para converter o tipo de dado da coluna \"ano\" para número inteiro (int).",
+        "Para somar 1 a todos os valores da coluna \"ano\", avançando um ano em cada registro.",
+        "Para ordenar a coluna \"ano\" do menor para o maior valor do DataFrame.",
+        "Para contar quantos anos diferentes existem na coluna \"ano\" da tabela."
+      ], correta: 0, explicacao: "<code>astype(int)</code> converte o tipo da coluna para inteiro. Útil quando um número foi lido como texto, por exemplo." },
+    { tema: "groupby + agg", pergunta: "O que <code>df.groupby('categoria')['vendas'].sum()</code> retorna?",
       opcoes: [
-        "<code>http://127.0.0.1:5001/api/voos?aeroporto=SBGR&tipo=chegadas</code>, apontando para o backend Python local.",
-        "<code>https://api.voos.com/v2/flights</code>, um endereço público na nuvem que dispensa rodar o backend Python localmente.",
-        "<code>flutter://localhost/voos</code>, um esquema interno do Flutter que acessa os dados sem precisar de um servidor HTTP.",
-        "<code>http://firebase.google.com/voos</code>, pois os dados de voos são servidos pelo Firestore em vez de um backend Python."
-      ], correta: 0, explicacao: "O Flask roda em <code>127.0.0.1:5001</code>, então a Service acessa <code>http://127.0.0.1:5001/api/voos?aeroporto=...&tipo=...</code>." },
-    { tema: "Navegação", pergunta: "Ao tocar em um voo (ou filme/missão) para abrir a tela de detalhes, qual comando é usado?",
+        "A soma das vendas para cada categoria — um total de vendas por grupo.",
+        "A soma de todas as vendas do DataFrame inteiro, sem separar por categoria.",
+        "A quantidade de categorias diferentes que existem na coluna \"categoria\".",
+        "A média das vendas por categoria, e não a soma, apesar do nome do método."
+      ], correta: 0, explicacao: "Agrupa por categoria e soma as vendas de cada grupo → total de vendas por categoria. Padrão groupby + agregação." },
+    { tema: "merge", pergunta: "O que <code>pd.merge(df1, df2, on='id')</code> faz?",
       opcoes: [
-        "<code>Navigator.push()</code>, que empilha a tela de detalhes por cima da tela atual mantendo a possibilidade de voltar.",
-        "<code>notifyListeners()</code>, que redesenha a tela atual já mostrando os detalhes do item selecionado pelo usuário.",
-        "<code>setState()</code>, que substitui todo o conteúdo da tela inicial pelos detalhes sem criar uma nova tela no app.",
-        "<code>runApp()</code>, que reinicia o aplicativo carregando diretamente a tela de detalhes do item que foi tocado."
-      ], correta: 0, explicacao: "<code>Navigator.push()</code> abre a tela de detalhes por cima da atual. É a navegação padrão entre lista e detalhes." },
-    { tema: "PokéAPI · JSON", pergunta: "Na Parte 2 da Pokédex (mostrar mais infos), qual é a sequência correta de passos?",
+        "Junta os dois DataFrames usando a coluna \"id\" como chave de ligação entre eles.",
+        "Empilha df2 embaixo de df1, aumentando o número de linhas sem casar por chave.",
+        "Remove de df1 todas as linhas cujo \"id\" também exista em df2, filtrando duplicatas.",
+        "Cria uma cópia de df1 e a renomeia para df2, descartando a tabela original."
+      ], correta: 0, explicacao: "<code>merge(..., on='id')</code> junta tabelas pela chave em comum (o \"id\"), como um JOIN de banco de dados." },
+    { tema: "concat", pergunta: "Qual a diferença entre <code>pd.concat()</code> e <code>pd.merge()</code>?",
       opcoes: [
-        "Localizar o dado no JSON da PokéAPI, modificar a rota Python, devolver pelo Flask, receber no Flutter e mostrar na tela.",
-        "Modificar apenas o Flutter para ler diretamente o novo campo da PokéAPI, sem precisar alterar a rota Python do backend.",
-        "Adicionar o campo primeiro no banco de dados SQLite e depois deixar o Flask copiá-lo automaticamente da PokéAPI.",
-        "Alterar somente o Provider, que passa a solicitar o novo dado à PokéAPI sem envolver a Service nem o backend Flask."
-      ], correta: 0, explicacao: "A sequência é: achar no JSON → mudar a rota Python → devolver pelo Flask → receber no Flutter → exibir. O dado sempre passa pelo Flask." },
-    { tema: "Estrutura · pastas", pergunta: "Na atividade de voos, onde as chamadas HTTP (<code>http.get</code>) devem ficar?",
+        "<code>concat()</code> empilha DataFrames (junta linhas); <code>merge()</code> junta tabelas casando por uma chave.",
+        "<code>concat()</code> junta por chave e <code>merge()</code> apenas empilha, ao contrário do que os nomes sugerem.",
+        "Os dois fazem exatamente a mesma coisa, sendo <code>concat()</code> só uma versão mais antiga.",
+        "<code>concat()</code> serve para colunas de texto e <code>merge()</code> apenas para colunas numéricas."
+      ], correta: 0, explicacao: "<code>concat()</code> empilha (junta linhas ou colunas na sequência); <code>merge()</code> casa registros por uma chave em comum." },
+    { tema: "Matriz · acesso", pergunta: "Em uma matriz NumPy, o que <code>matriz[:, 0]</code> retorna?",
       opcoes: [
-        "Dentro da pasta <code>services/</code>; nunca diretamente na HomePage ou em qualquer outra tela do aplicativo.",
-        "Dentro da pasta <code>pages/</code>, junto ao código da tela que exibe os dados, para facilitar a leitura do projeto.",
-        "No arquivo <code>main.dart</code>, centralizando todas as requisições da aplicação em um único ponto de entrada.",
-        "Na pasta <code>providers/</code>, já que é o Provider quem realmente faz a requisição e depois repassa para a Service."
-      ], correta: 0, explicacao: "As chamadas HTTP ficam em <code>services/</code>. Evite <code>http.get(...)</code> dentro da HomePage — a tela acessa dados via Provider." },
-    { tema: "SQLite · tabela", pergunta: "Na tabela <code>filmes</code>, como o campo <code>id</code> costuma ser definido?",
+        "A primeira coluna inteira — o \":\" significa \"todas as linhas\" e o 0 seleciona a coluna 0.",
+        "A primeira linha inteira da matriz, do primeiro ao último elemento dela.",
+        "Apenas o elemento da posição [0, 0], ou seja, o canto superior esquerdo da matriz.",
+        "A matriz inteira sem alteração, pois o \":\" seleciona tudo e o 0 é ignorado."
+      ], correta: 0, explicacao: "<code>matriz[:, 0]</code> → todas as linhas (:) da coluna 0 = a primeira coluna inteira. Já <code>matriz[0]</code> é a primeira linha." },
+    { tema: "Alinhamento por índice", pergunta: "Ao somar duas Series, como o Pandas decide quais valores somar?",
       opcoes: [
-        "<code>INTEGER PRIMARY KEY AUTOINCREMENT</code>, para que o SQLite gere o id automaticamente a cada novo filme.",
-        "<code>TEXT NOT NULL</code>, pois o id de cada filme é um código de texto único digitado pelo usuário no cadastro.",
-        "<code>INTEGER NOT NULL</code> apenas, cabendo ao aplicativo Flutter calcular e informar o próximo id disponível.",
-        "<code>REAL PRIMARY KEY</code>, permitindo ids fracionários para diferenciar filmes cadastrados no mesmo instante."
-      ], correta: 0, explicacao: "O <code>id</code> é <code>INTEGER PRIMARY KEY AUTOINCREMENT</code> — o SQLite cria e incrementa sozinho a cada INSERT." },
-    { tema: "Estoque · quantidade", pergunta: "Ao clicar em [ + ] ou [ - ] para alterar a quantidade de um produto, o que é obrigatório?",
+        "Pelo índice: ele soma \"Ana\" com \"Ana\", alinhando pelos rótulos — a ordem na lista não importa.",
+        "Pela posição: sempre soma o primeiro com o primeiro, ignorando completamente os rótulos.",
+        "Pela ordem alfabética dos valores, reorganizando ambas as Series antes de somar.",
+        "Aleatoriamente, escolhendo pares de valores a cada execução do código."
+      ], correta: 0, explicacao: "O Pandas alinha pelo índice: soma \"Ana\" com \"Ana\". A matemática viaja acompanhada do rótulo, não da posição." },
+    { tema: "Ética · viés", pergunta: "Segundo a aula, por que um algoritmo de IA pode reproduzir preconceitos?",
       opcoes: [
-        "Salvar a nova quantidade no SQLite com UPDATE — não basta alterar apenas o número mostrado na tela.",
-        "Excluir o produto e cadastrá-lo novamente com a quantidade atualizada, pois o SQLite não permite editar um registro.",
-        "Recarregar a página inteira do navegador a cada clique, para que o Flutter releia a quantidade atual do banco de dados.",
-        "Alterar somente o valor exibido na interface; a persistência acontece sozinha quando o app é fechado pelo usuário."
-      ], correta: 0, explicacao: "A alteração tem que ir pro banco via UPDATE. Mudar só na tela não persiste — ao recarregar, volta ao valor antigo." },
-    { tema: "Firebase · concluir", pergunta: "Na Central de Missões, o que acontece no Firestore ao concluir uma missão?",
+        "Porque aprende com dados históricos: se a história contém racismo ou machismo, o modelo replica isso em larga escala.",
+        "Porque programadores escrevem propositalmente código malicioso e discriminatório dentro da IA.",
+        "Porque a matemática é naturalmente injusta e sempre favorece um grupo específico de pessoas.",
+        "Porque a IA inventa preconceitos novos por conta própria, sem qualquer relação com os dados de treino."
+      ], correta: 0, explicacao: "Viés algorítmico: a IA aprende com dados históricos. Se a história tem preconceito, ela automatiza esse viés — não é código malicioso." },
+    { tema: "Ética · manipulação visual", pergunta: "Como um gráfico pode enganar o público mesmo com dados corretos?",
       opcoes: [
-        "O campo <code>concluida</code> muda de <code>false</code> para <code>true</code> no documento correspondente, via update.",
-        "O documento da missão é excluído do Firestore e recriado em uma collection separada chamada <code>concluidas</code>.",
-        "Um novo documento é adicionado à collection com os mesmos dados, mantendo o original como registro histórico pendente.",
-        "Nada muda no Firestore; a conclusão fica salva apenas na memória do aplicativo até que ele seja fechado pelo usuário."
-      ], correta: 0, explicacao: "Concluir → <code>concluida</code> vira <code>true</code> no documento (update no Firestore). A alteração precisa refletir na nuvem." },
-    { tema: "Estoque · Provider", pergunta: "Por que a atividade proíbe acessar o SQLite diretamente dentro da página (tela)?",
+        "Mudando a escala de um eixo, o que pode transformar uma flutuação normal em uma \"crise\" artificial.",
+        "Trocando as cores do gráfico, o que altera automaticamente os valores numéricos exibidos nele.",
+        "Aumentando o tamanho da fonte do título, o que faz os dados parecerem maiores do que são.",
+        "Não é possível enganar com dados corretos; um gráfico sempre reflete a verdade dos números."
+      ], correta: 0, explicacao: "Manipulação visual: mexer na escala de um eixo muda a percepção — uma variação pequena vira \"crise\", ainda que os dados estejam certos." },
+    { tema: "count", pergunta: "No groupby, o que <code>['vendas'].count()</code> retorna para cada grupo?",
       opcoes: [
-        "Para manter a separação de responsabilidades: a tela acessa dados pelo Provider, e só o Service fala com o SQLite.",
-        "Porque o SQLite só pode ser acessado a partir do arquivo <code>main.dart</code>, nunca de dentro de uma página do app.",
-        "Porque acessar o banco na tela deixa o aplicativo mais rápido, e a atividade quer que os alunos pratiquem otimização.",
-        "Porque o SQLite no Flutter Web não funciona dentro de páginas, apenas dentro de Providers ligados ao ChangeNotifier."
-      ], correta: 0, explicacao: "Separação de responsabilidades: View → Provider → Service → SQLite. A tela nunca fala direto com o banco." }
+        "A quantidade de registros (linhas) de vendas em cada grupo.",
+        "A soma dos valores de vendas de cada grupo, e não a contagem de registros.",
+        "A média das vendas de cada grupo, ignorando os valores ausentes.",
+        "O maior valor de vendas encontrado dentro de cada grupo da tabela."
+      ], correta: 0, explicacao: "<code>count()</code> conta registros (linhas) por grupo. Para somar seria <code>sum()</code>; para média, <code>mean()</code>." }
   ];
 
   /* =========================== MODO DIFÍCIL (20) =========================== */
   const dificil = [
-    { tema: "Arquitetura", pergunta: "Qual frase resume corretamente a responsabilidade de cada camada na arquitetura das atividades?",
+    { tema: "Series vs ndarray", pergunta: "Qual é a diferença fundamental entre uma <code>pd.Series</code> e um <code>np.ndarray</code>?",
       opcoes: [
-        "TELA MOSTRA, PROVIDER CONTROLA, SERVICE SE COMUNICA, FLASK RESPONDE — cada camada com um papel único e bem definido.",
-        "A tela faz o HTTP, o Provider desenha os widgets, a Service guarda o estado e o Flask apenas registra logs de acesso.",
-        "Todas as camadas fazem tudo de forma compartilhada, sem divisão fixa, para que o código fique mais flexível e enxuto.",
-        "O Flask controla o estado do app, o Provider se comunica com a API e a tela é quem executa as consultas no banco."
-      ], correta: 0, explicacao: "\"TELA MOSTRA. PROVIDER CONTROLA. SERVICE SE COMUNICA. FLASK RESPONDE.\" Entender o caminho dos dados é o objetivo principal." },
-    { tema: "Fluxo · direção", pergunta: "Por que a atividade insiste que o Flutter nunca acesse a API externa (PokéAPI/voos) diretamente?",
+        "A Series une a velocidade do NumPy com um índice rotulado; o ndarray é rápido mas não tem rótulos.",
+        "O ndarray tem rótulos e a Series não, sendo a Series apenas uma versão mais lenta e sem índice.",
+        "Não há diferença: <code>pd.Series</code> e <code>np.ndarray</code> são exatamente a mesma estrutura de dados.",
+        "A Series só aceita texto e o ndarray só aceita números, sendo incompatíveis entre si."
+      ], correta: 0, explicacao: "A Series é um ndarray \"turbinado\" com índice: velocidade do NumPy + organização por rótulos reais. O ndarray puro não tem rótulos." },
+    { tema: "loc × iloc · risco", pergunta: "Por que a \"Dica de Ouro\" recomenda sempre usar <code>loc</code> ou <code>iloc</code> em vez de só <code>[]</code>?",
       opcoes: [
-        "Para manter a separação de camadas e centralizar a lógica no backend — o Flutter só conhece o próprio Flask, que fala com a API externa.",
-        "Porque o Flutter é tecnicamente incapaz de fazer requisições HTTP para servidores que estejam fora da rede local do dispositivo.",
-        "Porque acessar a API direto do Flutter faria o aplicativo travar, já que o Dart não consegue processar respostas em formato JSON.",
-        "Porque a PokéAPI e a API de voos cobram por cada acesso, e passar pelo Flask elimina completamente esse custo por requisição."
-      ], correta: 0, explicacao: "É arquitetura: o Flutter fala só com o próprio backend (Service → Flask), que intermedia a API externa. Mantém as camadas separadas." },
-    { tema: "notifyListeners", pergunta: "Em um Provider que estende ChangeNotifier, o que acontece se você atualizar a lista mas <b>esquecer</b> o <code>notifyListeners()</code>?",
+        "Porque colchetes simples tentam \"adivinhar\" o contexto (rótulo ou posição), o que pode gerar confusão e bugs.",
+        "Porque colchetes simples são muito mais lentos e travam o programa em tabelas grandes.",
+        "Porque <code>loc</code> e <code>iloc</code> são os únicos comandos que conseguem ler dados de um DataFrame.",
+        "Porque colchetes simples apagam os dados selecionados após exibi-los uma vez na tela."
+      ], correta: 0, explicacao: "<code>[]</code> tenta adivinhar se é rótulo ou posição — ambíguo. <code>loc</code>/<code>iloc</code> são explícitos, deixando o código à prova de bugs e legível." },
+    { tema: "Vetorização", pergunta: "Por que operações vetorizadas (ex.: <code>notas + 1</code>) são preferíveis a um loop <code>for</code> em Pandas/NumPy?",
       opcoes: [
-        "Os dados mudam na memória, mas as telas ouvintes não são reconstruídas, então a interface continua mostrando o valor antigo.",
-        "O aplicativo lança uma exceção em tempo de execução, pois o ChangeNotifier exige o notify após qualquer alteração de lista.",
-        "As telas se atualizam normalmente, pois o Provider detecta sozinho qualquer mudança na lista e reconstrói os widgets ouvintes.",
-        "A lista é revertida ao estado anterior automaticamente, já que uma alteração sem notify é considerada inválida pelo framework."
-      ], correta: 0, explicacao: "Sem <code>notifyListeners()</code>, os ouvintes não sabem que mudou — a UI congela no valor antigo. Não dá erro, só não atualiza." },
-    { tema: "SQLite · persistência", pergunta: "No teste obrigatório da lista de filmes, você cadastra 3 filmes, fecha e reabre o app, e eles somem. O que isso indica?",
+        "Porque são muito mais rápidas: a operação roda otimizada em todos os elementos de uma vez, sem laço em Python.",
+        "Porque um loop <code>for</code> não funciona em vetores NumPy, gerando erro de sintaxe.",
+        "Porque a vetorização altera os dados originais e o <code>for</code> nunca consegue alterá-los.",
+        "Porque não há diferença de performance; é apenas uma questão de gosto do programador."
+      ], correta: 0, explicacao: "Vetorização roda em código otimizado (C, por baixo) sobre todos os elementos de uma vez — muito mais rápido que iterar em Python com <code>for</code>." },
+    { tema: "NaN · propagação", pergunta: "Ao somar duas Series alinhadas por índice, o que acontece se um rótulo existe em uma mas não na outra?",
       opcoes: [
-        "Que a persistência não está funcionando — provavelmente os filmes estão só na List, sem serem gravados no SQLite.",
-        "Que o SQLite apaga automaticamente os dados a cada reinício, sendo necessário reconfigurá-lo para modo permanente.",
-        "Que o teste foi bem-sucedido, pois o esperado é justamente que a lista seja reiniciada toda vez que o app abrir.",
-        "Que faltou chamar <code>notifyListeners()</code>, único responsável por manter os dados salvos entre as execuções do app."
-      ], correta: 0, explicacao: "Se somem ao reabrir, não estão sendo persistidos no SQLite — ficaram só na List (memória). O Service não gravou de fato." },
-    { tema: "Firebase × SQLite", pergunta: "Qual é a diferença fundamental entre usar Firestore (Central de Missões) e SQLite (Lista de Filmes)?",
+        "O resultado daquele rótulo vira NaN, pois falta o valor correspondente em uma das Series.",
+        "O Pandas usa zero para o rótulo ausente, somando normalmente sem gerar nenhum NaN.",
+        "O rótulo que só existe em uma das Series é descartado silenciosamente do resultado.",
+        "É gerado um erro em tempo de execução, pois as Series precisam ter índices idênticos."
+      ], correta: 0, explicacao: "Alinhamento por índice: se um rótulo existe só em uma Series, não há par para a soma → o resultado vira NaN naquele rótulo." },
+    { tema: "describe · escopo", pergunta: "Por padrão, sobre quais colunas o <code>df.describe()</code> calcula as estatísticas?",
       opcoes: [
-        "O Firestore é um banco na nuvem (dados sincronizados e acessíveis remotamente); o SQLite é um banco local, no próprio dispositivo.",
-        "O Firestore guarda dados em tabelas relacionais e o SQLite em documentos, sendo essa a única diferença entre os dois bancos.",
-        "O SQLite exige conexão constante com a internet, enquanto o Firestore funciona totalmente offline dentro do aparelho do usuário.",
-        "Não há diferença real: ambos salvam os dados exatamente da mesma forma, mudando apenas o nome do pacote importado no Flutter."
-      ], correta: 0, explicacao: "Firestore = nuvem (documents, sincronizado). SQLite = local, no dispositivo. É a diferença entre persistência remota e local." },
-    { tema: "Estoque · fluxo login", pergunta: "No login do controle de estoque, qual é a sequência correta de verificação?",
+        "Apenas as colunas numéricas — colunas de texto são ignoradas por padrão.",
+        "Todas as colunas, inclusive as de texto, calculando média e desvio para strings também.",
+        "Apenas a primeira coluna do DataFrame, servindo como amostra representativa da tabela.",
+        "Apenas as colunas que não têm nenhum valor ausente (NaN) em nenhuma linha."
+      ], correta: 0, explicacao: "Por padrão, <code>describe()</code> só considera colunas numéricas (média, desvio, quartis não fazem sentido para texto puro)." },
+    { tema: "groupby · mecanismo", pergunta: "O que o <code>groupby()</code> faz sozinho, antes de aplicar uma função de agregação?",
       opcoes: [
-        "Usuário digita → Provider → Service → SQLite → SELECT buscando e-mail e senha → usuário encontrado libera o acesso.",
-        "Usuário digita → SQLite direto na tela → se achar o e-mail, o Provider é criado depois só para guardar o nome do usuário.",
-        "Usuário digita → Service faz um INSERT do login → SELECT confirma → e o Provider decide se a senha estava correta.",
-        "Usuário digita → Flask valida no servidor → retorna ao Flutter, pois o controle de estoque usa backend Python como os voos."
-      ], correta: 0, explicacao: "Login: tela → Provider → Service → SQLite (SELECT por e-mail e senha). Se encontrar, entra; senão, \"E-mail ou senha incorretos\"." },
-    { tema: "Firebase · excluir concluída", pergunta: "Na Central de Missões, o que acontece com a pontuação se você excluir uma missão que estava concluída?",
+        "Apenas separa os dados em grupos; ele só produz um resultado quando seguido de <code>sum()</code>, <code>mean()</code> etc.",
+        "Já retorna a soma de cada grupo automaticamente, dispensando qualquer função de agregação.",
+        "Ordena o DataFrame inteiro e remove as linhas duplicadas de cada grupo formado.",
+        "Cria um novo DataFrame vazio com uma coluna para cada grupo, sem os dados originais."
+      ], correta: 0, explicacao: "<code>groupby()</code> só define os grupos (split). O resultado aparece na agregação (apply): <code>.sum()</code>, <code>.mean()</code>, <code>.agg()</code>." },
+    { tema: "agg", pergunta: "O que <code>.agg({'vendas': ['sum', 'mean']})</code> permite fazer após um groupby?",
       opcoes: [
-        "A pontuação dela deixa de aparecer no total, pois o documento é removido do Firestore e não conta mais na soma.",
-        "A pontuação permanece no total como registro histórico, mesmo que a missão não apareça mais na lista da tela inicial.",
-        "A exclusão é bloqueada pelo app, que não permite remover missões concluídas justamente para não alterar a pontuação total.",
-        "A pontuação dobra temporariamente como bônus de conclusão antes de a missão ser finalmente removida da collection."
-      ], correta: 0, explicacao: "Excluir remove o documento do Firestore. Se era concluída, seus pontos somem do total — a soma recalcula sem ela." },
-    { tema: "PokéAPI · camadas", pergunta: "Ao adicionar \"buscar por ID\" na Pokédex, quais camadas precisam ser tocadas?",
+        "Aplicar várias funções de uma vez à mesma coluna — soma e média das vendas por grupo, juntas.",
+        "Aplicar apenas a primeira função da lista (soma), ignorando as demais informadas.",
+        "Renomear a coluna \"vendas\" para \"sum\" e depois para \"mean\" em sequência.",
+        "Filtrar apenas os grupos cuja soma de vendas seja maior que a média geral."
+      ], correta: 0, explicacao: "<code>agg()</code> aplica várias funções ao mesmo tempo: aqui, soma E média de vendas por grupo, num único resultado." },
+    { tema: "merge × concat · escolha", pergunta: "Você tem duas tabelas: uma de clientes e uma de pedidos, ligadas por <code>cliente_id</code>. Qual usar para juntá-las?",
       opcoes: [
-        "Rota Python (Flask), método na Service, dado guardado no Provider e a exibição na tela — o fluxo completo entre as camadas.",
-        "Apenas a tela em Flutter, que passa a chamar a PokéAPI diretamente com o ID informado pelo usuário no campo de busca.",
-        "Somente o Provider, que armazena o ID e o envia à PokéAPI sem precisar de rota nova no Flask nem método na Service.",
-        "Apenas o backend Flask, pois uma vez criada a rota o Flutter reconhece e exibe o novo Pokémon automaticamente sozinho."
-      ], correta: 0, explicacao: "Toda funcionalidade nova passa pelas camadas: rota Flask → método na Service → dado no Provider → exibição na tela." },
-    { tema: "async · await", pergunta: "Métodos que acessam a API ou o banco (ex.: buscar voos, ler o SQLite) normalmente retornam o quê?",
+        "<code>merge</code>, casando pela chave <code>cliente_id</code>, para associar cada pedido ao seu cliente.",
+        "<code>concat</code>, empilhando as duas tabelas uma embaixo da outra sem casar por chave.",
+        "<code>groupby</code>, agrupando as duas tabelas pela coluna <code>cliente_id</code> ao mesmo tempo.",
+        "<code>join</code> pelo índice numérico automático, ignorando a coluna <code>cliente_id</code>."
+      ], correta: 0, explicacao: "Tabelas relacionadas por uma chave (<code>cliente_id</code>) → <code>merge</code> (como um JOIN). <code>concat</code> só empilharia, sem associar corretamente." },
+    { tema: "Fluxo de análise", pergunta: "Segundo o cheat sheet, qual é a ordem lógica de um fluxo comum de análise?",
       opcoes: [
-        "Um <code>Future</code>, pois são operações assíncronas — usa-se <code>async</code>/<code>await</code> para esperar o resultado chegar.",
-        "Um valor imediato e síncrono, já que tanto o HTTP quanto o SQLite respondem instantaneamente sem qualquer espera.",
-        "Um <code>Stream</code> infinito, que precisa ser cancelado manualmente após a primeira resposta para não travar o aplicativo.",
-        "Um <code>void</code>, pois operações de rede e banco nunca devolvem dados diretamente — elas só disparam efeitos colaterais."
-      ], correta: 0, explicacao: "Rede e banco são assíncronos: retornam <code>Future</code>. Por isso os métodos são <code>async</code> e usam <code>await</code> para esperar." },
-    { tema: "Estoque · terminal", pergunta: "Por que a atividade de estoque pede <code>print()</code> no terminal para cada operação de banco?",
+        "head → info → filtro → groupby → agg → merge/concat.",
+        "merge → agg → groupby → filtro → info → head, na ordem inversa da exploração.",
+        "groupby → head → merge → info → filtro → agg, sem uma lógica de exploração inicial.",
+        "agg → filtro → merge → groupby → info → head, começando pela agregação final."
+      ], correta: 0, explicacao: "Fluxo comum: primeiro explora (<code>head</code>, <code>info</code>), filtra, agrupa (<code>groupby</code> + <code>agg</code>) e por fim combina (<code>merge</code>/<code>concat</code>)." },
+    { tema: "Máscara · combinada", pergunta: "Como filtrar linhas em que idade > 18 <b>e</b> cidade == \"BH\" ao mesmo tempo?",
       opcoes: [
-        "Para verificar se os dados realmente foram salvos/alterados no SQLite, acompanhando INSERT, SELECT, UPDATE e DELETE.",
-        "Porque o SQLite no Flutter Web só grava os dados de fato quando um <code>print()</code> é executado logo após a operação.",
-        "Para que o usuário final consiga ler no terminal as mensagens e confirmar cada ação antes de ela ser efetivada no banco.",
-        "Porque sem os <code>print()</code> o Flutter não consegue compilar um projeto que utilize o pacote de acesso ao SQLite."
-      ], correta: 0, explicacao: "Os <code>print()</code> servem para depurar/confirmar que a operação chegou ao banco. É uma checagem, não um requisito técnico do SQLite." },
-    { tema: "MVVM × MVC", pergunta: "A lista de filmes usa MVVM (Model-View-ViewModel). Qual o papel da ViewModel nesse padrão?",
+        "<code>df[(df['idade'] > 18) & (df['cidade'] == \"BH\")]</code>, combinando as condições com <code>&</code> e parênteses.",
+        "<code>df[df['idade'] > 18 and df['cidade'] == \"BH\"]</code>, usando a palavra <code>and</code> entre as condições.",
+        "<code>df[df['idade'] > 18][df['cidade'] == \"BH\"]</code> sempre gera erro e nunca funciona no Pandas.",
+        "<code>df.filter(idade > 18, cidade == \"BH\")</code>, o método próprio do Pandas para dois filtros."
+      ], correta: 0, explicacao: "Máscaras combinadas usam <code>&</code> (e) / <code>|</code> (ou), com cada condição entre parênteses. <code>and</code>/<code>or</code> do Python não funcionam aqui." },
+    { tema: "Ética · John Snow", pergunta: "No exemplo do mapa da cólera (John Snow, 1854), qual foi o poder da visualização de dados?",
       opcoes: [
-        "Faz a ponte entre a View e o Service: guarda a lista em memória, pede os dados ao Service e avisa a View com notifyListeners.",
-        "É o banco de dados em si, sendo a camada que executa diretamente os comandos SQL de INSERT, SELECT e UPDATE no SQLite.",
-        "É apenas a tela visual, responsável por desenhar os widgets e receber os toques do usuário, sem lógica de dados alguma.",
-        "Substitui completamente o Service, acumulando tanto o acesso ao banco quanto a exibição dos dados em uma única camada."
-      ], correta: 0, explicacao: "A ViewModel (equivalente ao Provider) intermedeia View e Service: mantém a lista, pede dados ao Service e notifica a View." },
-    { tema: "Firestore · id", pergunta: "No Model <code>Missao</code>, por que o campo <code>id</code> é declarado como <code>String? id</code> (com ?)?",
+        "Mapear os casos revelou que as mortes se agrupavam em torno de uma bomba de água, provando que a doença estava na água.",
+        "O mapa provou que a cólera era transmitida pelo ar, confirmando a teoria dos miasmas da época.",
+        "O mapa não mudou nada; a descoberta da causa da cólera veio apenas de experimentos em laboratório.",
+        "A visualização apenas deixou os dados mais bonitos, sem alterar a concepção médica da época."
+      ], correta: 0, explicacao: "John Snow mapeou os casos e o agrupamento ao redor de uma bomba d'água provou que a cólera vinha da água — mudou a medicina. Dados subvertendo o senso comum." },
+    { tema: "Ética · RH automatizado", pergunta: "No caso da IA de RH que descartava currículos \"femininos\", qual foi a causa real do problema?",
       opcoes: [
-        "Porque uma missão nova ainda não tem id antes de ser salva — o id só existe depois que o Firestore cria o documento.",
-        "Porque o id de uma missão pode ser tanto texto quanto número, e o <code>?</code> permite alternar livremente entre os dois tipos.",
-        "Porque o <code>?</code> torna o id secreto, escondendo-o da tela de detalhes por questões de segurança dos dados do usuário.",
-        "Porque toda variável em Dart precisa terminar com <code>?</code> para poder ser usada dentro de uma classe de modelo."
-      ], correta: 0, explicacao: "<code>String?</code> (nullable) porque antes de salvar a missão não tem id — ele só é atribuído quando o Firestore cria o documento." },
-    { tema: "Voos · dois terminais", pergunta: "Na atividade de voos, por que é preciso manter dois terminais abertos ao mesmo tempo?",
+        "A IA foi treinada com 10 anos de currículos majoritariamente masculinos e deduziu que mulheres não eram qualificadas.",
+        "Um programador inseriu propositalmente uma regra para descartar mulheres do processo seletivo.",
+        "A IA tinha um bug de código que trocava aleatoriamente currículos aprovados por reprovados.",
+        "As mulheres realmente eram menos qualificadas, e a IA apenas refletiu essa verdade objetiva."
+      ], correta: 0, explicacao: "A IA automatizou o viés histórico: treinada com dados de contratações passadas (majoritariamente homens), ela replicou o padrão. É viés nos dados, não código malicioso." },
+    { tema: "Ética · origem do viés", pergunta: "Segundo o gráfico da aula, qual é a maior origem do viés nos algoritmos (55%)?",
       opcoes: [
-        "Um roda o backend Python (Flask) e o outro roda o Flutter; se o terminal do Python fechar, o Flutter não recebe mais dados.",
-        "Um terminal compila o Flutter e o outro serve apenas para digitar comandos git, mantendo o histórico do projeto atualizado.",
-        "Porque o Flutter precisa de dois processos idênticos rodando em paralelo para conseguir renderizar as telas em Flutter Web.",
-        "Um terminal roda o app em modo mobile e o outro em modo web, permitindo testar as duas versões simultaneamente."
-      ], correta: 0, explicacao: "Terminal 1 = <code>python app.py</code> (backend); Terminal 2 = <code>flutter run</code>. Sem o Python rodando, o Flutter não carrega os dados." },
-    { tema: "Estoque · SELECT antes INSERT", pergunta: "Por que, no cadastro de usuário, é preciso um SELECT antes do INSERT?",
+        "O viés nos dados históricos humanos — a tecnologia funciona como um \"espelho social\".",
+        "Erros técnicos do sistema, como falhas de programação e bugs no código do algoritmo.",
+        "O viés de amostragem, causado por coletar dados de poucas pessoas de uma vez só.",
+        "O design e a seleção de variáveis feitos pelos engenheiros ao construir o modelo."
+      ], correta: 0, explicacao: "55% vem do viés nos dados históricos humanos. A maioria da discriminação em IA não é código malicioso — é a absorção passiva de preconceitos da sociedade." },
+    { tema: "Series · name", pergunta: "Qual é o papel do atributo <code>name</code> de uma Series?",
       opcoes: [
-        "Para verificar se o e-mail já existe no banco e, se existir, bloquear o cadastro mostrando \"E-mail já cadastrado\".",
-        "Porque o SQLite exige um SELECT imediatamente antes de qualquer INSERT, senão a inserção é rejeitada pelo banco de dados.",
-        "Para carregar a lista de todos os usuários na tela antes de adicionar o novo, mantendo a interface sempre atualizada.",
-        "Porque o SELECT gera o id do novo usuário, que precisa ser conhecido antes de o registro ser inserido na tabela."
-      ], correta: 0, explicacao: "O SELECT checa se o e-mail já está cadastrado. Se sim, não insere (evita duplicata); se não, faz o INSERT." },
-    { tema: "PokéAPI · JSON path", pergunta: "Para adicionar \"ataque especial\" na tela de detalhes, onde esse dado deve ser localizado primeiro?",
+        "É um nome global opcional para a coluna — útil quando a Series vira uma coluna de um DataFrame.",
+        "É o nome do índice de cada linha, substituindo os rótulos individuais da estrutura.",
+        "É obrigatório e precisa ser único, servindo de chave primária da Series no Pandas.",
+        "É o nome do arquivo de onde os dados da Series foram carregados originalmente."
+      ], correta: 0, explicacao: "<code>name</code> é um nome global opcional para a Series — quando ela vira coluna de um DataFrame, esse nome é o cabeçalho da coluna." },
+    { tema: "Estatísticas nativas", pergunta: "Por que chamar <code>notas.mean()</code> é mais eficiente que somar manualmente e dividir num loop?",
       opcoes: [
-        "No JSON retornado pela PokéAPI — é preciso achar o campo no JSON antes de passá-lo pela rota Python até o Flutter.",
-        "Diretamente no código do Flutter, criando um campo novo e preenchendo com um valor fixo escolhido pelo desenvolvedor.",
-        "Na tabela do SQLite, já que os atributos dos Pokémon são armazenados localmente e não vêm da PokéAPI em tempo real.",
-        "No próprio Provider, que calcula o ataque especial a partir da altura e do peso do Pokémon já recebidos na busca."
-      ], correta: 0, explicacao: "Primeiro localiza-se o dado no JSON da PokéAPI; depois ele é devolvido pela rota Flask e exibido no Flutter. O dado vem da API." },
-    { tema: "Estado · loading", pergunta: "Por que o Provider costuma guardar uma variável booleana de \"carregando\" (loading)?",
+        "Porque a Series tem métodos estatísticos nativos otimizados, que rodam em microssegundos sobre todos os dados.",
+        "Porque <code>mean()</code> não calcula de fato a média, apenas retorna uma estimativa rápida e aproximada.",
+        "Porque um loop manual não consegue acessar os valores de uma Series, apenas o índice dela.",
+        "Porque não há diferença real; ambos levam o mesmo tempo em qualquer tamanho de dados."
+      ], correta: 0, explicacao: "Uma Series tem dezenas de métodos estatísticos nativos (<code>mean</code>, <code>max</code>, <code>median</code>...) otimizados — muito mais rápidos que um loop em Python." },
+    { tema: "Matriz · índices", pergunta: "Em uma matriz NumPy, qual a diferença entre <code>matriz[0]</code> e <code>matriz[:, 0]</code>?",
       opcoes: [
-        "Para a tela saber se deve mostrar um indicador de progresso enquanto a busca (assíncrona) ainda não terminou.",
-        "Para contar quantas vezes a API foi chamada durante a sessão, limitando o número de requisições permitidas por minuto.",
-        "Para armazenar o resultado da última requisição, servindo de cache e evitando novas chamadas à API para o mesmo dado.",
-        "Para decidir qual tela abrir primeiro ao iniciar o app, alternando entre a lista de voos e a tela de detalhes."
-      ], correta: 0, explicacao: "A flag de loading permite à tela mostrar o indicador de carregamento enquanto o Future não resolve, e escondê-lo ao terminar." },
-    { tema: "Firebase · pontuação Provider", pergunta: "Na Central de Missões, quem é o responsável mais indicado por calcular a pontuação total?",
+        "<code>matriz[0]</code> retorna a primeira linha inteira; <code>matriz[:, 0]</code> retorna a primeira coluna inteira.",
+        "<code>matriz[0]</code> retorna a primeira coluna; <code>matriz[:, 0]</code> retorna a primeira linha, ao contrário.",
+        "Os dois retornam exatamente o mesmo: a primeira linha da matriz de dados.",
+        "<code>matriz[0]</code> retorna o elemento [0][0]; <code>matriz[:, 0]</code> retorna a matriz inteira."
+      ], correta: 0, explicacao: "<code>matriz[0]</code> = primeira linha. <code>matriz[:, 0]</code> = todas as linhas da coluna 0 = primeira coluna. O \":\" significa \"todas as linhas\"." },
+    { tema: "float64", pergunta: "Por que um vetor NumPy costuma ter um único tipo de dado (ex.: <code>float64</code>)?",
       opcoes: [
-        "O Provider, que já guarda a lista de missões e pode somar os pontos das que estão com <code>concluida: true</code>.",
-        "A HomePage, que deve percorrer os documentos do Firestore diretamente e somar os pontos ali mesmo dentro do build.",
-        "O Firebase, através de uma função automática que devolve a soma já pronta sempre que um documento é modificado.",
-        "O Model <code>Missao</code>, cujo método <code>toMap()</code> retorna também o total acumulado de todas as missões concluídas."
-      ], correta: 0, explicacao: "O Provider guarda a lista e o estado, então é onde a soma dos pontos das concluídas naturalmente se encaixa. A tela só exibe." },
-    { tema: "Web · SQLite", pergunta: "Na atividade de estoque (Flutter Web), por que os arquivos <code>sqlite3.wasm</code> e <code>sqflite_sw.js</code> vão na pasta <code>web/</code>?",
+        "Porque a homogeneidade de tipo permite armazenamento contíguo e cálculos extremamente rápidos.",
+        "Porque o NumPy não consegue lidar com números inteiros, apenas com decimais do tipo float.",
+        "Porque cada elemento precisa de um tipo diferente para o vetor funcionar corretamente.",
+        "Porque o tipo <code>float64</code> é apenas um rótulo decorativo, sem efeito real sobre os dados."
+      ], correta: 0, explicacao: "Um único tipo por vez (ex.: <code>float64</code>) permite ao NumPy guardar tudo contíguo na memória e fazer cálculos vetorizados muito rápidos." },
+    { tema: "list × ndarray × Series", pergunta: "Comparando as três estruturas, qual afirmação está correta?",
       opcoes: [
-        "Porque o SQLite não roda nativamente no navegador; esses arquivos permitem que ele funcione via WebAssembly no Flutter Web.",
-        "Porque a pasta <code>web/</code> é onde o Flutter guarda o banco de dados em si, com os dados dos usuários e produtos salvos.",
-        "Porque esses arquivos substituem o pacote sqflite, dispensando qualquer dependência adicional no <code>pubspec.yaml</code>.",
-        "Porque o navegador só executa arquivos JavaScript, então todo o código Dart do projeto precisa ser copiado para essa pasta."
-      ], correta: 0, explicacao: "No navegador o SQLite roda via WebAssembly: <code>sqlite3.wasm</code> + <code>sqflite_sw.js</code> em <code>web/</code> tornam isso possível." },
-    { tema: "Separação · HTTP", pergunta: "Colocar <code>http.get(...)</code> diretamente na HomePage viola qual princípio das atividades?",
+        "List é flexível mas lenta; ndarray é rápido porém sem rótulos; Series une a velocidade do NumPy com índices reais.",
+        "List é a mais rápida das três; ndarray é a mais lenta; e a Series não serve para cálculos.",
+        "As três são idênticas em performance, mudando apenas o nome com que são chamadas em Python.",
+        "Só a list aceita rótulos; o ndarray e a Series trabalham exclusivamente por posição numérica."
+      ], correta: 0, explicacao: "List: flexível, lenta em cálculos grandes. ndarray: rápido, sem rótulos. Series: velocidade do NumPy + índice rotulado. É o \"melhor dos dois mundos\"." },
+    { tema: "Ética · privacidade", pergunta: "Segundo a aula, qual é o risco ligado à coleta massiva de dados (\"Fim da Privacidade\")?",
       opcoes: [
-        "A separação de responsabilidades: a requisição HTTP pertence à Service; a tela só deve acessar dados pelo Provider.",
-        "O princípio de que toda tela deve ser um StatelessWidget, incompatível com chamadas de rede feitas dentro dela.",
-        "A regra de que o Flutter Web não aceita requisições HTTP, exigindo que todas passem obrigatoriamente pelo Firebase.",
-        "Nenhum: colocar o <code>http.get</code> na tela é a forma recomendada, pois reduz a quantidade de arquivos do projeto."
-      ], correta: 0, explicacao: "HTTP na tela quebra a separação de camadas. O certo: Service faz o HTTP, Provider guarda o estado, a tela só exibe." },
-    { tema: "CRUD · mapeamento", pergunta: "Relacionando as operações CRUD com as ações do app de estoque, qual associação está correta?",
+        "A criação de perfis psicológicos profundos, apagando a linha entre serviço personalizado e vigilância.",
+        "O aumento do custo de armazenamento, que torna os servidores caros demais para as empresas.",
+        "A lentidão dos algoritmos, que ficam sobrecarregados ao processar dados de muitas pessoas.",
+        "A perda de dados por falhas técnicas, sem qualquer implicação ética para os usuários."
+      ], correta: 0, explicacao: "Fim da privacidade: a coleta massiva de dados íntimos permite perfis psicológicos profundos, ameaçando a autonomia — onde acaba o serviço e começa a vigilância?" },
+    { tema: "Análise · propósito", pergunta: "Qual frase resume melhor o valor de organizar e analisar dados, segundo a aula de ética?",
       opcoes: [
-        "Cadastrar = INSERT, login = SELECT, alterar quantidade = UPDATE, excluir produto = DELETE.",
-        "Cadastrar = SELECT, login = INSERT, alterar quantidade = DELETE, excluir produto = UPDATE.",
-        "Cadastrar = UPDATE, login = DELETE, alterar quantidade = INSERT, excluir produto = SELECT.",
-        "Todas as ações usam INSERT, pois qualquer interação com o banco no SQLite é considerada uma inserção de dados."
-      ], correta: 0, explicacao: "CRUD: cadastrar → INSERT, login/listar → SELECT, alterar quantidade → UPDATE, excluir → DELETE. As quatro operações do banco." }
+        "Os dados podem subverter o \"senso comum\" e revelar padrões invisíveis a olho nu — mas exigem responsabilidade.",
+        "Os dados sempre confirmam a intuição humana, servindo apenas para provar o que já sabíamos.",
+        "A análise de dados é neutra e nunca causa impacto real sobre decisões sociais ou econômicas.",
+        "Quanto mais dados forem coletados, mais verdadeiras e imparciais as conclusões serão automaticamente."
+      ], correta: 0, explicacao: "Dados podem revelar padrões invisíveis e mudar concepções (John Snow) — mas também sistematizar preconceito. Poder que exige responsabilidade." }
   ];
 
   /* =========================== MODO CÓDIGO (16) =========================== */
   const codigo = [
-    { tema: "Provider", trecho: `<span class="kw">class</span> <span class="fn">VooProvider</span> <span class="kw">extends</span> <span class="fn">ChangeNotifier</span> {\n  List&lt;Voo&gt; voos = [];\n\n  <span class="fn">void</span> setVoos(List&lt;Voo&gt; novos) {\n    voos = novos;\n    <span class="fn">notifyListeners</span>();\n  }\n}`,
-      pergunta: "O que este código faz?",
+    { tema: "NumPy · vetor", trecho: `<span class="kw">import</span> numpy <span class="kw">as</span> np\n\nnotas = np.array([<span class="num">7.5</span>, <span class="num">8.0</span>, <span class="num">6.5</span>, <span class="num">9.0</span>])\n<span class="fn">print</span>(notas + <span class="num">1</span>)`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Define um Provider que guarda a lista de voos e, ao recebê-la, chama <code>notifyListeners()</code> para atualizar as telas ouvintes.",
-        "Cria uma tela que exibe os voos, redesenhando-se automaticamente sempre que o método <code>setVoos</code> é chamado pela API.",
-        "Faz a requisição HTTP para buscar os voos e converte o JSON recebido em uma lista de objetos <code>Voo</code> do aplicativo.",
-        "Cria uma tabela <code>voos</code> no banco SQLite e insere cada voo recebido como um novo registro dentro dela."
-      ], correta: 0, explicacao: "É um Provider (ChangeNotifier): guarda <code>voos</code> e, ao atualizar, chama <code>notifyListeners()</code> para as telas se redesenharem." },
-    { tema: "Service · HTTP", trecho: `<span class="kw">Future</span>&lt;List&lt;Voo&gt;&gt; <span class="fn">buscarVoos</span>(String aeroporto) <span class="kw">async</span> {\n  <span class="kw">final</span> url = <span class="fn">Uri</span>.parse(\n    <span class="str">"http://127.0.0.1:5001/api/voos?aeroporto="</span> + aeroporto);\n  <span class="kw">final</span> resp = <span class="kw">await</span> http.get(url);\n  <span class="kw">final</span> dados = jsonDecode(resp.body);\n  <span class="kw">return</span> dados.map((v) => <span class="fn">Voo</span>.fromJson(v)).toList();\n}`,
-      pergunta: "O que este método da Service faz?",
+        "<code>[8.5 9.0 7.5 10.0]</code> — a soma ocorre elemento a elemento, aumentando 1 em cada nota.",
+        "<code>[7.5 8.0 6.5 9.0 1]</code> — o número 1 é adicionado como novo elemento ao fim do vetor.",
+        "<code>[8.5]</code> — apenas a primeira nota é somada com 1 e retornada sozinha.",
+        "Um erro, pois não é possível somar um número inteiro a um vetor de floats no NumPy."
+      ], correta: 0, explicacao: "Operação vetorizada: <code>notas + 1</code> soma 1 em cada elemento de uma vez → <code>[8.5 9.0 7.5 10.0]</code>." },
+    { tema: "Series · criação", trecho: `<span class="kw">import</span> pandas <span class="kw">as</span> pd\n\nnotas = pd.Series([<span class="num">7</span>, <span class="num">8</span>], index=[<span class="str">"Ana"</span>, <span class="str">"Bruno"</span>])\n<span class="fn">print</span>(notas.loc[<span class="str">"Ana"</span>])`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Faz a requisição HTTP para a API Python, decodifica o JSON da resposta e devolve uma lista de objetos <code>Voo</code>.",
-        "Exibe a lista de voos na tela, montando um widget para cada voo retornado pela API do backend em Python.",
-        "Guarda os voos no Provider e avisa as telas com <code>notifyListeners()</code> assim que os dados forem recebidos.",
-        "Cria a rota <code>/api/voos</code> no Flask, definindo qual código Python roda quando o endereço é acessado."
-      ], correta: 0, explicacao: "É a Service: faz o <code>http.get</code>, <code>jsonDecode</code> na resposta e converte em <code>List&lt;Voo&gt;</code>. Só comunicação, sem UI nem estado." },
-    { tema: "Flask · rota", trecho: `@app.route(<span class="str">"/pokemons/nome/&lt;nome&gt;"</span>)\n<span class="kw">def</span> <span class="fn">buscar_por_nome</span>(nome):\n    r = requests.get(<span class="str">f"https://pokeapi.co/api/v2/pokemon/{nome}"</span>)\n    dados = r.json()\n    <span class="kw">return</span> jsonify({\n        <span class="str">"id"</span>: dados[<span class="str">"id"</span>],\n        <span class="str">"nome"</span>: dados[<span class="str">"name"</span>],\n        <span class="str">"peso"</span>: dados[<span class="str">"weight"</span>]\n    })`,
-      pergunta: "O que esta rota Flask faz?",
+        "<code>7</code> — <code>loc[\"Ana\"]</code> busca pelo rótulo \"Ana\", que corresponde ao valor 7.",
+        "<code>8</code> — <code>loc</code> sempre retorna o último valor da Series, ignorando o rótulo.",
+        "<code>Ana</code> — o comando retorna o próprio rótulo pesquisado, e não o valor.",
+        "Um erro, pois <code>loc</code> não aceita rótulos de texto, apenas posições numéricas."
+      ], correta: 0, explicacao: "A Series liga \"Ana\"→7 e \"Bruno\"→8. <code>loc[\"Ana\"]</code> busca pelo rótulo e retorna 7." },
+    { tema: "Series · dicionário", trecho: `dados = pd.Series({<span class="str">"BH"</span>: <span class="num">22</span>, <span class="str">"SP"</span>: <span class="num">19</span>})\n<span class="fn">print</span>(dados.index)`,
+      pergunta: "O que este código imprime como índice?",
       opcoes: [
-        "Recebe um nome na URL, consulta a PokéAPI, extrai alguns campos do JSON e devolve um JSON próprio para o Flutter.",
-        "Salva o Pokémon pesquisado no banco SQLite e retorna uma mensagem de sucesso para a tela do aplicativo Flutter.",
-        "Renderiza uma página HTML com os detalhes do Pokémon, exibindo o id, o nome e o peso diretamente no navegador.",
-        "Acessa a PokéAPI diretamente do Flutter, sem intermediar nada, apenas repassando o endereço da API para o app."
-      ], correta: 0, explicacao: "A rota <code>/pokemons/nome/&lt;nome&gt;</code> consulta a PokéAPI, pega os campos do JSON e devolve com <code>jsonify</code>. É o Flask intermediando." },
-    { tema: "SQLite · INSERT", trecho: `<span class="kw">Future</span>&lt;void&gt; <span class="fn">inserirFilme</span>(Filme f) <span class="kw">async</span> {\n  <span class="kw">final</span> db = <span class="kw">await</span> banco;\n  <span class="kw">await</span> db.insert(<span class="str">"filmes"</span>, {\n    <span class="str">"titulo"</span>: f.titulo,\n    <span class="str">"assistido"</span>: f.assistido ? <span class="num">1</span> : <span class="num">0</span>,\n  });\n}`,
-      pergunta: "O que este método faz e por que o <code>? 1 : 0</code>?",
+        "As chaves do dicionário: <code>['BH', 'SP']</code> — elas viraram o índice da Series.",
+        "Os valores do dicionário: <code>[22, 19]</code> — os valores viram o índice na Series.",
+        "Uma numeração automática <code>[0, 1]</code>, ignorando as chaves do dicionário.",
+        "Um erro, pois a <code>pd.Series</code> não pode ser criada a partir de um dicionário."
+      ], correta: 0, explicacao: "Criando Series de dicionário, as chaves viram o índice → <code>['BH', 'SP']</code>. Os valores (22, 19) viram os dados." },
+    { tema: "loc × iloc", trecho: `notas = pd.Series([<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>], index=[<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>])\n<span class="fn">print</span>(notas.iloc[<span class="num">0</span>], notas.loc[<span class="str">"c"</span>])`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Insere um filme na tabela do SQLite; o ternário converte o booleano <code>assistido</code> em 1 (true) ou 0 (false).",
-        "Busca um filme já existente e o marca como assistido, usando 1 ou 0 para escolher qual coluna da tabela atualizar.",
-        "Cria a tabela <code>filmes</code> com uma coluna de nome 1 e outra 0, correspondentes aos filmes vistos e não vistos.",
-        "Exclui o filme do banco se ele já foi assistido (1) e o mantém caso ainda não tenha sido assistido (0) pelo usuário."
-      ], correta: 0, explicacao: "É um INSERT. O SQLite não tem booleano, então <code>assistido ? 1 : 0</code> converte true/false em 1/0 para a coluna INTEGER." },
-    { tema: "SQLite · SELECT", trecho: `<span class="kw">Future</span>&lt;List&lt;Filme&gt;&gt; <span class="fn">listarFilmes</span>() <span class="kw">async</span> {\n  <span class="kw">final</span> db = <span class="kw">await</span> banco;\n  <span class="kw">final</span> linhas = <span class="kw">await</span> db.query(<span class="str">"filmes"</span>);\n  <span class="kw">return</span> linhas.map((l) => <span class="fn">Filme</span>.fromMap(l)).toList();\n}`,
-      pergunta: "O que este método retorna?",
+        "<code>10 30</code> — <code>iloc[0]</code> pega a posição 0 (10) e <code>loc[\"c\"]</code> pega o rótulo \"c\" (30).",
+        "<code>a c</code> — os comandos retornam os rótulos das posições, e não os valores.",
+        "<code>10 10</code> — ambos retornam o primeiro valor, pois apontam para a mesma posição.",
+        "Um erro, pois não é possível misturar <code>iloc</code> e <code>loc</code> na mesma linha."
+      ], correta: 0, explicacao: "<code>iloc[0]</code> = posição 0 = 10. <code>loc[\"c\"]</code> = rótulo \"c\" = 30. Resultado: <code>10 30</code>." },
+    { tema: "Máscara booleana", trecho: `df = pd.DataFrame({<span class="str">"idade"</span>: [<span class="num">15</span>, <span class="num">22</span>, <span class="num">17</span>, <span class="num">30</span>]})\nadultos = df[df[<span class="str">"idade"</span>] > <span class="num">18</span>]\n<span class="fn">print</span>(<span class="fn">len</span>(adultos))`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Uma lista com todos os filmes salvos no SQLite, convertendo cada linha da tabela em um objeto <code>Filme</code>.",
-        "Apenas o último filme cadastrado, pois <code>db.query</code> sempre retorna somente o registro mais recente da tabela.",
-        "O número total de filmes na tabela, funcionando como um contador em vez de devolver os dados dos filmes em si.",
-        "Uma lista de filmes vinda da API Python, já que <code>db.query</code> faz uma requisição HTTP ao backend Flask."
-      ], correta: 0, explicacao: "É um SELECT (<code>db.query</code>): busca todas as linhas de <code>filmes</code> e converte cada uma em <code>Filme</code> com <code>fromMap</code>." },
-    { tema: "SQLite · UPDATE", trecho: `<span class="kw">await</span> db.update(\n  <span class="str">"produtos"</span>,\n  {<span class="str">"quantidade"</span>: novaQtd},\n  where: <span class="str">"id = ?"</span>,\n  whereArgs: [produto.id],\n);`,
-      pergunta: "O que este código faz?",
+        "<code>2</code> — apenas as idades 22 e 30 são maiores que 18, sobrando 2 linhas.",
+        "<code>4</code> — o filtro mantém todas as linhas do DataFrame original.",
+        "<code>18</code> — o resultado é o valor usado na condição do filtro booleano.",
+        "Um erro, pois não é permitido usar <code>len()</code> em um DataFrame filtrado."
+      ], correta: 0, explicacao: "A máscara <code>idade > 18</code> mantém 22 e 30 → 2 linhas. <code>len()</code> conta essas linhas → <code>2</code>." },
+    { tema: "info", trecho: `df = pd.DataFrame({\n  <span class="str">"nome"</span>: [<span class="str">"Ana"</span>, <span class="str">"Bruno"</span>],\n  <span class="str">"idade"</span>: [<span class="num">22</span>, <span class="num">19</span>]\n})\ndf.<span class="fn">info</span>()`,
+      pergunta: "O que <code>df.info()</code> mostra sobre este DataFrame?",
       opcoes: [
-        "Atualiza a quantidade de um produto específico no SQLite, identificando qual pela cláusula <code>where: \"id = ?\"</code>.",
-        "Insere um novo produto na tabela com a quantidade informada, criando um registro sempre que a função é chamada.",
-        "Exclui o produto cujo id corresponde ao informado, removendo sua linha inteira da tabela de produtos do banco.",
-        "Busca o produto pelo id e apenas exibe sua quantidade atual, sem alterar nenhum valor gravado no banco de dados."
-      ], correta: 0, explicacao: "É um UPDATE: altera <code>quantidade</code> só no produto com aquele <code>id</code> (o <code>?</code> é substituído por <code>whereArgs</code>). Persiste a mudança." },
-    { tema: "Firestore · add", trecho: `<span class="kw">Future</span>&lt;void&gt; <span class="fn">adicionar</span>(Missao m) <span class="kw">async</span> {\n  <span class="kw">await</span> FirebaseFirestore.instance\n    .collection(<span class="str">"missoes"</span>)\n    .add(m.toMap());\n}`,
-      pergunta: "O que este método da Service faz?",
+        "Um resumo: 2 colunas (nome, idade), seus tipos (object e int) e a contagem de valores não nulos.",
+        "As estatísticas descritivas (média e desvio) das colunas nome e idade da tabela.",
+        "Apenas os valores das duas linhas do DataFrame, exibindo a tabela por completo.",
+        "A soma total das idades (41) e a concatenação dos nomes em uma única string."
+      ], correta: 0, explicacao: "<code>info()</code> resume estrutura: nomes e tipos das colunas + contagem de não nulos. Não faz cálculos estatísticos (isso é o <code>describe()</code>)." },
+    { tema: "groupby", trecho: `df = pd.DataFrame({\n  <span class="str">"cat"</span>: [<span class="str">"A"</span>, <span class="str">"B"</span>, <span class="str">"A"</span>],\n  <span class="str">"vendas"</span>: [<span class="num">10</span>, <span class="num">5</span>, <span class="num">20</span>]\n})\n<span class="fn">print</span>(df.groupby(<span class="str">"cat"</span>)[<span class="str">"vendas"</span>].sum())`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Adiciona um novo documento na collection <code>missoes</code> do Firestore, convertendo a missão com <code>toMap()</code>.",
-        "Busca todas as missões da collection <code>missoes</code> e as devolve como uma lista de objetos <code>Missao</code>.",
-        "Atualiza uma missão existente no Firestore, alterando o campo <code>concluida</code> para true no documento correto.",
-        "Cria a collection <code>missoes</code> no banco SQLite local e insere a missão como um novo registro na tabela."
-      ], correta: 0, explicacao: "<code>.collection(\"missoes\").add(m.toMap())</code> cria um novo documento no Firestore. O <code>toMap()</code> converte o objeto Dart em Map." },
-    { tema: "Firestore · get", trecho: `<span class="kw">final</span> snap = <span class="kw">await</span> FirebaseFirestore.instance\n  .collection(<span class="str">"missoes"</span>)\n  .get();\n<span class="kw">return</span> snap.docs\n  .map((d) => <span class="fn">Missao</span>.fromMap(d.data())..id = d.id)\n  .toList();`,
-      pergunta: "O que este código retorna?",
+        "As vendas somadas por categoria: A = 30 (10+20) e B = 5.",
+        "A soma total de todas as vendas (35), sem separar por categoria.",
+        "A quantidade de categorias diferentes existentes na coluna \"cat\" (2).",
+        "As vendas ordenadas do menor para o maior valor: 5, 10, 20."
+      ], correta: 0, explicacao: "Agrupa por \"cat\" e soma as vendas: A junta 10+20 = 30, B tem 5. Resultado por grupo." },
+    { tema: "fillna", trecho: `<span class="kw">import</span> numpy <span class="kw">as</span> np\ns = pd.Series([<span class="num">1</span>, np.nan, <span class="num">3</span>])\n<span class="fn">print</span>(s.fillna(<span class="num">0</span>).tolist())`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Uma lista de todas as missões da collection, convertendo cada documento em <code>Missao</code> e guardando seu id.",
-        "Apenas a missão mais recente da collection, pois <code>.get()</code> retorna somente o último documento adicionado.",
-        "Um número indicando quantas missões existem no Firestore, sem devolver os dados de cada missão individualmente.",
-        "Uma única missão escolhida aleatoriamente entre todos os documentos existentes na collection <code>missoes</code>."
-      ], correta: 0, explicacao: "<code>.get()</code> traz todos os documentos; o <code>.map</code> converte cada um em <code>Missao</code> via <code>fromMap</code>, guardando o <code>id</code> do documento." },
-    { tema: "Consumer", trecho: `<span class="fn">Consumer</span>&lt;VooProvider&gt;(\n  builder: (context, provider, _) {\n    <span class="kw">if</span> (provider.carregando) {\n      <span class="kw">return</span> <span class="fn">CircularProgressIndicator</span>();\n    }\n    <span class="kw">return</span> <span class="fn">Text</span>(<span class="str">"Voos: "</span> + provider.voos.length.toString());\n  },\n)`,
-      pergunta: "O que este widget exibe?",
+        "<code>[1.0, 0.0, 3.0]</code> — o NaN da posição do meio é preenchido com 0.",
+        "<code>[1.0, 3.0]</code> — a linha com NaN é removida da Series.",
+        "<code>[1, nan, 3]</code> — o <code>fillna</code> não altera nada quando o valor é 0.",
+        "Um erro, pois não é possível usar <code>fillna</code> em uma Series com NaN."
+      ], correta: 0, explicacao: "<code>fillna(0)</code> troca o NaN por 0 → <code>[1.0, 0.0, 3.0]</code>. Para remover a linha seria <code>dropna()</code>." },
+    { tema: "isna", trecho: `df = pd.DataFrame({\n  <span class="str">"a"</span>: [<span class="num">1</span>, np.nan, <span class="num">3</span>],\n  <span class="str">"b"</span>: [np.nan, np.nan, <span class="num">6</span>]\n})\n<span class="fn">print</span>(df.isna().sum().tolist())`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Mostra um indicador de carregamento enquanto <code>carregando</code> for true; caso contrário, exibe a quantidade de voos.",
-        "Sempre exibe a quantidade de voos, ignorando o estado de carregamento, pois o <code>Consumer</code> não lê variáveis booleanas.",
-        "Faz a requisição HTTP dos voos toda vez que a tela é reconstruída e mostra o resultado assim que ele chega da API.",
-        "Salva os voos no SQLite e mostra uma mensagem de confirmação de que os dados foram persistidos com sucesso."
-      ], correta: 0, explicacao: "O <code>Consumer</code> ouve o Provider e reconstrói: se <code>carregando</code>, mostra o spinner; senão, mostra o número de voos." },
-    { tema: "Navigator", trecho: `<span class="fn">Navigator</span>.push(\n  context,\n  <span class="fn">MaterialPageRoute</span>(\n    builder: (_) => <span class="fn">DetalhesVoo</span>(voo: voo),\n  ),\n);`,
-      pergunta: "O que este código faz ao ser executado?",
+        "<code>[1, 2]</code> — a coluna \"a\" tem 1 NaN e a coluna \"b\" tem 2 NaN.",
+        "<code>[3, 3]</code> — o total de linhas de cada coluna do DataFrame.",
+        "<code>[2, 1]</code> — a coluna \"a\" tem 2 NaN e a \"b\" tem 1, na ordem inversa.",
+        "<code>3</code> — o total geral de valores ausentes somando as duas colunas."
+      ], correta: 0, explicacao: "<code>isna()</code> marca os NaN; <code>.sum()</code> conta por coluna: \"a\" tem 1, \"b\" tem 2 → <code>[1, 2]</code>." },
+    { tema: "sort_values", trecho: `df = pd.DataFrame({<span class="str">"idade"</span>: [<span class="num">30</span>, <span class="num">18</span>, <span class="num">25</span>]})\n<span class="fn">print</span>(df.sort_values(<span class="str">"idade"</span>)[<span class="str">"idade"</span>].tolist())`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Abre a tela <code>DetalhesVoo</code> por cima da atual, passando o objeto <code>voo</code> pelo construtor da nova tela.",
-        "Substitui a tela atual por <code>DetalhesVoo</code> sem permitir voltar, removendo a lista de voos da pilha de navegação.",
-        "Guarda o voo selecionado no Provider e avisa as outras telas com <code>notifyListeners()</code> para se atualizarem.",
-        "Faz uma requisição à API buscando os detalhes daquele voo específico e depois exibe o resultado em um SnackBar."
-      ], correta: 0, explicacao: "<code>Navigator.push</code> empilha a tela de detalhes, passando o <code>voo</code> pelo construtor. Dá pra voltar (a lista segue na pilha)." },
-    { tema: "SQLite · login", trecho: `<span class="kw">final</span> res = <span class="kw">await</span> db.query(\n  <span class="str">"usuarios"</span>,\n  where: <span class="str">"email = ? AND senha = ?"</span>,\n  whereArgs: [email, senha],\n);\n<span class="kw">return</span> res.isNotEmpty;`,
-      pergunta: "O que este código verifica?",
+        "<code>[18, 25, 30]</code> — as idades ordenadas do menor para o maior (crescente por padrão).",
+        "<code>[30, 25, 18]</code> — as idades ordenadas do maior para o menor valor.",
+        "<code>[30, 18, 25]</code> — a ordem original, pois <code>sort_values</code> não altera o DataFrame.",
+        "<code>73</code> — a soma de todas as idades da coluna após a ordenação."
+      ], correta: 0, explicacao: "<code>sort_values(\"idade\")</code> ordena crescente por padrão → <code>[18, 25, 30]</code>." },
+    { tema: "merge", trecho: `a = pd.DataFrame({<span class="str">"id"</span>: [<span class="num">1</span>, <span class="num">2</span>], <span class="str">"nome"</span>: [<span class="str">"Ana"</span>, <span class="str">"Bo"</span>]})\nb = pd.DataFrame({<span class="str">"id"</span>: [<span class="num">1</span>, <span class="num">2</span>], <span class="str">"nota"</span>: [<span class="num">9</span>, <span class="num">7</span>]})\nr = pd.merge(a, b, on=<span class="str">"id"</span>)\n<span class="fn">print</span>(r.shape)`,
+      pergunta: "Qual o shape do DataFrame resultante?",
       opcoes: [
-        "Se existe um usuário com aquele e-mail e senha no banco — se a consulta trouxe algo, o login é válido (retorna true).",
-        "Se o e-mail já está cadastrado, para impedir que dois usuários usem o mesmo endereço no momento do cadastro.",
-        "Quantos usuários existem no banco no total, retornando true apenas quando há mais de um usuário registrado.",
-        "Se a senha tem o formato correto, validando o texto digitado antes mesmo de consultar o banco de dados SQLite."
-      ], correta: 0, explicacao: "SELECT por <code>email</code> e <code>senha</code>. Se <code>res.isNotEmpty</code>, achou o usuário → login válido. É a verificação de login." },
-    { tema: "Firestore · update", trecho: `<span class="kw">await</span> FirebaseFirestore.instance\n  .collection(<span class="str">"missoes"</span>)\n  .doc(id)\n  .update({<span class="str">"concluida"</span>: <span class="kw">true</span>});`,
-      pergunta: "O que este código faz?",
+        "<code>(2, 3)</code> — 2 linhas casadas pelo id, com 3 colunas (id, nome, nota).",
+        "<code>(4, 2)</code> — as duas tabelas empilhadas, somando 4 linhas e 2 colunas.",
+        "<code>(2, 4)</code> — 2 linhas, mas mantendo a coluna id duplicada nas duas tabelas.",
+        "<code>(2, 2)</code> — apenas as colunas em comum entre as duas tabelas."
+      ], correta: 0, explicacao: "<code>merge on='id'</code> casa os ids 1 e 2 → 2 linhas; colunas: id + nome + nota = 3. Shape <code>(2, 3)</code>." },
+    { tema: "concat", trecho: `a = pd.DataFrame({<span class="str">"x"</span>: [<span class="num">1</span>, <span class="num">2</span>]})\nb = pd.DataFrame({<span class="str">"x"</span>: [<span class="num">3</span>, <span class="num">4</span>]})\nr = pd.concat([a, b])\n<span class="fn">print</span>(r.shape)`,
+      pergunta: "Qual o shape do DataFrame resultante?",
       opcoes: [
-        "Marca uma missão como concluída no Firestore, alterando o campo <code>concluida</code> para true no documento com aquele id.",
-        "Adiciona uma nova missão concluída à collection, criando um documento com o campo <code>concluida</code> igual a true.",
-        "Exclui do Firestore a missão cujo id foi informado, removendo permanentemente o documento da collection missoes.",
-        "Busca uma missão específica pelo id e retorna se ela já está concluída, sem alterar nenhum dado no banco da nuvem."
-      ], correta: 0, explicacao: "<code>.doc(id).update({\"concluida\": true})</code> altera só aquele documento no Firestore — é como se conclui uma missão na nuvem." },
-    { tema: "Model · fromMap", trecho: `factory <span class="fn">Filme</span>.fromMap(Map m) {\n  <span class="kw">return</span> <span class="fn">Filme</span>(\n    id: m[<span class="str">"id"</span>],\n    titulo: m[<span class="str">"titulo"</span>],\n    assistido: m[<span class="str">"assistido"</span>] == <span class="num">1</span>,\n  );\n}`,
-      pergunta: "O que este construtor faz com o campo <code>assistido</code>?",
+        "<code>(4, 1)</code> — as duas tabelas empilhadas: 2+2 = 4 linhas, 1 coluna.",
+        "<code>(2, 2)</code> — as tabelas juntadas lado a lado, gerando 2 colunas.",
+        "<code>(2, 1)</code> — apenas a primeira tabela, pois <code>concat</code> descarta a segunda.",
+        "<code>(1, 4)</code> — os valores transpostos em uma única linha de 4 colunas."
+      ], correta: 0, explicacao: "<code>concat</code> empilha (junta linhas): 2 + 2 = 4 linhas, mesma coluna \"x\" → shape <code>(4, 1)</code>." },
+    { tema: "loc · atribuição", trecho: `df = pd.DataFrame({<span class="str">"nome"</span>: [<span class="str">"Ana"</span>], <span class="str">"nota"</span>: [<span class="num">5</span>]},\n                  index=[<span class="str">"aluno1"</span>])\ndf.loc[<span class="str">"aluno1"</span>, <span class="str">"nota"</span>] = <span class="num">10</span>\n<span class="fn">print</span>(df.loc[<span class="str">"aluno1"</span>, <span class="str">"nota"</span>])`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Converte o inteiro do banco de volta em booleano: <code>== 1</code> vira true, qualquer outro valor (0) vira false.",
-        "Converte o texto \"assistido\" em um número inteiro para poder ser salvo corretamente na tabela do SQLite.",
-        "Marca todo filme lido do banco como assistido, já que a comparação <code>== 1</code> é sempre verdadeira no Dart.",
-        "Ignora o campo assistido ao ler do banco, deixando-o sempre com o valor padrão definido no construtor da classe."
-      ], correta: 0, explicacao: "<code>fromMap</code> reconstrói o objeto a partir da linha do banco. <code>m[\"assistido\"] == 1</code> converte o INTEGER de volta em booleano." },
-    { tema: "Estoque · print", trecho: `<span class="kw">await</span> db.insert(<span class="str">"usuarios"</span>, dados);\n<span class="fn">print</span>(<span class="str">"INSERT → Usuário cadastrado: "</span> + nome);`,
-      pergunta: "Qual é o objetivo do <code>print</code> logo após o <code>insert</code>?",
+        "<code>10</code> — o <code>loc</code> também serve para atribuir: a nota do \"aluno1\" foi alterada para 10.",
+        "<code>5</code> — o valor original, pois <code>loc</code> só lê dados, nunca os altera.",
+        "<code>15</code> — o novo valor é somado ao antigo em vez de substituí-lo.",
+        "Um erro, pois <code>loc</code> não pode receber uma atribuição com <code>=</code>."
+      ], correta: 0, explicacao: "<code>loc</code> também atribui: <code>df.loc[\"aluno1\", \"nota\"] = 10</code> troca o 5 por 10. O print mostra <code>10</code>." },
+    { tema: "astype", trecho: `df = pd.DataFrame({<span class="str">"ano"</span>: [<span class="str">"2020"</span>, <span class="str">"2021"</span>]})\ndf[<span class="str">"ano"</span>] = df[<span class="str">"ano"</span>].astype(<span class="fn">int</span>)\n<span class="fn">print</span>(df[<span class="str">"ano"</span>].sum())`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Confirmar no terminal que o cadastro chegou ao banco, ajudando a depurar e verificar se o INSERT funcionou.",
-        "Enviar a mensagem de cadastro para a tela do usuário, exibindo uma confirmação visual de que a conta foi criada.",
-        "Fazer o SQLite efetivar a gravação, pois sem o <code>print</code> o INSERT anterior não é confirmado no banco de dados.",
-        "Cadastrar um segundo usuário automaticamente com o mesmo nome, usado apenas em ambiente de testes do aplicativo."
-      ], correta: 0, explicacao: "O <code>print</code> mostra no terminal que o INSERT aconteceu — é depuração/confirmação, como pede a atividade de estoque." },
-    { tema: "Provider · carregar", trecho: `<span class="fn">void</span> <span class="fn">carregarVoos</span>(String aeroporto) <span class="kw">async</span> {\n  carregando = <span class="kw">true</span>;\n  <span class="fn">notifyListeners</span>();\n  voos = <span class="kw">await</span> service.buscarVoos(aeroporto);\n  carregando = <span class="kw">false</span>;\n  <span class="fn">notifyListeners</span>();\n}`,
-      pergunta: "Por que há dois <code>notifyListeners()</code> neste método?",
+        "<code>4041</code> — após converter para int, 2020 + 2021 são somados numericamente.",
+        "<code>20202021</code> — os textos são concatenados, pois continuam sendo strings.",
+        "<code>2</code> — a quantidade de anos existentes na coluna após a conversão.",
+        "Um erro, pois não é possível converter texto em número inteiro no Pandas."
+      ], correta: 0, explicacao: "<code>astype(int)</code> converte \"2020\"/\"2021\" em números; a soma vira 2020+2021 = <code>4041</code>. Sem converter, seria concatenação de texto." },
+    { tema: "describe", trecho: `s = pd.Series([<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>])\n<span class="fn">print</span>(s.describe()[<span class="str">"mean"</span>])`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "O primeiro mostra o carregamento na tela; o segundo, após os dados chegarem, esconde o loading e exibe os voos.",
-        "É um erro de código: chamar <code>notifyListeners()</code> duas vezes trava a tela e deve ser evitado nos Providers.",
-        "O primeiro salva os voos no SQLite e o segundo os envia para o Firestore, sincronizando os dois bancos de dados.",
-        "Os dois são idênticos e um deles é opcional; o método funcionaria exatamente igual com apenas um deles presente."
-      ], correta: 0, explicacao: "Primeiro notify: <code>carregando = true</code> → tela mostra o spinner. Segundo: dados chegaram e <code>carregando = false</code> → tela mostra os voos." },
-    { tema: "Firestore · delete", trecho: `<span class="kw">await</span> FirebaseFirestore.instance\n  .collection(<span class="str">"missoes"</span>)\n  .doc(id)\n  .delete();`,
-      pergunta: "O que este código faz?",
+        "<code>20.0</code> — a média de 10, 20 e 30, que é um dos valores do <code>describe()</code>.",
+        "<code>60.0</code> — a soma dos valores, e não a média, apesar do rótulo \"mean\".",
+        "<code>3</code> — a quantidade de elementos da Series (contagem).",
+        "<code>30.0</code> — o valor máximo da Series, retornado pelo <code>describe()</code>."
+      ], correta: 0, explicacao: "<code>describe()</code> traz estatísticas; <code>[\"mean\"]</code> pega a média: (10+20+30)/3 = <code>20.0</code>." },
+    { tema: "groupby · mean", trecho: `df = pd.DataFrame({\n  <span class="str">"cat"</span>: [<span class="str">"X"</span>, <span class="str">"X"</span>, <span class="str">"Y"</span>],\n  <span class="str">"v"</span>: [<span class="num">4</span>, <span class="num">6</span>, <span class="num">10</span>]\n})\n<span class="fn">print</span>(df.groupby(<span class="str">"cat"</span>)[<span class="str">"v"</span>].mean().tolist())`,
+      pergunta: "O que este código imprime?",
       opcoes: [
-        "Exclui do Firestore o documento (missão) cujo id foi informado, removendo-o permanentemente da collection.",
-        "Marca a missão como concluída, alterando o campo <code>concluida</code> para true no documento correspondente.",
-        "Busca a missão pelo id e a devolve como objeto <code>Missao</code>, sem remover nada do banco de dados na nuvem.",
-        "Remove apenas o campo <code>concluida</code> do documento, mantendo o restante dos dados da missão intactos."
-      ], correta: 0, explicacao: "<code>.doc(id).delete()</code> apaga aquele documento do Firestore. Se a missão era concluída, seus pontos também somem do total." }
+        "<code>[5.0, 10.0]</code> — média de X = (4+6)/2 = 5 e média de Y = 10.",
+        "<code>[10.0, 10.0]</code> — a soma de cada grupo, e não a média dos valores.",
+        "<code>[4.0, 10.0]</code> — apenas o primeiro valor de cada grupo é considerado.",
+        "<code>[6.66]</code> — a média geral de todos os valores, sem separar por grupo."
+      ], correta: 0, explicacao: "Agrupa por \"cat\" e tira a média: X = (4+6)/2 = 5.0, Y = 10.0 → <code>[5.0, 10.0]</code>." }
   ];
 
   /* =========================== MODO RESUMO (11) =========================== */
   const resumo = [
-    { titulo: "Arquitetura em camadas", tag: "o mapa de tudo", corpo: `<p>Todas as atividades seguem a mesma ideia: separar responsabilidades em camadas.</p>
-<span class="destaque">TELA MOSTRA.<br>PROVIDER CONTROLA.<br>SERVICE SE COMUNICA.<br>FLASK / BANCO RESPONDE.</span>
-<p><b>Page</b> → só exibe os dados. <b>Provider</b> → guarda o estado, controla loading/erro, avisa as telas. <b>Service</b> → faz o HTTP ou acessa o banco. <b>Backend/Banco</b> → responde com os dados.</p>
-<p>Regra de ouro: a tela <b>nunca</b> faz <code>http.get</code> nem acessa o banco direto. Tudo passa pelas camadas.</p>` },
-    { titulo: "Provider & ChangeNotifier", tag: "controle de estado", corpo: `<p>O Provider é uma classe que <code>extends ChangeNotifier</code>. Ele guarda os dados e avisa as telas quando algo muda.</p>
-<span class="destaque">class VooProvider extends ChangeNotifier {<br>&nbsp;&nbsp;List&lt;Voo&gt; voos = [];<br>&nbsp;&nbsp;bool carregando = false;<br><br>&nbsp;&nbsp;void setVoos(lista) {<br>&nbsp;&nbsp;&nbsp;&nbsp;voos = lista;<br>&nbsp;&nbsp;&nbsp;&nbsp;notifyListeners();<br>&nbsp;&nbsp;}<br>}</span>
-<p><b>notifyListeners()</b> é o que redesenha as telas ouvintes. Esqueceu de chamar? Os dados mudam mas a tela congela no valor antigo.</p>` },
-    { titulo: "Service — comunicação", tag: "HTTP e banco", corpo: `<p>A Service é a única camada que fala com o mundo externo: faz o <b>HTTP</b> (API) ou acessa o <b>banco</b> (SQLite/Firebase).</p>
-<span class="destaque">Future&lt;List&lt;Voo&gt;&gt; buscarVoos(aeroporto) async {<br>&nbsp;&nbsp;final r = await http.get(url);<br>&nbsp;&nbsp;final dados = jsonDecode(r.body);<br>&nbsp;&nbsp;return dados.map((v) => Voo.fromJson(v)).toList();<br>}</span>
-<p>As chamadas HTTP ficam sempre em <code>services/</code> — nunca dentro da tela. Métodos de rede/banco são <code>async</code> e retornam <code>Future</code>.</p>` },
-    { titulo: "Integração Flutter + Flask", tag: "PokéAPI e voos", corpo: `<p>O Flutter <b>nunca</b> acessa a API externa direto. O fluxo é sempre:</p>
-<span class="destaque">Flutter → Provider → Service → Flask → API externa</span>
-<p>O Flask cria rotas que consultam a API e devolvem um JSON próprio. Ex. da Pokédex: <code>GET /pokemons/nome/&lt;nome&gt;</code>.</p>
-<p>Na atividade de voos, o Flask roda em <code>127.0.0.1:5001</code> e a rota é <code>/api/voos?aeroporto=SBGR&tipo=chegadas</code>. Precisa de <b>dois terminais</b>: um pro Python, um pro Flutter.</p>` },
-    { titulo: "SQLite — persistência local", tag: "dados que ficam salvos", corpo: `<p>Uma <code>List</code> some quando o app fecha. O <b>SQLite</b> salva os dados no dispositivo — eles sobrevivem ao reinício.</p>
-<span class="destaque">id → INTEGER PRIMARY KEY AUTOINCREMENT<br>titulo → TEXT NOT NULL<br>assistido → INTEGER NOT NULL</span>
-<p>O SQLite não tem booleano: <b>false = 0, true = 1</b>. Converte na ida (<code>? 1 : 0</code>) e na volta (<code>== 1</code>).</p>` },
-    { titulo: "CRUD no SQLite", tag: "as 4 operações", corpo: `<p>Toda manipulação do banco cai em uma das quatro operações:</p>
-<span class="destaque">INSERT → cadastrar (db.insert)<br>SELECT → buscar (db.query)<br>UPDATE → alterar (db.update)<br>DELETE → excluir (db.delete)</span>
-<p>No estoque: cadastrar usuário/produto = INSERT, login = SELECT, mudar quantidade = UPDATE, excluir = DELETE. E lembre: alterar só na tela não persiste — tem que gravar no banco.</p>` },
-    { titulo: "Login & validação", tag: "controle de estoque", corpo: `<p>O login consulta o banco: se existir um usuário com aquele e-mail <b>e</b> senha, libera o acesso.</p>
-<span class="destaque">Usuário digita → Provider → Service → SQLite<br>→ SELECT (email = ? AND senha = ?)<br>→ encontrou? entra : "E-mail ou senha incorretos"</span>
-<p>Para não repetir e-mail: antes do INSERT, faça um SELECT. Se o e-mail já existe → "E-mail já cadastrado".</p>` },
-    { titulo: "MVVM — Lista de Filmes", tag: "Model-View-ViewModel", corpo: `<p>Variação da arquitetura: a <b>ViewModel</b> faz o papel do Provider.</p>
-<p><b>Model</b> (<code>Filme</code>: id, titulo, assistido) → <b>View</b> (a tela) → <b>ViewModel</b> (guarda a List, avisa a View) → <b>Service</b> (SQLite).</p>
-<span class="destaque">A List&lt;Filme&gt; da ViewModel NÃO persiste.<br>Quem salva é o FilmeService (SQLite).</span>
-<p>A ViewModel carrega, adiciona e altera status, sempre chamando <code>notifyListeners()</code> para atualizar a tela.</p>` },
-    { titulo: "Firebase Cloud Firestore", tag: "banco na nuvem", corpo: `<p>O Firestore é um banco de <b>documentos</b> na nuvem. Estrutura: collection → documents → campos.</p>
-<span class="destaque">missoes (collection)<br>&nbsp;└ documento1<br>&nbsp;&nbsp;&nbsp;├ titulo: "Estudar Firebase"<br>&nbsp;&nbsp;&nbsp;├ dificuldade: "Difícil"<br>&nbsp;&nbsp;&nbsp;├ pontos: 30<br>&nbsp;&nbsp;&nbsp;└ concluida: false</span>
-<p>Diferente do SQLite (local), o Firestore é remoto e sincronizado. Toda alteração no app deve refletir na nuvem.</p>` },
-    { titulo: "CRUD no Firestore", tag: "métodos do Firebase", corpo: `<p>As operações da Service usam os métodos do Firestore:</p>
-<span class="destaque">.add() → adicionar documento<br>.get() → buscar todos<br>.update() → atualizar campo<br>.delete() → excluir documento</span>
-<p>Concluir missão = <code>.doc(id).update({"concluida": true})</code>. Excluir = <code>.doc(id).delete()</code>. Os pontos só contam para missões com <code>concluida: true</code>.</p>` },
-    { titulo: "Model: toMap & fromMap", tag: "converter dados", corpo: `<p>Para salvar objetos Dart no Firebase (ou SQLite), converte-se entre objeto e Map.</p>
-<span class="destaque">toMap() → objeto Dart vira Map (para salvar)<br>fromMap() → Map vira objeto Dart (ao ler)</span>
-<p>No Firestore o <code>id</code> costuma ser <code>String? id</code> (nullable), porque a missão só ganha id depois que o documento é criado. Ao ler, guarda-se o id com <code>d.id</code>.</p>` }
+    { titulo: "Por que o Pandas existe", tag: "análise de dados", corpo: `<p>O <b>Pandas</b> é a biblioteca padrão de análise de dados em Python: carregar, explorar, limpar e transformar tabelas.</p>
+<p>Compare as três estruturas:</p>
+<span class="destaque">list → flexível, mas lenta em cálculos grandes<br>ndarray (NumPy) → rápido, porém sem rótulos<br>Series (Pandas) → velocidade do NumPy + índice rotulado</span>
+<p>A Series é o "tijolo" da análise; o próximo passo (a "parede") é o <b>DataFrame</b> — a tabela completa.</p>` },
+    { titulo: "Vetores e Matrizes (NumPy)", tag: "estruturas base", corpo: `<p><b>Vetor (1D):</b> sequência em uma única dimensão, só comprimento. É um <code>ndarray</code> com shape <code>(n,)</code> e um único tipo de dado (ex.: <code>float64</code>).</p>
+<p><b>Matriz (2D):</b> ganha linhas e colunas, shape <code>(linhas, colunas)</code>. O acesso exige dois índices:</p>
+<span class="destaque">matriz[linha, coluna] → um elemento<br>matriz[0] → a primeira linha<br>matriz[:, 0] → a primeira coluna (":" = todas as linhas)</span>
+<p>Operações são <b>elemento a elemento</b>: <code>notas + 1</code> soma 1 em todos ao mesmo tempo, sem loop.</p>` },
+    { titulo: "pd.Series: o vetor rotulado", tag: "o tijolo", corpo: `<p>Uma Series é um vetor NumPy "turbinado" com um índice. Três partes:</p>
+<span class="destaque">values → os dados (por baixo, NumPy puro)<br>index → o rótulo (nome) de cada posição<br>name → nome global opcional da coluna</span>
+<p>Em vez de acessar pela "posição 3", você usa o rótulo "Diego". Os dados ganham significado de negócio.</p>` },
+    { titulo: "Criando uma Series", tag: "duas formas", corpo: `<p><b>A partir de lista:</b> você fornece os dados e, separadamente, o índice.</p>
+<span class="destaque">pd.Series([7, 8], index=["Ana", "Bruno"])</span>
+<p>Sem informar o index, o Pandas gera numeração automática: 0, 1, 2, 3...</p>
+<p><b>A partir de dicionário:</b> forma mais orgânica.</p>
+<span class="destaque">pd.Series({"BH": 22, "SP": 19})</span>
+<p>As chaves ("BH", "SP") viram o índice; os valores (22, 19) viram os dados.</p>` },
+    { titulo: "Acessando valores: loc vs iloc", tag: "a dica de ouro", corpo: `<p>Três formas de acessar, mas só duas recomendadas:</p>
+<span class="destaque">.loc[] → pelo rótulo (nome). Ex.: notas.loc["Ana"]<br>.iloc[] → pela posição inteira. Ex.: notas.iloc[0]<br>[] → tenta adivinhar o contexto (pode confundir)</span>
+<p><b>Dica de Ouro:</b> use sempre <code>loc</code> ou <code>iloc</code>. Deixa o código à prova de bugs e legível. Os dois também servem para <b>atribuir</b> valores.</p>` },
+    { titulo: "A inteligência do Pandas", tag: "3 superpoderes", corpo: `<p><b>Estatísticas nativas:</b> a Series tem dezenas de métodos diretos e otimizados — <code>notas.mean()</code>, <code>notas.max()</code> rodam em microssegundos.</p>
+<p><b>Alinhamento por índice:</b> ao somar duas Series, o Pandas soma "Ana" com "Ana". A ordem na lista não importa — a matemática viaja acompanhada do índice.</p>
+<p><b>Máscaras booleanas:</b> uma condição como <code>notas >= 7</code> gera True/False; jogá-la na Series extrai exatamente as linhas desejadas.</p>` },
+    { titulo: "Lidando com ausências (NaN)", tag: "limpeza", corpo: `<p>Dados reais nunca são perfeitos: informações faltam, corrompem ou falham na coleta. O Pandas marca a falha com <b>NaN</b> (Not a Number).</p>
+<span class="destaque">.isna() → identifica quem está faltando<br>.fillna(x) → preenche os buracos com 'x'<br>.dropna() → remove as linhas falhas</span>
+<p><code>df.isna().sum()</code> conta os NaN por coluna. Ao somar Series, um rótulo sem par vira NaN.</p>` },
+    { titulo: "Visão e transformação", tag: "métodos essenciais", corpo: `<p><b>Visão inicial:</b></p>
+<span class="destaque">head() → primeiras linhas · tail() → últimas<br>info() → colunas e tipos · describe() → estatísticas<br>shape → (linhas, colunas) · columns → nomes das colunas</span>
+<p><b>Limpeza/transformação:</b> <code>rename()</code> (renomeia colunas), <code>drop()</code> (remove colunas/linhas), <code>fillna()</code>, <code>isna()</code>, <code>astype()</code> (converte tipos).</p>` },
+    { titulo: "Seleção, filtro e agregação", tag: "extrair e resumir", corpo: `<p><b>Selecionar/filtrar:</b> <code>loc[]</code>, <code>iloc[]</code>, filtro booleano <code>df[df['idade'] > 18]</code>, <code>sort_values()</code>.</p>
+<p><b>Agregar:</b> <code>groupby()</code> agrupa por uma coluna; depois se aplica:</p>
+<span class="destaque">.sum() → soma · .mean() → média<br>.median() → mediana · .count() → conta registros<br>.agg({'vendas':['sum','mean']}) → várias de uma vez</span>
+<p><b>Combinar tabelas:</b> <code>merge()</code> (junta por chave), <code>concat()</code> (empilha), <code>join()</code> (pelo índice).</p>` },
+    { titulo: "Fluxo comum de análise", tag: "passo a passo", corpo: `<p>A ordem lógica típica de um dia a dia de análise:</p>
+<span class="destaque">head() → info() → filtro → groupby() → agg() → merge()/concat()</span>
+<p>Primeiro <b>explora</b> (head, info), depois <b>filtra</b> o que interessa, <b>agrupa e resume</b> (groupby + agg) e, por fim, <b>combina</b> tabelas quando precisa. Pequenos comandos, grandes insights.</p>` },
+    { titulo: "Dados e Responsabilidade", tag: "ética", corpo: `<p>Dados podem <b>subverter o senso comum</b> e revelar padrões invisíveis (ex.: John Snow mapeou a cólera em 1854 e provou que a doença vinha da água, não do ar).</p>
+<p>Mas também podem <b>sistematizar o preconceito</b>:</p>
+<span class="destaque">Viés algorítmico → a IA aprende o preconceito dos dados históricos (55% da origem do viés)<br>Fim da privacidade → coleta massiva vira vigilância<br>Manipulação visual → mudar a escala do eixo distorce a percepção</span>
+<p>A reflexão final: <b>"Dados não tomam decisões éticas. Pessoas tomam."</b></p>` }
   ];
 
   const modos = {
@@ -698,7 +702,7 @@
     resumo:  { nome: "Resumo",  tipo: "resumo", questoes: resumo }
   };
 
-  const temasChips = ["Arquitetura", "Provider", "Service", "Flask + API", "SQLite", "CRUD", "Firebase", "MVVM"];
+  const temasChips = ["NumPy", "Series", "loc/iloc", "DataFrame", "groupby", "merge/concat", "NaN", "Ética de dados"];
 
   let modoAtual = null, questoes = [], atual = 0, acertos = 0, ordemAtual = [], respondida = false, erros = [], iniciado = false, respostasDadas = [];
 
@@ -730,14 +734,14 @@
     barra.style.width = "0%"; contador.textContent = ""; placar.textContent = "";
     card.innerHTML = `
       <div class="hero">
-        <h1>&gt; Prova Flutter<br><span>Integração & Persistência</span></h1>
-        <p class="desc">API + Flask (PokéAPI, voos), SQLite (filmes, estoque com login) e Firebase Firestore (missões). Nos quizzes as alternativas embaralham e a explicação aparece na hora. O modo Resumo é material de estudo.</p>
+        <h1>&gt; Prova Python<br><span>Pandas & Análise de Dados</span></h1>
+        <p class="desc">NumPy (vetores/matrizes), Series, loc/iloc, métodos de DataFrame, tratamento de NaN e ética de dados. Nos quizzes as alternativas embaralham e a explicação aparece na hora. O modo Resumo é material de estudo.</p>
         <div class="chips">${temasChips.map(t => `<span class="chip">${t}</span>`).join("")}</div>
         <div class="modos">
           <button class="modo facil" onclick="iniciar('facil')"><span class="m-icone">🟢</span><span class="m-nome">Fácil</span><span class="m-desc">18 questões · conceitos e definições básicas</span></button>
           <button class="modo medio" onclick="iniciar('medio')"><span class="m-icone">🟡</span><span class="m-nome">Médio</span><span class="m-desc">18 questões · aplicação prática dos conceitos</span></button>
-          <button class="modo dificil" onclick="iniciar('dificil')"><span class="m-icone">🔴</span><span class="m-nome">Difícil</span><span class="m-desc">20 questões · justificativas técnicas e pegadinhas</span></button>
-          <button class="modo codigo" onclick="iniciar('codigo')"><span class="m-icone">💻</span><span class="m-nome">Código</span><span class="m-desc">16 trechos · leia o código e acerte o que ele faz</span></button>
+          <button class="modo dificil" onclick="iniciar('dificil')"><span class="m-icone">🔴</span><span class="m-nome">Difícil</span><span class="m-desc">20 questões · mecanismos, pegadinhas e ética</span></button>
+          <button class="modo codigo" onclick="iniciar('codigo')"><span class="m-icone">💻</span><span class="m-nome">Código</span><span class="m-desc">16 trechos · leia o código e acerte a saída</span></button>
           <button class="modo resumo" onclick="iniciar('resumo')"><span class="m-icone">📖</span><span class="m-nome">Resumo</span><span class="m-desc">11 tópicos · material de estudo, sem quiz</span></button>
         </div>
         <p class="dica-teclado">atalhos nos quizzes: 1–4 responde · Enter avança · ← volta</p>
@@ -821,7 +825,7 @@
     const pct = Math.round((acertos / questoes.length) * 100);
     let veredito, sub;
     if (pct >= 90)      { veredito = "Monstro. 🏆";                sub = modoAtual === "dificil" ? "Pode fazer a prova de olhos fechados." : "Bora subir de nível — tenta o próximo modo."; }
-    else if (pct >= 70) { veredito = "Tá pronto pra prova. 🚀";    sub = "Só dá uma olhada nos erros abaixo."; }
+    else if (pct >= 70) { veredito = "Tá pronto pra prova. 🐼";    sub = "Só dá uma olhada nos erros abaixo."; }
     else if (pct >= 50) { veredito = "Na média, mas dá pra mais."; sub = "Revisa os tópicos das questões erradas."; }
     else                { veredito = "Volta pra teoria. 📚";       sub = "Dá uma passada no modo Resumo e refaz."; }
     card.innerHTML = `
