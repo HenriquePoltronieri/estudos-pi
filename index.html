@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Python & Pandas — Análise de Dados</title>
+<title>Quiz Kotlin & Android — Compose, Room & API</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -59,7 +59,7 @@
   .pergunta b { color: var(--dourado); }
   code { background: var(--card2); padding: 2px 6px; border-radius: 5px; color: var(--codigo); font-size: 0.85em; font-family: inherit; }
   pre { background: #05090f; border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 14px 0 20px; overflow-x: auto; font-size: 0.8rem; line-height: 1.65; color: #e8eef5; }
-  pre .kw { color: #ff9db8; } pre .fn { color: #7db9ff; } pre .str { color: #a5e8b0; } pre .cm { color: #6b7d94; font-style: italic; } pre .num { color: #f5c563; }
+  pre .kw { color: #ff9db8; } pre .fn { color: #7db9ff; } pre .str { color: #a5e8b0; } pre .cm { color: #6b7d94; font-style: italic; } pre .num { color: #f5c563; } pre .an { color: #e8c14f; }
   .opcao { display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left; background: var(--card2); border: 1px solid var(--border); color: var(--texto); font-family: inherit; font-size: 0.83rem; line-height: 1.55; padding: 13px 15px; border-radius: 10px; margin-bottom: 9px; cursor: pointer; transition: border-color 0.15s, transform 0.1s, background 0.15s; }
   .opcao .txt { display: block; min-height: 3.1em; }
   .opcao:hover:not(:disabled) { border-color: var(--verde); transform: translateX(3px); }
@@ -116,582 +116,570 @@
 <script>
   /* =========================== MODO FÁCIL (18) =========================== */
   const facil = [
-    { tema: "Pandas · o que é", pergunta: "Para que serve a biblioteca <b>Pandas</b> em Python?",
+    { tema: "Compose · @Composable", pergunta: "O que a anotação <code>@Composable</code> faz em uma função Kotlin?",
       opcoes: [
-        "Para análise e manipulação de dados — carregar, explorar, limpar e transformar tabelas de dados de forma eficiente.",
-        "Para criar interfaces gráficas e telas de aplicativos desktop, definindo botões, janelas e menus do programa.",
-        "Para treinar redes neurais e modelos de inteligência artificial diretamente, sem precisar de nenhuma outra biblioteca.",
-        "Para gerenciar o sistema operacional, controlando processos, arquivos e permissões da máquina onde o código roda."
-      ], correta: 0, explicacao: "Pandas é a biblioteca padrão de análise de dados em Python: manipula, explora e transforma tabelas (DataFrames e Series)." },
-    { tema: "Vetor · NumPy", pergunta: "O que é um <b>vetor</b> (1 dimensão) no NumPy?",
+        "Marca a função como capaz de emitir interface (UI) no Jetpack Compose — ela só pode ser chamada de dentro de outra Composable ou do <code>setContent</code>.",
+        "Transforma a função em uma coroutine que roda em segundo plano, liberando a thread principal do aplicativo.",
+        "Define a função como uma rota de API, associando um endereço HTTP ao código escrito logo abaixo dela.",
+        "Converte a função em uma tabela do banco de dados, gerando colunas a partir dos seus parâmetros."
+      ], correta: 0, explicacao: "<code>@Composable</code> marca a função como geradora de UI. Por convenção usa PascalCase e só roda dentro do <code>setContent</code> ou de outra Composable." },
+    { tema: "Compose · declarativo", pergunta: "Qual princípio resume a UI no Jetpack Compose?",
       opcoes: [
-        "Uma sequência de dados em uma única dimensão — só tem comprimento, com shape no formato <code>(n,)</code>.",
-        "Uma estrutura de duas dimensões, com linhas e colunas, usada para representar tabelas completas de dados.",
-        "Um dicionário que associa cada chave a um valor, permitindo acesso aos dados apenas por nome, nunca por posição.",
-        "Um gráfico de setas que representa direção e sentido, usado somente para cálculos de física e geometria."
-      ], correta: 0, explicacao: "Vetor = 1 dimensão, só comprimento, shape <code>(n,)</code>. É um <code>ndarray</code> do NumPy com um único tipo de dado." },
-    { tema: "Matriz · NumPy", pergunta: "Qual é o shape de uma <b>matriz</b> (2 dimensões) no NumPy?",
+        "<code>UI = f(state)</code> — a interface é função do estado; muda o estado, a tela se atualiza sozinha.",
+        "<code>UI = HTML + CSS</code> — a tela é montada com marcação e folhas de estilo, como em páginas web.",
+        "<code>UI = SQL</code> — a interface é gerada diretamente a partir das consultas feitas ao banco de dados.",
+        "<code>UI = loop</code> — a tela é redesenhada manualmente dentro de um laço infinito em execução."
+      ], correta: 0, explicacao: "Compose é declarativo: <code>UI = f(state)</code>. Você descreve como a tela deve ficar para cada estado, em vez de atualizar widgets manualmente." },
+    { tema: "Compose · remember", pergunta: "Para que serve o <code>remember { }</code> no Compose?",
       opcoes: [
-        "<code>(linhas, colunas)</code>, pois a matriz organiza os dados em duas dimensões: linhas e colunas.",
-        "<code>(n,)</code>, exatamente igual ao de um vetor, já que matriz e vetor são a mesma estrutura no NumPy.",
-        "<code>(colunas,)</code>, informando apenas a quantidade de colunas, pois o número de linhas é sempre igual a 1.",
-        "<code>(0, 0)</code> sempre, pois o shape de uma matriz só é calculado depois que ela é preenchida com dados."
-      ], correta: 0, explicacao: "Matriz 2D tem shape <code>(linhas, colunas)</code>. O acesso exige dois índices: <code>matriz[linha, coluna]</code>." },
-    { tema: "Series", pergunta: "O que é uma <code>pd.Series</code> no Pandas?",
+        "Preserva um valor na memória entre recomposições — sem ele, a variável voltaria ao valor inicial a cada redesenho.",
+        "Salva o valor permanentemente no banco de dados do dispositivo, mantendo-o mesmo após fechar o app.",
+        "Memoriza o último endpoint de API acessado, evitando repetir a mesma requisição de rede.",
+        "Guarda o histórico de navegação entre telas para permitir voltar à tela anterior."
+      ], correta: 0, explicacao: "<code>remember</code> preserva o valor entre recomposições. Sem ele, a cada redesenho a variável voltaria ao valor inicial." },
+    { tema: "Compose · mutableStateOf", pergunta: "O que <code>mutableStateOf()</code> cria no Compose?",
       opcoes: [
-        "Um vetor rotulado: os dados (values) acompanhados de um índice (index) que dá um nome a cada posição.",
-        "Uma tabela completa com várias colunas e linhas, equivalente a uma planilha inteira do Excel.",
-        "Uma função que gera números aleatórios em sequência para preencher testes de análise de dados.",
-        "Um tipo de gráfico de linha usado para exibir a evolução de um valor ao longo do tempo."
-      ], correta: 0, explicacao: "Series = um vetor NumPy \"turbinado\" com um índice. Tem <code>values</code> (dados), <code>index</code> (rótulos) e <code>name</code> (nome opcional)." },
-    { tema: "Series · index", pergunta: "Numa Series, o que é o <b>index</b>?",
+        "Um \"envelope observável\": quando o valor muda, o Compose é notificado para recompor quem usa esse estado.",
+        "Uma constante imutável que nunca pode ter o seu valor alterado durante a execução do aplicativo.",
+        "Uma conexão com o banco de dados SQLite para ler e gravar valores de forma persistente.",
+        "Uma função de rede que busca o valor inicial em uma API externa antes de exibir a tela."
+      ], correta: 0, explicacao: "<code>mutableStateOf()</code> cria um estado observável. Ao mudar o valor, o Compose recompõe automaticamente os componentes que o leem." },
+    { tema: "Compose · Column", pergunta: "O que o layout <code>Column</code> faz no Compose?",
       opcoes: [
-        "O rótulo (nome) de cada posição da estrutura — permite acessar um valor por nome, não só por posição.",
-        "O valor máximo armazenado na Series, calculado automaticamente pelo Pandas na hora da criação.",
-        "O tipo de dado da Series (int, float, string), definido uma única vez para toda a estrutura.",
-        "A quantidade total de elementos da Series, equivalente ao resultado da função <code>len()</code>."
-      ], correta: 0, explicacao: "O <code>index</code> são os rótulos de cada posição. Ex.: em vez de acessar pela posição 3, você acessa pelo rótulo \"Diego\"." },
-    { tema: "head", pergunta: "O que o método <code>df.head()</code> faz?",
+        "Empilha os elementos verticalmente, de cima para baixo.",
+        "Empilha os elementos horizontalmente, da esquerda para a direita.",
+        "Sobrepõe os elementos em profundidade (um por cima do outro).",
+        "Organiza os elementos automaticamente em uma grade de linhas e colunas."
+      ], correta: 0, explicacao: "<code>Column</code> empilha na vertical. <code>Row</code> empilha na horizontal e <code>Box</code> sobrepõe (Z-order)." },
+    { tema: "Compose · Row", pergunta: "O que o layout <code>Row</code> faz no Compose?",
       opcoes: [
-        "Mostra as primeiras linhas do DataFrame, para uma visão rápida da estrutura dos dados.",
-        "Mostra as últimas linhas do DataFrame, exibindo os registros mais recentes da tabela.",
-        "Remove o cabeçalho (nomes das colunas) do DataFrame, deixando apenas os valores puros.",
-        "Retorna o número total de linhas do DataFrame, funcionando como um contador de registros."
-      ], correta: 0, explicacao: "<code>head()</code> mostra as primeiras linhas. Para as últimas, use <code>tail()</code>." },
-    { tema: "tail", pergunta: "O que o método <code>df.tail()</code> faz?",
+        "Empilha os elementos horizontalmente, da esquerda para a direita.",
+        "Empilha os elementos verticalmente, de cima para baixo.",
+        "Sobrepõe os elementos uns sobre os outros em camadas de profundidade.",
+        "Divide a tela em duas metades iguais, uma para cada elemento filho."
+      ], correta: 0, explicacao: "<code>Row</code> organiza na horizontal (lado a lado). <code>Column</code> é na vertical e <code>Box</code> sobrepõe." },
+    { tema: "Compose · Box", pergunta: "Qual é a característica do layout <code>Box</code>?",
       opcoes: [
-        "Mostra as últimas linhas do DataFrame.",
-        "Mostra as primeiras linhas do DataFrame, igual ao <code>head()</code>, apenas com outro nome.",
-        "Ordena o DataFrame do maior para o menor valor da última coluna existente na tabela.",
-        "Apaga as últimas linhas do DataFrame permanentemente, reduzindo o tamanho da tabela."
-      ], correta: 0, explicacao: "<code>tail()</code> mostra as últimas linhas. O oposto de <code>head()</code>." },
-    { tema: "info", pergunta: "O que o método <code>df.info()</code> mostra?",
+        "Sobrepõe os elementos em profundidade (Z-order), permitindo um por cima do outro — útil para badges e overlays.",
+        "Enfileira os elementos em uma única linha horizontal, sem permitir sobreposição alguma.",
+        "Cria uma caixa de texto editável onde o usuário digita informações no aplicativo.",
+        "Guarda uma lista de itens em memória para serem exibidos posteriormente na tela."
+      ], correta: 0, explicacao: "<code>Box</code> sobrepõe elementos em profundidade (Z-order). Bom para colocar um elemento sobre o outro, como um selo sobre uma imagem." },
+    { tema: "Compose · Modifier", pergunta: "Para que servem os <code>Modifier</code> no Compose?",
       opcoes: [
-        "Um resumo das colunas e seus tipos de dados, além da contagem de valores não nulos.",
-        "Apenas o número de linhas e colunas do DataFrame, sem nenhuma outra informação adicional.",
-        "As estatísticas descritivas (média, desvio, mínimo, máximo) de cada coluna numérica da tabela.",
-        "O conteúdo completo de todas as linhas e colunas do DataFrame, exibindo a tabela inteira na tela."
-      ], correta: 0, explicacao: "<code>info()</code> resume as colunas, seus tipos e a contagem de não nulos. Para estatísticas use <code>describe()</code>." },
-    { tema: "describe", pergunta: "O que o método <code>df.describe()</code> retorna?",
+        "Decoram e posicionam os componentes (padding, background, tamanho...) — e a ordem na cadeia importa.",
+        "Definem as rotas de navegação entre as telas do aplicativo em execução.",
+        "Convertem respostas JSON da API em objetos Kotlin automaticamente.",
+        "Criam as tabelas do banco de dados a partir das propriedades de uma classe."
+      ], correta: 0, explicacao: "<code>Modifier</code> decora/posiciona: <code>padding</code>, <code>background</code>, <code>fillMaxWidth</code>... Aplicados em cadeia, e a ordem altera o resultado." },
+    { tema: "SQLite", pergunta: "O que é o <b>SQLite</b> no Android?",
       opcoes: [
-        "Estatísticas descritivas das colunas numéricas: contagem, média, desvio padrão, mínimo, máximo e quartis.",
-        "Uma descrição em texto do que o DataFrame representa, escrita automaticamente pelo Pandas.",
-        "A lista dos nomes de todas as colunas do DataFrame, uma embaixo da outra, sem valores.",
-        "O tipo de dado de cada coluna (int, float, object), sem nenhum cálculo estatístico envolvido."
-      ], correta: 0, explicacao: "<code>describe()</code> traz estatísticas descritivas (média, desvio, min, max, quartis) das colunas numéricas." },
-    { tema: "shape", pergunta: "O que <code>df.shape</code> retorna?",
+        "Um banco de dados relacional leve, embutido no Android, que não precisa de bibliotecas externas.",
+        "Uma biblioteca para fazer requisições HTTP e consumir APIs da internet no aplicativo.",
+        "O sistema de temas visuais do Material Design usado para estilizar a interface do app.",
+        "Um emulador de Android usado para testar o aplicativo sem precisar de um celular físico."
+      ], correta: 0, explicacao: "SQLite é um banco relacional leve e embutido no Android — \"provavelmente o banco mais distribuído do mundo\". Não precisa de servidor externo." },
+    { tema: "Room", pergunta: "O que é o <b>Room</b> no Android?",
       opcoes: [
-        "A quantidade de linhas e colunas do DataFrame, na forma de uma tupla <code>(linhas, colunas)</code>.",
-        "O formato do gráfico que será desenhado a partir dos dados do DataFrame na tela.",
-        "O tipo de cada coluna do DataFrame, indicando se é numérica, texto ou data.",
-        "Apenas o número de colunas do DataFrame, sem informar a quantidade de linhas."
-      ], correta: 0, explicacao: "<code>shape</code> devolve <code>(linhas, colunas)</code> — a quantidade de linhas e colunas da tabela." },
-    { tema: "columns", pergunta: "O que <code>df.columns</code> retorna?",
+        "Uma camada de abstração sobre o SQLite que automatiza o schema e as queries por meio de anotações.",
+        "Uma biblioteca de animações para criar transições suaves entre as telas do aplicativo.",
+        "Um cliente HTTP que converte respostas JSON em objetos Kotlin automaticamente.",
+        "Um gerenciador de navegação que controla a pilha de telas do aplicativo Android."
+      ], correta: 0, explicacao: "Room é uma camada sobre o SQLite: com anotações (@Entity, @Dao, @Database) ele automatiza tabelas e consultas, evitando escrever SQL manualmente." },
+    { tema: "Room · @Entity", pergunta: "O que a anotação <code>@Entity</code> faz no Room?",
       opcoes: [
-        "A lista dos nomes das colunas do DataFrame.",
-        "A soma de todos os valores de cada coluna do DataFrame, coluna por coluna.",
-        "O número total de colunas do DataFrame, como um único valor inteiro.",
-        "Os valores da primeira coluna do DataFrame, do primeiro ao último registro."
-      ], correta: 0, explicacao: "<code>columns</code> lista os nomes das colunas da tabela." },
-    { tema: "loc", pergunta: "Como o <code>df.loc[]</code> seleciona os dados?",
+        "Marca uma data class como uma tabela do banco — cada propriedade vira uma coluna.",
+        "Marca uma função como uma requisição HTTP do tipo GET para uma API externa.",
+        "Define uma função Composable que desenha a interface da tela de cadastro.",
+        "Cria uma coroutine que executa a operação em segundo plano, fora da thread principal."
+      ], correta: 0, explicacao: "<code>@Entity</code> transforma uma data class em tabela do banco. Cada propriedade da classe vira uma coluna da tabela." },
+    { tema: "Room · @Dao", pergunta: "O que é um <code>@Dao</code> no Room?",
       opcoes: [
-        "Pelo rótulo (nome) explícito do índice — ex.: <code>notas.loc[\"Ana\"]</code>.",
-        "Pela posição inteira (0, 1, 2...) na memória, ignorando totalmente os rótulos do índice.",
-        "Por ordem alfabética dos valores, sempre retornando o primeiro em ordem crescente.",
-        "Por uma busca aleatória entre todas as linhas, escolhendo uma qualquer a cada chamada."
-      ], correta: 0, explicacao: "<code>loc[]</code> seleciona pelo rótulo (nome) do índice. Já <code>iloc[]</code> seleciona pela posição inteira." },
-    { tema: "iloc", pergunta: "Como o <code>df.iloc[]</code> seleciona os dados?",
+        "Uma interface que define as operações do banco: inserir, consultar, atualizar e excluir.",
+        "A classe principal que representa o aplicativo e inicia a primeira tela ao abrir.",
+        "Um objeto que guarda o estado da UI e sobrevive à rotação da tela do dispositivo.",
+        "Uma função que converte respostas JSON da API em objetos Kotlin para exibição."
+      ], correta: 0, explicacao: "DAO (Data Access Object) é a interface com as operações do banco: <code>@Insert</code>, <code>@Query</code>, <code>@Update</code>, <code>@Delete</code>." },
+    { tema: "Retrofit", pergunta: "O que é o <b>Retrofit</b> no Android?",
       opcoes: [
-        "Pela posição inteira (0, 1, 2...) na memória — ex.: <code>notas.iloc[0]</code>.",
-        "Pelo rótulo (nome) do índice, exatamente igual ao <code>loc[]</code>, apenas com outro nome.",
-        "Pelo valor da coluna, retornando a primeira linha cujo dado corresponde ao que foi buscado.",
-        "Por uma condição lógica escrita entre os colchetes, funcionando como um filtro booleano."
-      ], correta: 0, explicacao: "<code>iloc[]</code> seleciona pela posição inteira (0, 1, 2...). Já <code>loc[]</code> usa o rótulo." },
-    { tema: "NaN", pergunta: "No Pandas, o que representa o valor <b>NaN</b>?",
+        "Um cliente HTTP type-safe que declara endpoints por anotações e converte o JSON em objetos Kotlin.",
+        "Um banco de dados local usado para salvar as respostas da API dentro do dispositivo.",
+        "Uma biblioteca de layout que organiza os componentes da tela em linhas e colunas.",
+        "Um sistema de autenticação que gerencia o login e a senha dos usuários do app."
+      ], correta: 0, explicacao: "Retrofit é um cliente HTTP type-safe: declara as rotas da API por anotações (@GET, @Path...) e converte o JSON em objetos Kotlin automaticamente." },
+    { tema: "Retrofit · @GET", pergunta: "O que a anotação <code>@GET</code> faz no Retrofit?",
       opcoes: [
-        "Uma falha ou ausência de dado (\"Not a Number\") — informação que não existe ou não foi coletada.",
-        "Um valor igual a zero, usado como padrão sempre que uma coluna numérica é criada vazia.",
-        "O maior número possível que o Pandas consegue armazenar em uma célula da tabela.",
-        "Um texto com a palavra literal \"NaN\" digitada pelo usuário em uma célula da planilha."
-      ], correta: 0, explicacao: "NaN (Not a Number) representa uma falha/ausência de dado. Dados reais raramente são perfeitos — o NaN marca os buracos." },
-    { tema: "fillna", pergunta: "O que o método <code>df.fillna(0)</code> faz?",
+        "Marca a função como uma requisição HTTP do tipo GET para buscar dados de uma API.",
+        "Marca a função como uma consulta SQL que busca registros no banco de dados local.",
+        "Define a função como uma Composable que exibe os dados recebidos na tela.",
+        "Cria uma variável de estado observável que atualiza a tela quando muda."
+      ], correta: 0, explicacao: "<code>@GET</code> marca a função como requisição GET. O caminho (ex.: <code>pokemon/{nameOrId}</code>) define o endpoint acessado." },
+    { tema: "ViewModel", pergunta: "Para que serve o <code>ViewModel</code> no Android?",
       opcoes: [
-        "Preenche os valores ausentes (NaN) com o valor informado — nesse caso, com 0.",
-        "Remove todas as linhas que contêm valores ausentes (NaN) do DataFrame.",
-        "Identifica e conta quantos valores ausentes existem em cada coluna da tabela.",
-        "Substitui todos os valores da tabela por 0, apagando os dados originais existentes."
-      ], correta: 0, explicacao: "<code>fillna(x)</code> preenche os buracos (NaN) com o valor <code>x</code>. Para remover linhas com NaN, usa-se <code>dropna()</code>." },
-    { tema: "groupby", pergunta: "Para que serve o método <code>df.groupby()</code>?",
+        "Guardar o estado da tela e sobreviver a mudanças de configuração, como a rotação do dispositivo.",
+        "Desenhar os componentes visuais da interface, definindo cores, botões e textos da tela.",
+        "Executar diretamente as consultas SQL no banco de dados SQLite do aplicativo.",
+        "Armazenar permanentemente os dados em disco, mesmo depois que o app é encerrado."
+      ], correta: 0, explicacao: "O ViewModel guarda o estado e sobrevive a mudanças de configuração (rotação, idioma) — assim os dados carregados não se perdem nem a rede é chamada de novo." },
+    { tema: "Coroutines · suspend", pergunta: "O que uma função marcada com <code>suspend</code> permite no Kotlin?",
       opcoes: [
-        "Para agrupar os dados por uma coluna (ex.: categoria), permitindo depois somar ou tirar média por grupo.",
-        "Para juntar dois DataFrames diferentes em uma única tabela, combinando suas linhas.",
-        "Para ordenar as linhas do DataFrame em grupos de tamanho fixo, de cima para baixo.",
-        "Para remover as colunas duplicadas do DataFrame, mantendo apenas uma de cada grupo."
-      ], correta: 0, explicacao: "<code>groupby('categoria')</code> agrupa os dados por essa coluna — depois se aplica <code>sum()</code>, <code>mean()</code>, <code>count()</code> etc. por grupo." },
-    { tema: "sort_values", pergunta: "O que o método <code>df.sort_values('idade')</code> faz?",
+        "Pausar enquanto espera (ex.: rede ou banco) sem bloquear a thread principal, liberando-a para a UI.",
+        "Executar a função exatamente 1 vez por segundo, como um temporizador automático do sistema.",
+        "Impedir que a função seja chamada mais de uma vez durante a execução do aplicativo.",
+        "Suspender o aplicativo inteiro até que o usuário toque na tela novamente para continuar."
+      ], correta: 0, explicacao: "<code>suspend</code> permite pausar a função enquanto espera (rede/banco) sem travar a thread principal. É a base das coroutines." },
+    { tema: "Design Patterns", pergunta: "Em quantas categorias os padrões de projeto (design patterns) se dividem?",
       opcoes: [
-        "Ordena as linhas do DataFrame com base nos valores da coluna informada (nesse caso, idade).",
-        "Soma todos os valores da coluna idade e retorna o total como um único número.",
-        "Filtra o DataFrame, mantendo apenas as linhas cuja idade for maior que a média.",
-        "Renomeia a coluna idade para outro nome escolhido automaticamente pelo Pandas."
-      ], correta: 0, explicacao: "<code>sort_values('coluna')</code> ordena as linhas pelos valores daquela coluna (crescente por padrão)." },
-    { tema: "Ética · NaN humano", pergunta: "Segundo a aula \"Dados e Responsabilidade\", quem toma as decisões éticas na análise de dados?",
+        "Três: criacionais, estruturais e comportamentais.",
+        "Duas: padrões de front-end e padrões de back-end.",
+        "Quatro: criação, leitura, atualização e exclusão (CRUD).",
+        "Uma só: todos os padrões pertencem a uma única categoria geral."
+      ], correta: 0, explicacao: "São 3 categorias: criacionais (criação de objetos), estruturais (composição) e comportamentais (interação entre objetos)." },
+    { tema: "Singleton", pergunta: "O que o padrão <b>Singleton</b> garante?",
       opcoes: [
-        "As pessoas. \"Dados não tomam decisões éticas. Pessoas tomam.\" — a responsabilidade é de quem usa os dados.",
-        "Os próprios dados, que já vêm com regras de ética embutidas e escolhem sozinhos o que é certo.",
-        "O algoritmo de inteligência artificial, que é sempre neutro e imparcial por ser baseado em matemática.",
-        "O computador, que segue apenas a lógica e por isso nunca comete erros de julgamento ético."
-      ], correta: 0, explicacao: "A frase da reflexão final: \"Dados não tomam decisões éticas. Pessoas tomam.\" A responsabilidade é humana." }
+        "Que uma classe tenha apenas uma única instância em todo o aplicativo.",
+        "Que uma classe possa ter infinitas instâncias criadas ao mesmo tempo.",
+        "Que uma interface incompatível se torne compatível com outra classe.",
+        "Que vários objetos sejam notificados automaticamente sobre mudanças."
+      ], correta: 0, explicacao: "Singleton garante uma única instância da classe em todo o app. É um padrão criacional — ex.: a instância do banco Room costuma ser Singleton." }
   ];
 
   /* =========================== MODO MÉDIO (18) =========================== */
   const medio = [
-    { tema: "loc × iloc", pergunta: "Você quer a linha do índice rotulado \"Ana\". Qual comando usar?",
+    { tema: "Compose · recomposição", pergunta: "O que é <b>recomposição</b> no Jetpack Compose?",
       opcoes: [
-        "<code>df.loc[\"Ana\"]</code>, pois <code>loc</code> busca pelo rótulo (nome) do índice.",
-        "<code>df.iloc[\"Ana\"]</code>, pois <code>iloc</code> aceita tanto nomes quanto posições inteiras.",
-        "<code>df[\"Ana\"]</code>, que com colchetes simples sempre retorna a linha de rótulo informado.",
-        "<code>df.get(\"Ana\")</code>, o único método capaz de buscar uma linha por nome no Pandas."
-      ], correta: 0, explicacao: "Rótulo → <code>loc</code>. <code>iloc</code> só aceita posição inteira; colchetes simples em Series buscam por rótulo, mas <code>loc</code> é o recomendado." },
-    { tema: "Máscara booleana", pergunta: "O que <code>df[df['idade'] > 18]</code> faz?",
+        "A reexecução seletiva das Composables que leem um estado que mudou — só elas são redesenhadas, não a tela inteira.",
+        "A recriação completa de toda a tela do zero sempre que qualquer valor do app é alterado.",
+        "A compilação do código Kotlin em bytecode toda vez que o usuário toca em um botão.",
+        "A reconexão automática com a API sempre que a internet do dispositivo cai e volta."
+      ], correta: 0, explicacao: "Recomposição = reexecução seletiva: o Compose redesenha só as Composables que leem o estado alterado, não tudo. É o que o torna eficiente." },
+    { tema: "Compose · state hoisting", pergunta: "O que é <b>State Hoisting</b> (elevação de estado) no Compose?",
       opcoes: [
-        "Filtra o DataFrame, retornando apenas as linhas em que a idade é maior que 18 (máscara booleana).",
-        "Substitui todas as idades maiores que 18 pelo valor 18, limitando o máximo permitido na coluna.",
-        "Ordena o DataFrame pela coluna idade, colocando primeiro quem tem mais de 18 anos.",
-        "Conta quantas pessoas têm mais de 18 anos e retorna esse número como resultado."
-      ], correta: 0, explicacao: "<code>df['idade'] > 18</code> cria uma máscara de True/False; jogá-la no DataFrame extrai só as linhas True. É filtro booleano." },
-    { tema: "Operações vetoriais", pergunta: "No NumPy/Pandas, o que acontece ao fazer <code>notas + 1</code> em um vetor de notas?",
+        "Mover o estado para um componente ancestral: a tela filha recebe dados por parâmetro e emite eventos por callbacks.",
+        "Guardar o estado permanentemente no banco de dados SQLite para que ele nunca seja perdido.",
+        "Elevar o estado para a nuvem, sincronizando-o automaticamente entre vários dispositivos do usuário.",
+        "Duplicar o estado em todas as Composables da tela para garantir que todas tenham o mesmo valor."
+      ], correta: 0, explicacao: "State Hoisting eleva o estado para o ancestral: o filho fica \"sem estado\" (recebe dados e dispara callbacks), o que o torna reutilizável e testável." },
+    { tema: "Compose · by remember", pergunta: "Qual a diferença entre <code>val estado = mutableStateOf(0)</code> e <code>var x by remember { mutableStateOf(0) }</code>?",
       opcoes: [
-        "Todas as notas aumentam 1 ao mesmo tempo — a operação ocorre elemento a elemento, sem loop.",
-        "Apenas a primeira nota do vetor aumenta 1; as demais permanecem exatamente iguais.",
-        "É gerado um erro, pois não é possível somar um número inteiro a um vetor no NumPy.",
-        "O número 1 é adicionado como um novo elemento ao final do vetor de notas."
-      ], correta: 0, explicacao: "Operações em vetores são elemento a elemento (vetorizadas): <code>notas + 1</code> soma 1 em todas as notas de uma vez, sem <code>for</code>." },
-    { tema: "Series · dicionário", pergunta: "Ao criar <code>pd.Series({\"BH\": 22, \"SP\": 19})</code>, o que acontece?",
+        "Com <code>by</code> (delegação), você lê/escreve direto em <code>x</code>; sem o <code>by</code>, precisa acessar por <code>.value</code>.",
+        "O <code>by</code> salva o valor no banco de dados, enquanto o <code>.value</code> mantém apenas na memória.",
+        "O <code>by</code> só funciona para números, e o <code>.value</code> funciona para qualquer tipo de dado.",
+        "Não há diferença nenhuma; são duas formas idênticas de escrever a mesma coisa em Kotlin."
+      ], correta: 0, explicacao: "Com delegação (<code>by</code>) você usa <code>x</code> diretamente. Sem ela, acessa o conteúdo via <code>estado.value</code>. O <code>remember</code> é o que persiste entre recomposições." },
+    { tema: "Compose · toDoubleOrNull", pergunta: "Por que usar <code>texto.toDoubleOrNull() ?: 0.0</code> ao converter um campo de texto?",
       opcoes: [
-        "As chaves (\"BH\", \"SP\") viram o índice, e os valores (22, 19) viram os dados da Series.",
-        "As chaves viram os dados e os valores viram o índice, ao contrário do que aparece no dicionário.",
-        "O Pandas ignora as chaves e cria um índice numérico automático (0, 1) para os valores.",
-        "É gerado um erro, pois a <code>pd.Series</code> só aceita listas, nunca dicionários como entrada."
-      ], correta: 0, explicacao: "Criando Series a partir de dicionário: as chaves viram o índice e os valores viram os dados. Forma mais \"orgânica\"." },
-    { tema: "Series · sem index", pergunta: "Se você criar uma Series a partir de uma lista <b>sem</b> informar o index, o que ocorre?",
+        "Para converter com segurança: se o texto for inválido, <code>toDoubleOrNull</code> devolve null e o Elvis (<code>?:</code>) usa 0.0.",
+        "Para arredondar o número digitado para a casa decimal mais próxima antes de exibi-lo.",
+        "Para somar 0.0 ao valor digitado, garantindo que ele seja sempre um número positivo.",
+        "Para impedir que o usuário digite qualquer coisa que não seja um número no campo."
+      ], correta: 0, explicacao: "<code>toDoubleOrNull()</code> devolve null em vez de quebrar quando o texto é inválido; o operador Elvis <code>?: 0.0</code> fornece um valor padrão seguro." },
+    { tema: "SQLite · SQLiteOpenHelper", pergunta: "Quais são os dois métodos principais do <code>SQLiteOpenHelper</code>?",
       opcoes: [
-        "O Pandas gera uma numeração automática como índice: 0, 1, 2, 3...",
-        "A Series não é criada e o Pandas lança um erro exigindo que o índice seja informado.",
-        "Cada valor da lista vira também o seu próprio índice, duplicando os dados na estrutura.",
-        "O índice fica vazio, e os valores só podem ser acessados com <code>iloc</code>, nunca com <code>loc</code>."
-      ], correta: 0, explicacao: "Sem index informado, o Pandas cria numeração automática 0, 1, 2, 3... — igual às posições." },
-    { tema: "isna", pergunta: "O que <code>df.isna().sum()</code> retorna?",
+        "<code>onCreate()</code>, chamado uma vez para criar as tabelas, e <code>onUpgrade()</code>, chamado ao subir a versão do banco.",
+        "<code>onStart()</code>, que abre o banco, e <code>onStop()</code>, que o fecha ao sair do aplicativo.",
+        "<code>insert()</code>, que grava dados, e <code>select()</code>, que lê dados da tabela.",
+        "<code>onRequest()</code>, que chama a API, e <code>onResponse()</code>, que trata a resposta."
+      ], correta: 0, explicacao: "<code>onCreate()</code> cria as tabelas na primeira instalação; <code>onUpgrade()</code> roda quando a versão do banco aumenta, para migrações de schema." },
+    { tema: "SQLite · Cursor", pergunta: "O que é um <code>Cursor</code> no SQLite?",
       opcoes: [
-        "A quantidade de valores ausentes (NaN) em cada coluna do DataFrame.",
-        "A soma de todos os valores numéricos de cada coluna, ignorando os NaN.",
-        "Um valor True se houver qualquer NaN na tabela e False caso contrário.",
-        "As linhas que contêm valores ausentes, prontas para serem removidas."
-      ], correta: 0, explicacao: "<code>isna()</code> marca True onde há NaN; <code>.sum()</code> conta esses True por coluna — total de ausências em cada uma." },
-    { tema: "dropna", pergunta: "Qual a diferença entre <code>fillna()</code> e <code>dropna()</code>?",
+        "Um iterador linha a linha sobre o resultado de uma consulta, lendo células com <code>getString()</code>, <code>getInt()</code> etc.",
+        "O ponteiro do mouse exibido na tela do aplicativo durante a interação do usuário.",
+        "Um campo de texto onde o usuário digita a consulta SQL que deseja executar.",
+        "Uma anotação que marca a classe como tabela do banco de dados no Room."
+      ], correta: 0, explicacao: "Cursor é um iterador sobre o resultado de uma query: percorre linha a linha e lê os valores das colunas com <code>getString()</code>, <code>getInt()</code>..." },
+    { tema: "SQLite · ContentValues", pergunta: "Para que serve o <code>ContentValues</code> no SQLite?",
       opcoes: [
-        "<code>fillna()</code> preenche os buracos (NaN) com um valor; <code>dropna()</code> remove as linhas que têm NaN.",
-        "<code>fillna()</code> remove as linhas com NaN; <code>dropna()</code> preenche os buracos com zero.",
-        "Os dois fazem a mesma coisa: preencher NaN com a média da coluna correspondente.",
-        "<code>fillna()</code> conta os NaN e <code>dropna()</code> apenas os identifica, sem alterar a tabela."
-      ], correta: 0, explicacao: "<code>fillna(x)</code> tapa os buracos com um valor; <code>dropna()</code> descarta as linhas falhas. Escolha conforme o caso." },
-    { tema: "rename", pergunta: "O que <code>df.rename(columns={'old':'new'})</code> faz?",
+        "Representa uma linha (chave→valor) antes da inserção, substituindo a concatenação manual de SQL.",
+        "Guarda as configurações visuais do aplicativo, como cores e tamanhos de fonte.",
+        "Lê linha a linha o resultado de uma consulta feita ao banco de dados.",
+        "Define as rotas da API que o aplicativo vai acessar para buscar dados."
+      ], correta: 0, explicacao: "<code>ContentValues</code> é um mapa chave→valor que representa uma linha antes de inserir — evita montar strings SQL concatenando valores manualmente." },
+    { tema: "Repository", pergunta: "Qual é o papel do padrão <b>Repository</b> na persistência de dados?",
       opcoes: [
-        "Renomeia a coluna \"old\" para \"new\", mantendo os dados no lugar.",
-        "Cria uma nova coluna chamada \"new\" copiando os dados da coluna \"old\".",
-        "Remove a coluna \"old\" e a coluna \"new\" de uma só vez do DataFrame.",
-        "Troca os valores da coluna \"old\" pelos valores da coluna \"new\"."
-      ], correta: 0, explicacao: "<code>rename(columns={...})</code> troca o nome das colunas conforme o dicionário — chave = nome atual, valor = novo nome." },
-    { tema: "drop", pergunta: "O que <code>df.drop(columns=['coluna'])</code> faz?",
+        "Isolar o ViewModel dos detalhes da fonte de dados, convertendo objetos ↔ banco e rodando no <code>Dispatchers.IO</code>.",
+        "Desenhar a interface da tela, organizando os botões e campos de texto em colunas.",
+        "Guardar o estado observável que faz a tela se recompor quando algo muda.",
+        "Converter respostas JSON da API diretamente em componentes visuais da tela."
+      ], correta: 0, explicacao: "O Repository isola o ViewModel da fonte de dados: converte objetos ↔ ContentValues/Cursor e roda no <code>Dispatchers.IO</code> para não travar a Main Thread." },
+    { tema: "Room · Flow", pergunta: "Qual a vantagem de uma query do Room retornar <code>Flow&lt;List&lt;...&gt;&gt;</code>?",
       opcoes: [
-        "Remove a coluna informada do DataFrame.",
-        "Renomeia a coluna informada, dando a ela um nome padrão gerado pelo Pandas.",
-        "Move a coluna informada para a primeira posição da tabela, à esquerda de todas.",
-        "Preenche os valores ausentes da coluna informada com a média dos demais valores."
-      ], correta: 0, explicacao: "<code>drop(columns=[...])</code> remove colunas. Também dá pra remover linhas passando os índices delas." },
-    { tema: "astype", pergunta: "Para que serve <code>df['ano'].astype(int)</code>?",
+        "O Flow emite dados atualizados automaticamente quando a tabela muda, atualizando a UI sem callbacks manuais.",
+        "O Flow executa a consulta exatamente uma vez e depois para de observar a tabela.",
+        "O Flow salva a lista em um arquivo de texto a cada mudança feita no banco.",
+        "O Flow converte a lista em JSON para ser enviada a uma API externa automaticamente."
+      ], correta: 0, explicacao: "Um <code>Flow</code> é um fluxo reativo: quando a tabela muda, ele reemite os dados sozinho, fazendo a UI se atualizar sem callbacks manuais." },
+    { tema: "Room · suspend", pergunta: "Por que métodos do DAO que inserem/alteram dados costumam ser <code>suspend</code>?",
       opcoes: [
-        "Para converter o tipo de dado da coluna \"ano\" para número inteiro (int).",
-        "Para somar 1 a todos os valores da coluna \"ano\", avançando um ano em cada registro.",
-        "Para ordenar a coluna \"ano\" do menor para o maior valor do DataFrame.",
-        "Para contar quantos anos diferentes existem na coluna \"ano\" da tabela."
-      ], correta: 0, explicacao: "<code>astype(int)</code> converte o tipo da coluna para inteiro. Útil quando um número foi lido como texto, por exemplo." },
-    { tema: "groupby + agg", pergunta: "O que <code>df.groupby('categoria')['vendas'].sum()</code> retorna?",
+        "Para rodarem como coroutine em segundo plano (<code>Dispatchers.IO</code>), sem bloquear a thread principal.",
+        "Para serem executados automaticamente a cada 1 segundo enquanto o app estiver aberto.",
+        "Para só poderem ser chamados uma única vez durante todo o ciclo de vida do app.",
+        "Para converterem o resultado da operação em JSON antes de devolvê-lo à tela."
+      ], correta: 0, explicacao: "Operações de banco são I/O. Marcá-las como <code>suspend</code> permite rodá-las em background (Dispatchers.IO) sem travar a UI." },
+    { tema: "Retrofit · interface", pergunta: "Por que a Service do Retrofit é declarada como uma <b>interface</b> sem implementação?",
       opcoes: [
-        "A soma das vendas para cada categoria — um total de vendas por grupo.",
-        "A soma de todas as vendas do DataFrame inteiro, sem separar por categoria.",
-        "A quantidade de categorias diferentes que existem na coluna \"categoria\".",
-        "A média das vendas por categoria, e não a soma, apesar do nome do método."
-      ], correta: 0, explicacao: "Agrupa por categoria e soma as vendas de cada grupo → total de vendas por categoria. Padrão groupby + agregação." },
-    { tema: "merge", pergunta: "O que <code>pd.merge(df1, df2, on='id')</code> faz?",
+        "Porque o Retrofit gera o código real em tempo de execução, lendo as anotações dos métodos.",
+        "Porque interfaces são mais rápidas que classes e por isso a API responde antes.",
+        "Porque o Android não permite usar classes concretas para acessar a internet.",
+        "Porque a implementação fica guardada no banco de dados SQLite do dispositivo."
+      ], correta: 0, explicacao: "Você só declara a interface com as anotações; o Retrofit gera a implementação real em runtime lendo essas anotações. Não se escreve o corpo dos métodos." },
+    { tema: "API · @SerializedName", pergunta: "Para que serve a anotação <code>@SerializedName(\"front_default\")</code> em uma data class?",
       opcoes: [
-        "Junta os dois DataFrames usando a coluna \"id\" como chave de ligação entre eles.",
-        "Empilha df2 embaixo de df1, aumentando o número de linhas sem casar por chave.",
-        "Remove de df1 todas as linhas cujo \"id\" também exista em df2, filtrando duplicatas.",
-        "Cria uma cópia de df1 e a renomeia para df2, descartando a tabela original."
-      ], correta: 0, explicacao: "<code>merge(..., on='id')</code> junta tabelas pela chave em comum (o \"id\"), como um JOIN de banco de dados." },
-    { tema: "concat", pergunta: "Qual a diferença entre <code>pd.concat()</code> e <code>pd.merge()</code>?",
+        "Para mapear um nome do JSON (ex.: <code>front_default</code>) para um nome Kotlin diferente (ex.: <code>frontDefault</code>).",
+        "Para criptografar o campo antes de enviá-lo à API, protegendo o dado do usuário.",
+        "Para marcar o campo como chave primária da tabela no banco de dados Room.",
+        "Para definir o valor padrão que o campo terá caso a API não o retorne."
+      ], correta: 0, explicacao: "<code>@SerializedName</code> faz a ponte entre o nome do campo no JSON (ex.: snake_case) e o nome da propriedade Kotlin (camelCase). O Gson usa isso na conversão." },
+    { tema: "API · UI State", pergunta: "O padrão de \"UI State\" com sealed interface costuma representar quais estados de tela?",
       opcoes: [
-        "<code>concat()</code> empilha DataFrames (junta linhas); <code>merge()</code> junta tabelas casando por uma chave.",
-        "<code>concat()</code> junta por chave e <code>merge()</code> apenas empilha, ao contrário do que os nomes sugerem.",
-        "Os dois fazem exatamente a mesma coisa, sendo <code>concat()</code> só uma versão mais antiga.",
-        "<code>concat()</code> serve para colunas de texto e <code>merge()</code> apenas para colunas numéricas."
-      ], correta: 0, explicacao: "<code>concat()</code> empilha (junta linhas ou colunas na sequência); <code>merge()</code> casa registros por uma chave em comum." },
-    { tema: "Matriz · acesso", pergunta: "Em uma matriz NumPy, o que <code>matriz[:, 0]</code> retorna?",
+        "Loading (carregando), Success (dados prontos) e Error/NotFound (falhou) — a tela fica em exatamente um estado válido.",
+        "Apenas Online e Offline, conforme a conexão com a internet do dispositivo.",
+        "Apenas Claro e Escuro, conforme o tema visual escolhido pelo usuário no app.",
+        "Login, Cadastro e Home, que são as três telas obrigatórias de todo aplicativo."
+      ], correta: 0, explicacao: "O UI State modela a tela como Loading / Success / Error (NotFound). Garante exatamente um estado válido por vez, evitando combinações impossíveis." },
+    { tema: "Coroutines · viewModelScope", pergunta: "Para que serve o <code>viewModelScope.launch { }</code>?",
       opcoes: [
-        "A primeira coluna inteira — o \":\" significa \"todas as linhas\" e o 0 seleciona a coluna 0.",
-        "A primeira linha inteira da matriz, do primeiro ao último elemento dela.",
-        "Apenas o elemento da posição [0, 0], ou seja, o canto superior esquerdo da matriz.",
-        "A matriz inteira sem alteração, pois o \":\" seleciona tudo e o 0 é ignorado."
-      ], correta: 0, explicacao: "<code>matriz[:, 0]</code> → todas as linhas (:) da coluna 0 = a primeira coluna inteira. Já <code>matriz[0]</code> é a primeira linha." },
-    { tema: "Alinhamento por índice", pergunta: "Ao somar duas Series, como o Pandas decide quais valores somar?",
+        "Iniciar uma coroutine ligada ao ciclo de vida do ViewModel — ela é cancelada quando o ViewModel é destruído.",
+        "Criar uma nova thread do sistema operacional exclusiva para cada requisição de rede.",
+        "Abrir uma nova tela do aplicativo exibindo o resultado da operação assíncrona.",
+        "Executar uma consulta SQL síncrona diretamente na thread principal do aplicativo."
+      ], correta: 0, explicacao: "<code>viewModelScope.launch</code> inicia uma coroutine atrelada ao ViewModel — se o ViewModel morre, a coroutine é cancelada junto, evitando vazamentos." },
+    { tema: "Design Patterns · criacionais", pergunta: "Qual é o foco dos padrões <b>criacionais</b>?",
       opcoes: [
-        "Pelo índice: ele soma \"Ana\" com \"Ana\", alinhando pelos rótulos — a ordem na lista não importa.",
-        "Pela posição: sempre soma o primeiro com o primeiro, ignorando completamente os rótulos.",
-        "Pela ordem alfabética dos valores, reorganizando ambas as Series antes de somar.",
-        "Aleatoriamente, escolhendo pares de valores a cada execução do código."
-      ], correta: 0, explicacao: "O Pandas alinha pelo índice: soma \"Ana\" com \"Ana\". A matemática viaja acompanhada do rótulo, não da posição." },
-    { tema: "Ética · viés", pergunta: "Segundo a aula, por que um algoritmo de IA pode reproduzir preconceitos?",
+        "A criação de objetos — incluem Singleton, Factory Method, Builder, Abstract Factory e Prototype.",
+        "A composição de classes e objetos — incluem Adapter, Decorator e Facade.",
+        "A comunicação entre objetos — incluem Observer, Strategy e Command.",
+        "A persistência de dados no banco — incluem Entity, DAO e Repository."
+      ], correta: 0, explicacao: "Criacionais tratam da criação de objetos: Singleton, Factory Method, Abstract Factory, Builder, Prototype." },
+    { tema: "Design Patterns · Observer", pergunta: "O que o padrão <b>Observer</b> faz?",
       opcoes: [
-        "Porque aprende com dados históricos: se a história contém racismo ou machismo, o modelo replica isso em larga escala.",
-        "Porque programadores escrevem propositalmente código malicioso e discriminatório dentro da IA.",
-        "Porque a matemática é naturalmente injusta e sempre favorece um grupo específico de pessoas.",
-        "Porque a IA inventa preconceitos novos por conta própria, sem qualquer relação com os dados de treino."
-      ], correta: 0, explicacao: "Viés algorítmico: a IA aprende com dados históricos. Se a história tem preconceito, ela automatiza esse viés — não é código malicioso." },
-    { tema: "Ética · manipulação visual", pergunta: "Como um gráfico pode enganar o público mesmo com dados corretos?",
+        "Notifica automaticamente vários objetos quando o objeto observado muda de estado.",
+        "Garante que uma classe tenha apenas uma única instância no aplicativo inteiro.",
+        "Constrói objetos complexos passo a passo, separando a construção da representação.",
+        "Compatibiliza duas interfaces incompatíveis para que trabalhem juntas."
+      ], correta: 0, explicacao: "Observer notifica múltiplos \"observadores\" quando o objeto observado muda. É comportamental — o <code>Flow</code>/estado do Compose segue essa ideia." },
+    { tema: "Design Patterns · Strategy", pergunta: "O que o padrão <b>Strategy</b> permite?",
       opcoes: [
-        "Mudando a escala de um eixo, o que pode transformar uma flutuação normal em uma \"crise\" artificial.",
-        "Trocando as cores do gráfico, o que altera automaticamente os valores numéricos exibidos nele.",
-        "Aumentando o tamanho da fonte do título, o que faz os dados parecerem maiores do que são.",
-        "Não é possível enganar com dados corretos; um gráfico sempre reflete a verdade dos números."
-      ], correta: 0, explicacao: "Manipulação visual: mexer na escala de um eixo muda a percepção — uma variação pequena vira \"crise\", ainda que os dados estejam certos." },
-    { tema: "count", pergunta: "No groupby, o que <code>['vendas'].count()</code> retorna para cada grupo?",
+        "Encapsular algoritmos intercambiáveis, permitindo trocar a estratégia usada em tempo de execução.",
+        "Criar uma interface simplificada que esconde a complexidade de um subsistema.",
+        "Adicionar funcionalidades a um objeto dinamicamente, sem alterar sua classe.",
+        "Compartilhar objetos iguais para economizar memória do aplicativo."
+      ], correta: 0, explicacao: "Strategy encapsula algoritmos intercambiáveis por trás de uma interface comum, permitindo trocar o comportamento sem alterar quem o usa." },
+    { tema: "Arquitetura · MVVM", pergunta: "No padrão MVVM com fluxo unidirecional (UDF), como os dados e eventos fluem?",
       opcoes: [
-        "A quantidade de registros (linhas) de vendas em cada grupo.",
-        "A soma dos valores de vendas de cada grupo, e não a contagem de registros.",
-        "A média das vendas de cada grupo, ignorando os valores ausentes.",
-        "O maior valor de vendas encontrado dentro de cada grupo da tabela."
-      ], correta: 0, explicacao: "<code>count()</code> conta registros (linhas) por grupo. Para somar seria <code>sum()</code>; para média, <code>mean()</code>." }
+        "Os dados descem (API → ViewModel → UI) e os eventos do usuário sobem por callbacks; o ViewModel não conhece a UI.",
+        "A UI acessa a API diretamente e o ViewModel apenas desenha os componentes na tela.",
+        "O banco de dados controla toda a lógica e envia comandos diretos para a interface.",
+        "Os dados e eventos circulam aleatoriamente entre as camadas, sem direção definida."
+      ], correta: 0, explicacao: "MVVM + UDF: dados descem (API → ViewModel → UI) e eventos sobem por callbacks. O ViewModel nunca referencia a UI — isso o torna testável." }
   ];
 
   /* =========================== MODO DIFÍCIL (20) =========================== */
   const dificil = [
-    { tema: "Series vs ndarray", pergunta: "Qual é a diferença fundamental entre uma <code>pd.Series</code> e um <code>np.ndarray</code>?",
+    { tema: "Compose · remember vs state", pergunta: "O que acontece se você usar <code>mutableStateOf(0)</code> <b>sem</b> o <code>remember</code> dentro de uma Composable?",
       opcoes: [
-        "A Series une a velocidade do NumPy com um índice rotulado; o ndarray é rápido mas não tem rótulos.",
-        "O ndarray tem rótulos e a Series não, sendo a Series apenas uma versão mais lenta e sem índice.",
-        "Não há diferença: <code>pd.Series</code> e <code>np.ndarray</code> são exatamente a mesma estrutura de dados.",
-        "A Series só aceita texto e o ndarray só aceita números, sendo incompatíveis entre si."
-      ], correta: 0, explicacao: "A Series é um ndarray \"turbinado\" com índice: velocidade do NumPy + organização por rótulos reais. O ndarray puro não tem rótulos." },
-    { tema: "loc × iloc · risco", pergunta: "Por que a \"Dica de Ouro\" recomenda sempre usar <code>loc</code> ou <code>iloc</code> em vez de só <code>[]</code>?",
+        "A cada recomposição o valor volta a 0, pois sem <code>remember</code> o estado é recriado a cada redesenho.",
+        "O valor é salvo permanentemente no banco, sobrevivendo até ao fechamento do aplicativo.",
+        "O app não compila, pois <code>mutableStateOf</code> exige obrigatoriamente o <code>remember</code> junto.",
+        "O valor é compartilhado entre todas as telas do aplicativo automaticamente."
+      ], correta: 0, explicacao: "Sem <code>remember</code>, o estado é recriado a cada recomposição e volta ao valor inicial. O <code>remember</code> é o que o preserva entre redesenhos." },
+    { tema: "Compose · ordem do Modifier", pergunta: "Por que a <b>ordem</b> dos modificadores em uma cadeia <code>Modifier</code> importa?",
       opcoes: [
-        "Porque colchetes simples tentam \"adivinhar\" o contexto (rótulo ou posição), o que pode gerar confusão e bugs.",
-        "Porque colchetes simples são muito mais lentos e travam o programa em tabelas grandes.",
-        "Porque <code>loc</code> e <code>iloc</code> são os únicos comandos que conseguem ler dados de um DataFrame.",
-        "Porque colchetes simples apagam os dados selecionados após exibi-los uma vez na tela."
-      ], correta: 0, explicacao: "<code>[]</code> tenta adivinhar se é rótulo ou posição — ambíguo. <code>loc</code>/<code>iloc</code> são explícitos, deixando o código à prova de bugs e legível." },
-    { tema: "Vetorização", pergunta: "Por que operações vetorizadas (ex.: <code>notas + 1</code>) são preferíveis a um loop <code>for</code> em Pandas/NumPy?",
+        "Porque cada modificador é aplicado em sequência — ex.: padding antes ou depois do background muda o resultado visual.",
+        "Porque apenas o primeiro modificador da cadeia tem efeito; os demais são ignorados pelo Compose.",
+        "Porque a ordem define a prioridade de execução das coroutines ligadas ao componente.",
+        "Porque os modificadores são ordenados alfabeticamente antes de serem aplicados, sempre."
+      ], correta: 0, explicacao: "Modifiers são aplicados em sequência. <code>padding().background()</code> ≠ <code>background().padding()</code> — a cor pinta áreas diferentes conforme a ordem." },
+    { tema: "Compose · declarativo vs imperativo", pergunta: "Qual é a diferença entre a abordagem declarativa (Compose) e a imperativa (Views antigas)?",
       opcoes: [
-        "Porque são muito mais rápidas: a operação roda otimizada em todos os elementos de uma vez, sem laço em Python.",
-        "Porque um loop <code>for</code> não funciona em vetores NumPy, gerando erro de sintaxe.",
-        "Porque a vetorização altera os dados originais e o <code>for</code> nunca consegue alterá-los.",
-        "Porque não há diferença de performance; é apenas uma questão de gosto do programador."
-      ], correta: 0, explicacao: "Vetorização roda em código otimizado (C, por baixo) sobre todos os elementos de uma vez — muito mais rápido que iterar em Python com <code>for</code>." },
-    { tema: "NaN · propagação", pergunta: "Ao somar duas Series alinhadas por índice, o que acontece se um rótulo existe em uma mas não na outra?",
+        "No imperativo você atualiza o widget manualmente (<code>tv.text = x</code>); no declarativo você descreve a UI e o estado a sincroniza.",
+        "No declarativo você escreve mais código manual; no imperativo tudo é automático.",
+        "São idênticos: \"declarativo\" e \"imperativo\" são apenas dois nomes para o mesmo conceito.",
+        "O imperativo só funciona em Kotlin e o declarativo só funciona em Java, no Android."
+      ], correta: 0, explicacao: "Imperativo: você comanda cada atualização (<code>tv.text = ...</code>). Declarativo (Compose): você descreve a UI em função do estado e ela se sincroniza sozinha." },
+    { tema: "Persistência · escolha", pergunta: "Quando usar SharedPreferences/DataStore em vez de SQLite/Room?",
       opcoes: [
-        "O resultado daquele rótulo vira NaN, pois falta o valor correspondente em uma das Series.",
-        "O Pandas usa zero para o rótulo ausente, somando normalmente sem gerar nenhum NaN.",
-        "O rótulo que só existe em uma das Series é descartado silenciosamente do resultado.",
-        "É gerado um erro em tempo de execução, pois as Series precisam ter índices idênticos."
-      ], correta: 0, explicacao: "Alinhamento por índice: se um rótulo existe só em uma Series, não há par para a soma → o resultado vira NaN naquele rótulo." },
-    { tema: "describe · escopo", pergunta: "Por padrão, sobre quais colunas o <code>df.describe()</code> calcula as estatísticas?",
+        "Para dados pequenos de chave-valor (preferências, configurações) — não para listas estruturadas ou consultas complexas.",
+        "Para armazenar grandes volumes de dados relacionais com várias tabelas e relacionamentos.",
+        "Para substituir completamente o SQLite em qualquer situação, pois é sempre mais rápido.",
+        "Para fazer requisições HTTP e guardar as respostas de uma API externa no dispositivo."
+      ], correta: 0, explicacao: "SharedPreferences/DataStore são para dados pequenos chave-valor (configurações). Listas estruturadas e consultas complexas pedem SQLite/Room." },
+    { tema: "Room × SQLite manual", pergunta: "O que o Room automatiza que no SQLite \"cru\" era feito manualmente?",
       opcoes: [
-        "Apenas as colunas numéricas — colunas de texto são ignoradas por padrão.",
-        "Todas as colunas, inclusive as de texto, calculando média e desvio para strings também.",
-        "Apenas a primeira coluna do DataFrame, servindo como amostra representativa da tabela.",
-        "Apenas as colunas que não têm nenhum valor ausente (NaN) em nenhuma linha."
-      ], correta: 0, explicacao: "Por padrão, <code>describe()</code> só considera colunas numéricas (média, desvio, quartis não fazem sentido para texto puro)." },
-    { tema: "groupby · mecanismo", pergunta: "O que o <code>groupby()</code> faz sozinho, antes de aplicar uma função de agregação?",
+        "A geração de SQL, o mapeamento objeto↔tabela (sem ContentValues/Cursor na mão) e a checagem de queries em tempo de compilação.",
+        "A conexão com a internet e o download automático dos dados de uma API externa.",
+        "A criação dos componentes visuais da tela a partir das tabelas do banco.",
+        "A animação das transições entre as telas que exibem os dados do banco."
+      ], correta: 0, explicacao: "Room gera o SQL, mapeia objeto↔tabela (dispensando ContentValues/Cursor manuais) e valida as queries em tempo de compilação — o que o SQLite cru não faz." },
+    { tema: "Room · Single Source of Truth", pergunta: "No padrão \"Single Source of Truth\" com Room, quem a UI observa?",
       opcoes: [
-        "Apenas separa os dados em grupos; ele só produz um resultado quando seguido de <code>sum()</code>, <code>mean()</code> etc.",
-        "Já retorna a soma de cada grupo automaticamente, dispensando qualquer função de agregação.",
-        "Ordena o DataFrame inteiro e remove as linhas duplicadas de cada grupo formado.",
-        "Cria um novo DataFrame vazio com uma coluna para cada grupo, sem os dados originais."
-      ], correta: 0, explicacao: "<code>groupby()</code> só define os grupos (split). O resultado aparece na agregação (apply): <code>.sum()</code>, <code>.mean()</code>, <code>.agg()</code>." },
-    { tema: "agg", pergunta: "O que <code>.agg({'vendas': ['sum', 'mean']})</code> permite fazer após um groupby?",
+        "Apenas o banco Room — a API alimenta o banco e a UI nunca observa a API diretamente, evitando conflitos de sincronização.",
+        "Apenas a API — o banco é ignorado e a tela sempre busca os dados direto da internet.",
+        "As duas fontes ao mesmo tempo (API e banco), somando os resultados na tela.",
+        "O ViewModel, que guarda uma cópia independente dos dados sem relação com o banco."
+      ], correta: 0, explicacao: "Single Source of Truth: a API grava no Room, e a UI observa só o Room. Uma única fonte evita conflitos entre dados vindos de lugares diferentes." },
+    { tema: "Room · @PrimaryKey", pergunta: "O que <code>@PrimaryKey(autoGenerate = true)</code> faz em uma Entity?",
       opcoes: [
-        "Aplicar várias funções de uma vez à mesma coluna — soma e média das vendas por grupo, juntas.",
-        "Aplicar apenas a primeira função da lista (soma), ignorando as demais informadas.",
-        "Renomear a coluna \"vendas\" para \"sum\" e depois para \"mean\" em sequência.",
-        "Filtrar apenas os grupos cuja soma de vendas seja maior que a média geral."
-      ], correta: 0, explicacao: "<code>agg()</code> aplica várias funções ao mesmo tempo: aqui, soma E média de vendas por grupo, num único resultado." },
-    { tema: "merge × concat · escolha", pergunta: "Você tem duas tabelas: uma de clientes e uma de pedidos, ligadas por <code>cliente_id</code>. Qual usar para juntá-las?",
+        "Define a chave primária e faz o Room gerar ids sequenciais automaticamente a cada inserção.",
+        "Marca o campo como obrigatório, impedindo que ele fique nulo ao salvar um registro.",
+        "Criptografa o valor do campo antes de gravá-lo na tabela do banco de dados.",
+        "Cria uma coluna de data que registra quando cada linha foi inserida na tabela."
+      ], correta: 0, explicacao: "<code>@PrimaryKey(autoGenerate = true)</code> marca a chave primária e deixa o Room criar ids sequenciais sozinho — você não precisa informar o id ao inserir." },
+    { tema: "Coroutines vs threads", pergunta: "Por que coroutines são mais eficientes que threads tradicionais do sistema operacional?",
       opcoes: [
-        "<code>merge</code>, casando pela chave <code>cliente_id</code>, para associar cada pedido ao seu cliente.",
-        "<code>concat</code>, empilhando as duas tabelas uma embaixo da outra sem casar por chave.",
-        "<code>groupby</code>, agrupando as duas tabelas pela coluna <code>cliente_id</code> ao mesmo tempo.",
-        "<code>join</code> pelo índice numérico automático, ignorando a coluna <code>cliente_id</code>."
-      ], correta: 0, explicacao: "Tabelas relacionadas por uma chave (<code>cliente_id</code>) → <code>merge</code> (como um JOIN). <code>concat</code> só empilharia, sem associar corretamente." },
-    { tema: "Fluxo de análise", pergunta: "Segundo o cheat sheet, qual é a ordem lógica de um fluxo comum de análise?",
+        "São leves em memória: milhares de coroutines podem rodar sobre poucas threads reais, sem o custo de criar threads do SO.",
+        "Coroutines rodam na placa de vídeo (GPU), e threads rodam só no processador (CPU).",
+        "Coroutines não executam nada de fato; apenas simulam a execução para economizar bateria.",
+        "Não há diferença de eficiência; \"coroutine\" é só outro nome para \"thread\" em Kotlin."
+      ], correta: 0, explicacao: "Coroutines são leves: milhares delas rodam sobre um punhado de threads reais. Criar uma thread do SO é caro; uma coroutine, não." },
+    { tema: "ViewModel · rotação", pergunta: "Por que guardar os dados carregados no ViewModel evita recarregar da API ao girar a tela?",
       opcoes: [
-        "head → info → filtro → groupby → agg → merge/concat.",
-        "merge → agg → groupby → filtro → info → head, na ordem inversa da exploração.",
-        "groupby → head → merge → info → filtro → agg, sem uma lógica de exploração inicial.",
-        "agg → filtro → merge → groupby → info → head, começando pela agregação final."
-      ], correta: 0, explicacao: "Fluxo comum: primeiro explora (<code>head</code>, <code>info</code>), filtra, agrupa (<code>groupby</code> + <code>agg</code>) e por fim combina (<code>merge</code>/<code>concat</code>)." },
-    { tema: "Máscara · combinada", pergunta: "Como filtrar linhas em que idade > 18 <b>e</b> cidade == \"BH\" ao mesmo tempo?",
+        "Porque o ViewModel sobrevive à destruição/recriação da Activity, preservando o estado entre as mudanças de configuração.",
+        "Porque o ViewModel salva os dados no banco SQLite toda vez que a tela é girada pelo usuário.",
+        "Porque girar a tela não destrói a Activity, então nada precisa ser preservado de qualquer forma.",
+        "Porque o ViewModel desativa a rotação da tela para impedir que a Activity seja recriada."
+      ], correta: 0, explicacao: "Ao girar a tela, a Activity é destruída e recriada, mas o ViewModel sobrevive — então os dados já carregados continuam lá, sem nova chamada de rede." },
+    { tema: "Compose · UI = f(state)", pergunta: "Na prática, o que significa a tela ser \"função do estado\" no Compose?",
       opcoes: [
-        "<code>df[(df['idade'] > 18) & (df['cidade'] == \"BH\")]</code>, combinando as condições com <code>&</code> e parênteses.",
-        "<code>df[df['idade'] > 18 and df['cidade'] == \"BH\"]</code>, usando a palavra <code>and</code> entre as condições.",
-        "<code>df[df['idade'] > 18][df['cidade'] == \"BH\"]</code> sempre gera erro e nunca funciona no Pandas.",
-        "<code>df.filter(idade > 18, cidade == \"BH\")</code>, o método próprio do Pandas para dois filtros."
-      ], correta: 0, explicacao: "Máscaras combinadas usam <code>&</code> (e) / <code>|</code> (ou), com cada condição entre parênteses. <code>and</code>/<code>or</code> do Python não funcionam aqui." },
-    { tema: "Ética · John Snow", pergunta: "No exemplo do mapa da cólera (John Snow, 1854), qual foi o poder da visualização de dados?",
+        "Você não altera widgets manualmente: ao mudar o estado, o Compose recompõe e a tela reflete o novo valor sozinha.",
+        "Você precisa chamar uma função toda vez que quiser atualizar qualquer elemento da tela.",
+        "O estado é calculado a partir do que está desenhado na tela, e não o contrário.",
+        "A tela só pode exibir funções matemáticas, como gráficos e equações, na interface."
+      ], correta: 0, explicacao: "<code>UI = f(state)</code>: a tela é determinada pelo estado. Você muda o estado e o Compose recompõe — nunca se mexe no componente \"na mão\"." },
+    { tema: "StateFlow", pergunta: "O que diferencia um <code>StateFlow</code> de um <code>Flow</code> comum?",
       opcoes: [
-        "Mapear os casos revelou que as mortes se agrupavam em torno de uma bomba de água, provando que a doença estava na água.",
-        "O mapa provou que a cólera era transmitida pelo ar, confirmando a teoria dos miasmas da época.",
-        "O mapa não mudou nada; a descoberta da causa da cólera veio apenas de experimentos em laboratório.",
-        "A visualização apenas deixou os dados mais bonitos, sem alterar a concepção médica da época."
-      ], correta: 0, explicacao: "John Snow mapeou os casos e o agrupamento ao redor de uma bomba d'água provou que a cólera vinha da água — mudou a medicina. Dados subvertendo o senso comum." },
-    { tema: "Ética · RH automatizado", pergunta: "No caso da IA de RH que descartava currículos \"femininos\", qual foi a causa real do problema?",
+        "O StateFlow guarda sempre o último valor emitido, disponível de imediato — ideal para o estado observado pela UI.",
+        "O StateFlow só funciona com números, enquanto o Flow aceita qualquer tipo de dado.",
+        "O Flow guarda o último valor e o StateFlow não guarda valor algum entre emissões.",
+        "Não há diferença; StateFlow é apenas o nome antigo do Flow no Kotlin."
+      ], correta: 0, explicacao: "StateFlow mantém sempre o último valor (como um \"estado atual\") acessível na hora — combina a reatividade do Flow com disponibilidade imediata para a UI." },
+    { tema: "Dispatchers.IO", pergunta: "Por que operações de banco e rede devem rodar no <code>Dispatchers.IO</code>?",
       opcoes: [
-        "A IA foi treinada com 10 anos de currículos majoritariamente masculinos e deduziu que mulheres não eram qualificadas.",
-        "Um programador inseriu propositalmente uma regra para descartar mulheres do processo seletivo.",
-        "A IA tinha um bug de código que trocava aleatoriamente currículos aprovados por reprovados.",
-        "As mulheres realmente eram menos qualificadas, e a IA apenas refletiu essa verdade objetiva."
-      ], correta: 0, explicacao: "A IA automatizou o viés histórico: treinada com dados de contratações passadas (majoritariamente homens), ela replicou o padrão. É viés nos dados, não código malicioso." },
-    { tema: "Ética · origem do viés", pergunta: "Segundo o gráfico da aula, qual é a maior origem do viés nos algoritmos (55%)?",
+        "Porque é o dispatcher otimizado para operações de entrada/saída, mantendo a thread principal livre para a UI.",
+        "Porque o <code>Dispatchers.IO</code> é o único que consegue acessar a internet no Android.",
+        "Porque ele executa o código mais rápido que qualquer outro dispatcher disponível.",
+        "Porque a UI só é desenhada corretamente quando o banco roda na thread principal."
+      ], correta: 0, explicacao: "<code>Dispatchers.IO</code> é feito para I/O (disco, rede). Rodar banco/rede ali mantém a Main Thread livre, sem travar a interface (ANR)." },
+    { tema: "Design Patterns · estruturais", pergunta: "Qual padrão é <b>estrutural</b> e compatibiliza interfaces incompatíveis?",
       opcoes: [
-        "O viés nos dados históricos humanos — a tecnologia funciona como um \"espelho social\".",
-        "Erros técnicos do sistema, como falhas de programação e bugs no código do algoritmo.",
-        "O viés de amostragem, causado por coletar dados de poucas pessoas de uma vez só.",
-        "O design e a seleção de variáveis feitos pelos engenheiros ao construir o modelo."
-      ], correta: 0, explicacao: "55% vem do viés nos dados históricos humanos. A maioria da discriminação em IA não é código malicioso — é a absorção passiva de preconceitos da sociedade." },
-    { tema: "Series · name", pergunta: "Qual é o papel do atributo <code>name</code> de uma Series?",
+        "Adapter — faz duas interfaces que não casariam trabalharem juntas.",
+        "Singleton — garante uma única instância de uma classe.",
+        "Observer — notifica vários objetos sobre uma mudança.",
+        "Factory Method — cria objetos sem especificar a classe concreta."
+      ], correta: 0, explicacao: "Adapter é estrutural: adapta uma interface a outra incompatível. Singleton/Factory são criacionais; Observer é comportamental." },
+    { tema: "Design Patterns · Factory", pergunta: "O que o padrão <b>Factory Method</b> resolve?",
       opcoes: [
-        "É um nome global opcional para a coluna — útil quando a Series vira uma coluna de um DataFrame.",
-        "É o nome do índice de cada linha, substituindo os rótulos individuais da estrutura.",
-        "É obrigatório e precisa ser único, servindo de chave primária da Series no Pandas.",
-        "É o nome do arquivo de onde os dados da Series foram carregados originalmente."
-      ], correta: 0, explicacao: "<code>name</code> é um nome global opcional para a Series — quando ela vira coluna de um DataFrame, esse nome é o cabeçalho da coluna." },
-    { tema: "Estatísticas nativas", pergunta: "Por que chamar <code>notas.mean()</code> é mais eficiente que somar manualmente e dividir num loop?",
+        "Criar objetos sem especificar a classe concreta, delegando a decisão de qual instanciar.",
+        "Garantir que uma classe só possa ter uma única instância durante a execução.",
+        "Adicionar comportamentos a um objeto em tempo de execução, sem herança.",
+        "Fornecer uma fachada simplificada para um conjunto complexo de classes."
+      ], correta: 0, explicacao: "Factory Method cria objetos sem amarrar o código à classe concreta — quem chama pede \"um produto\" e a fábrica decide qual classe instanciar." },
+    { tema: "Design Patterns · Decorator", pergunta: "O que o padrão <b>Decorator</b> permite fazer?",
       opcoes: [
-        "Porque a Series tem métodos estatísticos nativos otimizados, que rodam em microssegundos sobre todos os dados.",
-        "Porque <code>mean()</code> não calcula de fato a média, apenas retorna uma estimativa rápida e aproximada.",
-        "Porque um loop manual não consegue acessar os valores de uma Series, apenas o índice dela.",
-        "Porque não há diferença real; ambos levam o mesmo tempo em qualquer tamanho de dados."
-      ], correta: 0, explicacao: "Uma Series tem dezenas de métodos estatísticos nativos (<code>mean</code>, <code>max</code>, <code>median</code>...) otimizados — muito mais rápidos que um loop em Python." },
-    { tema: "Matriz · índices", pergunta: "Em uma matriz NumPy, qual a diferença entre <code>matriz[0]</code> e <code>matriz[:, 0]</code>?",
+        "Adicionar funcionalidades a um objeto dinamicamente, sem alterar a sua classe original.",
+        "Garantir uma única instância global de uma classe em todo o aplicativo.",
+        "Encapsular algoritmos intercambiáveis para trocá-los em tempo de execução.",
+        "Compor objetos em uma estrutura de árvore hierárquica de pai e filhos."
+      ], correta: 0, explicacao: "Decorator (estrutural) adiciona responsabilidades a um objeto em runtime, \"embrulhando-o\", sem precisar herdar nem alterar a classe original." },
+    { tema: "Compose · Composable chamada", pergunta: "De onde uma função <code>@Composable</code> pode ser chamada?",
       opcoes: [
-        "<code>matriz[0]</code> retorna a primeira linha inteira; <code>matriz[:, 0]</code> retorna a primeira coluna inteira.",
-        "<code>matriz[0]</code> retorna a primeira coluna; <code>matriz[:, 0]</code> retorna a primeira linha, ao contrário.",
-        "Os dois retornam exatamente o mesmo: a primeira linha da matriz de dados.",
-        "<code>matriz[0]</code> retorna o elemento [0][0]; <code>matriz[:, 0]</code> retorna a matriz inteira."
-      ], correta: 0, explicacao: "<code>matriz[0]</code> = primeira linha. <code>matriz[:, 0]</code> = todas as linhas da coluna 0 = primeira coluna. O \":\" significa \"todas as linhas\"." },
-    { tema: "float64", pergunta: "Por que um vetor NumPy costuma ter um único tipo de dado (ex.: <code>float64</code>)?",
+        "Apenas de dentro de <code>setContent { }</code> ou de outra função <code>@Composable</code>.",
+        "De qualquer lugar do código, inclusive de funções comuns e do <code>main()</code>.",
+        "Apenas de dentro de uma coroutine iniciada com <code>launch { }</code>.",
+        "Apenas de dentro de um método DAO anotado com <code>@Query</code>."
+      ], correta: 0, explicacao: "Uma Composable só roda dentro do <code>setContent</code> ou de outra Composable. Não dá pra chamá-la de uma função comum — ela emite UI no contexto do Compose." },
+    { tema: "API · @Path", pergunta: "No Retrofit, o que o <code>@Path(\"nameOrId\")</code> faz em <code>@GET(\"pokemon/{nameOrId}\")</code>?",
       opcoes: [
-        "Porque a homogeneidade de tipo permite armazenamento contíguo e cálculos extremamente rápidos.",
-        "Porque o NumPy não consegue lidar com números inteiros, apenas com decimais do tipo float.",
-        "Porque cada elemento precisa de um tipo diferente para o vetor funcionar corretamente.",
-        "Porque o tipo <code>float64</code> é apenas um rótulo decorativo, sem efeito real sobre os dados."
-      ], correta: 0, explicacao: "Um único tipo por vez (ex.: <code>float64</code>) permite ao NumPy guardar tudo contíguo na memória e fazer cálculos vetorizados muito rápidos." },
-    { tema: "list × ndarray × Series", pergunta: "Comparando as três estruturas, qual afirmação está correta?",
+        "Substitui o trecho <code>{nameOrId}</code> da URL pelo valor passado ao método na hora da chamada.",
+        "Define o cabeçalho de autenticação enviado junto com a requisição HTTP.",
+        "Converte o nome do Pokémon em letras maiúsculas antes de enviar à API.",
+        "Marca o parâmetro como chave primária na tabela do banco de dados."
+      ], correta: 0, explicacao: "<code>@Path</code> injeta o argumento no lugar do <code>{nameOrId}</code> da rota. Ex.: passar \"pikachu\" gera a URL <code>pokemon/pikachu</code>." },
+    { tema: "Entity × data class", pergunta: "Qual a relação entre uma data class normal e uma <code>@Entity</code> do Room?",
       opcoes: [
-        "List é flexível mas lenta; ndarray é rápido porém sem rótulos; Series une a velocidade do NumPy com índices reais.",
-        "List é a mais rápida das três; ndarray é a mais lenta; e a Series não serve para cálculos.",
-        "As três são idênticas em performance, mudando apenas o nome com que são chamadas em Python.",
-        "Só a list aceita rótulos; o ndarray e a Series trabalham exclusivamente por posição numérica."
-      ], correta: 0, explicacao: "List: flexível, lenta em cálculos grandes. ndarray: rápido, sem rótulos. Series: velocidade do NumPy + índice rotulado. É o \"melhor dos dois mundos\"." },
-    { tema: "Ética · privacidade", pergunta: "Segundo a aula, qual é o risco ligado à coleta massiva de dados (\"Fim da Privacidade\")?",
+        "A Entity é uma data class anotada: a anotação <code>@Entity</code> faz o Room tratá-la como tabela, com cada campo virando coluna.",
+        "São coisas opostas: data class é para a UI e Entity nunca pode ser uma data class.",
+        "A Entity substitui a data class; o Room proíbe o uso de data classes no projeto.",
+        "Não há relação; Entity é uma interface e data class é uma função Composable."
+      ], correta: 0, explicacao: "Uma Entity normalmente é uma data class com <code>@Entity</code>. A anotação é o que a transforma em tabela — cada propriedade vira uma coluna." },
+    { tema: "Compose · Preview", pergunta: "O que a anotação <code>@Preview</code> oferece no desenvolvimento com Compose?",
       opcoes: [
-        "A criação de perfis psicológicos profundos, apagando a linha entre serviço personalizado e vigilância.",
-        "O aumento do custo de armazenamento, que torna os servidores caros demais para as empresas.",
-        "A lentidão dos algoritmos, que ficam sobrecarregados ao processar dados de muitas pessoas.",
-        "A perda de dados por falhas técnicas, sem qualquer implicação ética para os usuários."
-      ], correta: 0, explicacao: "Fim da privacidade: a coleta massiva de dados íntimos permite perfis psicológicos profundos, ameaçando a autonomia — onde acaba o serviço e começa a vigilância?" },
-    { tema: "Análise · propósito", pergunta: "Qual frase resume melhor o valor de organizar e analisar dados, segundo a aula de ética?",
+        "Renderiza a Composable isolada no Android Studio, sem precisar de emulador — acelera o desenvolvimento iterativo.",
+        "Publica a tela em um site de preview online para o cliente visualizar antes do lançamento.",
+        "Executa automaticamente os testes unitários da tela a cada alteração do código.",
+        "Gera uma versão de demonstração do app com funcionalidades limitadas por tempo."
+      ], correta: 0, explicacao: "<code>@Preview</code> renderiza a Composable direto no Android Studio, sem emulador. Dá pra ver a tela enquanto codifica, iterando bem mais rápido." },
+    { tema: "Arquitetura · camadas", pergunta: "Numa arquitetura Android completa, qual é o caminho típico dos dados da API até a tela?",
       opcoes: [
-        "Os dados podem subverter o \"senso comum\" e revelar padrões invisíveis a olho nu — mas exigem responsabilidade.",
-        "Os dados sempre confirmam a intuição humana, servindo apenas para provar o que já sabíamos.",
-        "A análise de dados é neutra e nunca causa impacto real sobre decisões sociais ou econômicas.",
-        "Quanto mais dados forem coletados, mais verdadeiras e imparciais as conclusões serão automaticamente."
-      ], correta: 0, explicacao: "Dados podem revelar padrões invisíveis e mudar concepções (John Snow) — mas também sistematizar preconceito. Poder que exige responsabilidade." }
+        "API (Retrofit) → grava no Room → ViewModel observa o Room (Flow) → UI (Compose) exibe o estado.",
+        "UI → API diretamente → Room guarda uma cópia → o ViewModel só desenha os botões da tela.",
+        "Room → API → UI → ViewModel, com o banco iniciando a requisição de rede sozinho.",
+        "ViewModel → UI → Room → API, começando o fluxo pela interface visual do aplicativo."
+      ], correta: 0, explicacao: "Fluxo típico: Retrofit busca da API → grava no Room → o ViewModel observa o Room via Flow → a UI (Compose) exibe. Room como Single Source of Truth." }
   ];
 
   /* =========================== MODO CÓDIGO (16) =========================== */
   const codigo = [
-    { tema: "NumPy · vetor", trecho: `<span class="kw">import</span> numpy <span class="kw">as</span> np\n\nnotas = np.array([<span class="num">7.5</span>, <span class="num">8.0</span>, <span class="num">6.5</span>, <span class="num">9.0</span>])\n<span class="fn">print</span>(notas + <span class="num">1</span>)`,
-      pergunta: "O que este código imprime?",
+    { tema: "Compose · estado", trecho: `<span class="an">@Composable</span>\n<span class="kw">fun</span> <span class="fn">Contador</span>() {\n    <span class="kw">var</span> cliques <span class="kw">by</span> remember { mutableStateOf(<span class="num">0</span>) }\n    <span class="fn">Button</span>(onClick = { cliques++ }) {\n        <span class="fn">Text</span>(<span class="str">"Cliques: </span>$cliques<span class="str">"</span>)\n    }\n}`,
+      pergunta: "O que este código faz quando o botão é tocado?",
       opcoes: [
-        "<code>[8.5 9.0 7.5 10.0]</code> — a soma ocorre elemento a elemento, aumentando 1 em cada nota.",
-        "<code>[7.5 8.0 6.5 9.0 1]</code> — o número 1 é adicionado como novo elemento ao fim do vetor.",
-        "<code>[8.5]</code> — apenas a primeira nota é somada com 1 e retornada sozinha.",
-        "Um erro, pois não é possível somar um número inteiro a um vetor de floats no NumPy."
-      ], correta: 0, explicacao: "Operação vetorizada: <code>notas + 1</code> soma 1 em cada elemento de uma vez → <code>[8.5 9.0 7.5 10.0]</code>." },
-    { tema: "Series · criação", trecho: `<span class="kw">import</span> pandas <span class="kw">as</span> pd\n\nnotas = pd.Series([<span class="num">7</span>, <span class="num">8</span>], index=[<span class="str">"Ana"</span>, <span class="str">"Bruno"</span>])\n<span class="fn">print</span>(notas.loc[<span class="str">"Ana"</span>])`,
-      pergunta: "O que este código imprime?",
+        "Incrementa <code>cliques</code> e o Compose recompõe o <code>Text</code>, mostrando o novo valor na tela.",
+        "Incrementa <code>cliques</code> na memória, mas a tela nunca atualiza porque falta um <code>setState</code>.",
+        "Volta <code>cliques</code> para 0 a cada toque, pois o <code>remember</code> reinicia o valor.",
+        "Salva o número de cliques no banco de dados SQLite do dispositivo a cada toque."
+      ], correta: 0, explicacao: "Ao tocar, <code>cliques++</code> altera o estado observável; o Compose recompõe o <code>Text</code> que lê <code>cliques</code>, exibindo o novo valor. O <code>remember</code> preserva entre recomposições." },
+    { tema: "Compose · state hoisting", trecho: `<span class="an">@Composable</span>\n<span class="kw">fun</span> <span class="fn">Contador</span>(cliques: Int, onIncrementar: () -> Unit) {\n    <span class="fn">Text</span>(<span class="str">"Cliques: </span>$cliques<span class="str">"</span>)\n    <span class="fn">Button</span>(onClick = onIncrementar) { <span class="fn">Text</span>(<span class="str">"+1"</span>) }\n}`,
+      pergunta: "O que caracteriza esta Composable?",
       opcoes: [
-        "<code>7</code> — <code>loc[\"Ana\"]</code> busca pelo rótulo \"Ana\", que corresponde ao valor 7.",
-        "<code>8</code> — <code>loc</code> sempre retorna o último valor da Series, ignorando o rótulo.",
-        "<code>Ana</code> — o comando retorna o próprio rótulo pesquisado, e não o valor.",
-        "Um erro, pois <code>loc</code> não aceita rótulos de texto, apenas posições numéricas."
-      ], correta: 0, explicacao: "A Series liga \"Ana\"→7 e \"Bruno\"→8. <code>loc[\"Ana\"]</code> busca pelo rótulo e retorna 7." },
-    { tema: "Series · dicionário", trecho: `dados = pd.Series({<span class="str">"BH"</span>: <span class="num">22</span>, <span class="str">"SP"</span>: <span class="num">19</span>})\n<span class="fn">print</span>(dados.index)`,
-      pergunta: "O que este código imprime como índice?",
+        "É \"sem estado\" (state hoisting): recebe os dados por parâmetro e dispara o evento por callback, sem guardar estado interno.",
+        "É a dona do estado: ela cria e modifica <code>cliques</code> internamente com <code>remember</code>.",
+        "É uma tela que acessa o banco de dados para buscar o número de cliques salvo.",
+        "É uma função de rede que envia o número de cliques para uma API externa."
+      ], correta: 0, explicacao: "Esta Composable não tem estado: recebe <code>cliques</code> e emite <code>onIncrementar</code>. É state hoisting — quem chama é o dono do estado. Isso a torna reutilizável." },
+    { tema: "Compose · OutlinedTextField", trecho: `<span class="kw">var</span> peso <span class="kw">by</span> remember { mutableStateOf(<span class="str">""</span>) }\n\n<span class="fn">OutlinedTextField</span>(\n    value = peso,\n    onValueChange = { novo -> peso = novo },\n    label = { <span class="fn">Text</span>(<span class="str">"Peso em Kg"</span>) }\n)`,
+      pergunta: "Como este campo de texto mantém o que o usuário digita?",
       opcoes: [
-        "As chaves do dicionário: <code>['BH', 'SP']</code> — elas viraram o índice da Series.",
-        "Os valores do dicionário: <code>[22, 19]</code> — os valores viram o índice na Series.",
-        "Uma numeração automática <code>[0, 1]</code>, ignorando as chaves do dicionário.",
-        "Um erro, pois a <code>pd.Series</code> não pode ser criada a partir de um dicionário."
-      ], correta: 0, explicacao: "Criando Series de dicionário, as chaves viram o índice → <code>['BH', 'SP']</code>. Os valores (22, 19) viram os dados." },
-    { tema: "loc × iloc", trecho: `notas = pd.Series([<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>], index=[<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>])\n<span class="fn">print</span>(notas.iloc[<span class="num">0</span>], notas.loc[<span class="str">"c"</span>])`,
-      pergunta: "O que este código imprime?",
+        "O <code>value</code> lê o estado <code>peso</code> e o <code>onValueChange</code> atualiza esse estado a cada tecla, recompondo o campo.",
+        "O campo guarda o texto sozinho, sem precisar de estado; <code>value</code> e <code>onValueChange</code> são decorativos.",
+        "O texto é salvo direto no banco SQLite a cada letra digitada pelo usuário.",
+        "O <code>label</code> armazena o valor digitado, e o <code>value</code> apenas exibe o rótulo."
+      ], correta: 0, explicacao: "Padrão de campo controlado: <code>value</code> mostra o estado atual e <code>onValueChange</code> o atualiza a cada digitação. Sem isso, o texto não \"gruda\"." },
+    { tema: "Room · Entity", trecho: `<span class="an">@Entity</span>(tableName = <span class="str">"livros"</span>)\n<span class="kw">data class</span> <span class="fn">LivroEntity</span>(\n    <span class="an">@PrimaryKey</span>(autoGenerate = <span class="kw">true</span>) <span class="kw">val</span> id: Long = <span class="num">0</span>,\n    <span class="kw">val</span> titulo: String\n)`,
+      pergunta: "O que este código define?",
       opcoes: [
-        "<code>10 30</code> — <code>iloc[0]</code> pega a posição 0 (10) e <code>loc[\"c\"]</code> pega o rótulo \"c\" (30).",
-        "<code>a c</code> — os comandos retornam os rótulos das posições, e não os valores.",
-        "<code>10 10</code> — ambos retornam o primeiro valor, pois apontam para a mesma posição.",
-        "Um erro, pois não é possível misturar <code>iloc</code> e <code>loc</code> na mesma linha."
-      ], correta: 0, explicacao: "<code>iloc[0]</code> = posição 0 = 10. <code>loc[\"c\"]</code> = rótulo \"c\" = 30. Resultado: <code>10 30</code>." },
-    { tema: "Máscara booleana", trecho: `df = pd.DataFrame({<span class="str">"idade"</span>: [<span class="num">15</span>, <span class="num">22</span>, <span class="num">17</span>, <span class="num">30</span>]})\nadultos = df[df[<span class="str">"idade"</span>] > <span class="num">18</span>]\n<span class="fn">print</span>(<span class="fn">len</span>(adultos))`,
-      pergunta: "O que este código imprime?",
+        "Uma tabela \"livros\" com colunas id (chave primária auto-gerada) e titulo (texto).",
+        "Uma função que busca todos os livros de uma API externa na internet.",
+        "Uma tela Composable que lista os livros cadastrados pelo usuário.",
+        "Uma interface DAO com os métodos de inserir e consultar livros."
+      ], correta: 0, explicacao: "<code>@Entity</code> cria a tabela \"livros\"; cada propriedade vira coluna. <code>id</code> é chave primária auto-gerada e <code>titulo</code> é uma coluna de texto." },
+    { tema: "Room · DAO", trecho: `<span class="an">@Dao</span>\n<span class="kw">interface</span> <span class="fn">LivroDao</span> {\n    <span class="an">@Query</span>(<span class="str">"SELECT * FROM livros"</span>)\n    <span class="kw">fun</span> <span class="fn">observeAll</span>(): Flow&lt;List&lt;LivroEntity&gt;&gt;\n\n    <span class="an">@Insert</span>\n    <span class="kw">suspend fun</span> <span class="fn">insertAll</span>(livros: List&lt;LivroEntity&gt;)\n}`,
+      pergunta: "O que esta interface DAO oferece?",
       opcoes: [
-        "<code>2</code> — apenas as idades 22 e 30 são maiores que 18, sobrando 2 linhas.",
-        "<code>4</code> — o filtro mantém todas as linhas do DataFrame original.",
-        "<code>18</code> — o resultado é o valor usado na condição do filtro booleano.",
-        "Um erro, pois não é permitido usar <code>len()</code> em um DataFrame filtrado."
-      ], correta: 0, explicacao: "A máscara <code>idade > 18</code> mantém 22 e 30 → 2 linhas. <code>len()</code> conta essas linhas → <code>2</code>." },
-    { tema: "info", trecho: `df = pd.DataFrame({\n  <span class="str">"nome"</span>: [<span class="str">"Ana"</span>, <span class="str">"Bruno"</span>],\n  <span class="str">"idade"</span>: [<span class="num">22</span>, <span class="num">19</span>]\n})\ndf.<span class="fn">info</span>()`,
-      pergunta: "O que <code>df.info()</code> mostra sobre este DataFrame?",
+        "Um método reativo <code>observeAll()</code> que emite a lista sempre que a tabela muda, e um <code>insertAll()</code> assíncrono.",
+        "Dois métodos que acessam uma API externa para baixar e enviar livros pela internet.",
+        "A definição visual da tela que exibe a lista de livros para o usuário.",
+        "A classe principal do banco que cria a conexão com o SQLite ao abrir o app."
+      ], correta: 0, explicacao: "O DAO define as operações: <code>observeAll()</code> retorna <code>Flow</code> (reemite ao mudar a tabela) e <code>insertAll()</code> é <code>suspend</code> (roda em background)." },
+    { tema: "Room · Database", trecho: `<span class="an">@Database</span>(entities = [LivroEntity::class], version = <span class="num">1</span>)\n<span class="kw">abstract class</span> <span class="fn">BibliotecaDatabase</span> : <span class="fn">RoomDatabase</span>()`,
+      pergunta: "O que esta classe representa?",
       opcoes: [
-        "Um resumo: 2 colunas (nome, idade), seus tipos (object e int) e a contagem de valores não nulos.",
-        "As estatísticas descritivas (média e desvio) das colunas nome e idade da tabela.",
-        "Apenas os valores das duas linhas do DataFrame, exibindo a tabela por completo.",
-        "A soma total das idades (41) e a concatenação dos nomes em uma única string."
-      ], correta: 0, explicacao: "<code>info()</code> resume estrutura: nomes e tipos das colunas + contagem de não nulos. Não faz cálculos estatísticos (isso é o <code>describe()</code>)." },
-    { tema: "groupby", trecho: `df = pd.DataFrame({\n  <span class="str">"cat"</span>: [<span class="str">"A"</span>, <span class="str">"B"</span>, <span class="str">"A"</span>],\n  <span class="str">"vendas"</span>: [<span class="num">10</span>, <span class="num">5</span>, <span class="num">20</span>]\n})\n<span class="fn">print</span>(df.groupby(<span class="str">"cat"</span>)[<span class="str">"vendas"</span>].sum())`,
-      pergunta: "O que este código imprime?",
+        "A configuração do banco Room: lista as entities (tabelas) e a versão, servindo de ponto de acesso aos DAOs.",
+        "Uma tabela do banco de dados chamada \"BibliotecaDatabase\" com uma coluna de livros.",
+        "Uma tela Composable que mostra toda a biblioteca de livros do aplicativo.",
+        "Uma requisição de rede que baixa a biblioteca inteira de uma API externa."
+      ], correta: 0, explicacao: "<code>@Database</code> define o banco: quais entities (tabelas) e qual versão. É a classe abstrata que dá acesso aos DAOs do app." },
+    { tema: "Retrofit · Service", trecho: `<span class="kw">interface</span> <span class="fn">PokeApiService</span> {\n    <span class="an">@GET</span>(<span class="str">"pokemon/{nameOrId}"</span>)\n    <span class="kw">suspend fun</span> <span class="fn">getPokemon</span>(\n        <span class="an">@Path</span>(<span class="str">"nameOrId"</span>) nameOrId: String\n    ): PokemonDetailResponse\n}`,
+      pergunta: "O que esta interface faz?",
       opcoes: [
-        "As vendas somadas por categoria: A = 30 (10+20) e B = 5.",
-        "A soma total de todas as vendas (35), sem separar por categoria.",
-        "A quantidade de categorias diferentes existentes na coluna \"cat\" (2).",
-        "As vendas ordenadas do menor para o maior valor: 5, 10, 20."
-      ], correta: 0, explicacao: "Agrupa por \"cat\" e soma as vendas: A junta 10+20 = 30, B tem 5. Resultado por grupo." },
-    { tema: "fillna", trecho: `<span class="kw">import</span> numpy <span class="kw">as</span> np\ns = pd.Series([<span class="num">1</span>, np.nan, <span class="num">3</span>])\n<span class="fn">print</span>(s.fillna(<span class="num">0</span>).tolist())`,
-      pergunta: "O que este código imprime?",
+        "Declara um endpoint GET para buscar um Pokémon por nome ou id; o Retrofit gera a implementação em runtime.",
+        "Cria uma tabela \"pokemon\" no banco SQLite com uma coluna para nome ou id.",
+        "Desenha a tela de detalhes do Pokémon com a sua imagem e os seus atributos.",
+        "Guarda o Pokémon buscado no estado do ViewModel para sobreviver à rotação."
+      ], correta: 0, explicacao: "É a Service do Retrofit: <code>@GET</code> + <code>@Path</code> definem o endpoint. Você só declara a interface; o Retrofit cria o código real em runtime." },
+    { tema: "API · data class", trecho: `<span class="kw">data class</span> <span class="fn">Sprites</span>(\n    <span class="an">@SerializedName</span>(<span class="str">"front_default"</span>)\n    <span class="kw">val</span> frontDefault: String\n)`,
+      pergunta: "Qual o papel do <code>@SerializedName</code> aqui?",
       opcoes: [
-        "<code>[1.0, 0.0, 3.0]</code> — o NaN da posição do meio é preenchido com 0.",
-        "<code>[1.0, 3.0]</code> — a linha com NaN é removida da Series.",
-        "<code>[1, nan, 3]</code> — o <code>fillna</code> não altera nada quando o valor é 0.",
-        "Um erro, pois não é possível usar <code>fillna</code> em uma Series com NaN."
-      ], correta: 0, explicacao: "<code>fillna(0)</code> troca o NaN por 0 → <code>[1.0, 0.0, 3.0]</code>. Para remover a linha seria <code>dropna()</code>." },
-    { tema: "isna", trecho: `df = pd.DataFrame({\n  <span class="str">"a"</span>: [<span class="num">1</span>, np.nan, <span class="num">3</span>],\n  <span class="str">"b"</span>: [np.nan, np.nan, <span class="num">6</span>]\n})\n<span class="fn">print</span>(df.isna().sum().tolist())`,
-      pergunta: "O que este código imprime?",
+        "Mapeia o campo <code>front_default</code> do JSON para a propriedade Kotlin <code>frontDefault</code>.",
+        "Criptografa a URL da imagem antes de salvá-la no banco de dados local.",
+        "Marca <code>frontDefault</code> como chave primária da tabela no Room.",
+        "Define \"front_default\" como o valor padrão caso a API não retorne a imagem."
+      ], correta: 0, explicacao: "O JSON usa <code>front_default</code> (snake_case) e o Kotlin <code>frontDefault</code> (camelCase). O <code>@SerializedName</code> liga os dois na conversão do Gson." },
+    { tema: "Coroutines · viewModelScope", trecho: `<span class="kw">fun</span> <span class="fn">carregar</span>(nome: String) {\n    viewModelScope.launch {\n        estado = Loading\n        <span class="kw">val</span> p = service.getPokemon(nome)\n        estado = Success(p)\n    }\n}`,
+      pergunta: "O que este código faz?",
       opcoes: [
-        "<code>[1, 2]</code> — a coluna \"a\" tem 1 NaN e a coluna \"b\" tem 2 NaN.",
-        "<code>[3, 3]</code> — o total de linhas de cada coluna do DataFrame.",
-        "<code>[2, 1]</code> — a coluna \"a\" tem 2 NaN e a \"b\" tem 1, na ordem inversa.",
-        "<code>3</code> — o total geral de valores ausentes somando as duas colunas."
-      ], correta: 0, explicacao: "<code>isna()</code> marca os NaN; <code>.sum()</code> conta por coluna: \"a\" tem 1, \"b\" tem 2 → <code>[1, 2]</code>." },
-    { tema: "sort_values", trecho: `df = pd.DataFrame({<span class="str">"idade"</span>: [<span class="num">30</span>, <span class="num">18</span>, <span class="num">25</span>]})\n<span class="fn">print</span>(df.sort_values(<span class="str">"idade"</span>)[<span class="str">"idade"</span>].tolist())`,
-      pergunta: "O que este código imprime?",
+        "Inicia uma coroutine: marca o estado como Loading, busca o Pokémon na API e, ao chegar, muda para Success.",
+        "Executa a busca na thread principal, travando a tela até a API responder.",
+        "Faz um loop que busca o mesmo Pokémon repetidamente a cada segundo.",
+        "Salva o Pokémon no banco de dados sem nunca chamar a API externa."
+      ], correta: 0, explicacao: "<code>viewModelScope.launch</code> abre a coroutine: estado vira Loading, <code>getPokemon</code> (suspend) espera a resposta sem travar a UI, e então vira Success." },
+    { tema: "UI State · sealed", trecho: `<span class="kw">sealed interface</span> <span class="fn">UiState</span> {\n    <span class="kw">object</span> Loading : UiState\n    <span class="kw">data class</span> Success(<span class="kw">val</span> p: Pokemon) : UiState\n    <span class="kw">object</span> Error : UiState\n}`,
+      pergunta: "Para que serve esta sealed interface?",
       opcoes: [
-        "<code>[18, 25, 30]</code> — as idades ordenadas do menor para o maior (crescente por padrão).",
-        "<code>[30, 25, 18]</code> — as idades ordenadas do maior para o menor valor.",
-        "<code>[30, 18, 25]</code> — a ordem original, pois <code>sort_values</code> não altera o DataFrame.",
-        "<code>73</code> — a soma de todas as idades da coluna após a ordenação."
-      ], correta: 0, explicacao: "<code>sort_values(\"idade\")</code> ordena crescente por padrão → <code>[18, 25, 30]</code>." },
-    { tema: "merge", trecho: `a = pd.DataFrame({<span class="str">"id"</span>: [<span class="num">1</span>, <span class="num">2</span>], <span class="str">"nome"</span>: [<span class="str">"Ana"</span>, <span class="str">"Bo"</span>]})\nb = pd.DataFrame({<span class="str">"id"</span>: [<span class="num">1</span>, <span class="num">2</span>], <span class="str">"nota"</span>: [<span class="num">9</span>, <span class="num">7</span>]})\nr = pd.merge(a, b, on=<span class="str">"id"</span>)\n<span class="fn">print</span>(r.shape)`,
-      pergunta: "Qual o shape do DataFrame resultante?",
+        "Representa os estados possíveis da tela (Loading, Success, Error), garantindo que ela esteja em exatamente um deles.",
+        "Define as três telas do aplicativo: carregamento, sucesso e erro, com navegação entre elas.",
+        "Cria três tabelas no banco de dados, uma para cada estado de carregamento.",
+        "Declara três endpoints de API, um para cada situação de resposta do servidor."
+      ], correta: 0, explicacao: "Uma sealed interface fecha os estados possíveis: Loading, Success ou Error. A tela fica sempre em exatamente um — sem combinações impossíveis." },
+    { tema: "SQLite · ContentValues", trecho: `<span class="kw">val</span> valores = ContentValues().apply {\n    put(<span class="str">"titulo"</span>, livro.titulo)\n    put(<span class="str">"ano"</span>, livro.ano)\n}\ndb.insert(<span class="str">"livros"</span>, <span class="kw">null</span>, valores)`,
+      pergunta: "O que este código faz?",
       opcoes: [
-        "<code>(2, 3)</code> — 2 linhas casadas pelo id, com 3 colunas (id, nome, nota).",
-        "<code>(4, 2)</code> — as duas tabelas empilhadas, somando 4 linhas e 2 colunas.",
-        "<code>(2, 4)</code> — 2 linhas, mas mantendo a coluna id duplicada nas duas tabelas.",
-        "<code>(2, 2)</code> — apenas as colunas em comum entre as duas tabelas."
-      ], correta: 0, explicacao: "<code>merge on='id'</code> casa os ids 1 e 2 → 2 linhas; colunas: id + nome + nota = 3. Shape <code>(2, 3)</code>." },
-    { tema: "concat", trecho: `a = pd.DataFrame({<span class="str">"x"</span>: [<span class="num">1</span>, <span class="num">2</span>]})\nb = pd.DataFrame({<span class="str">"x"</span>: [<span class="num">3</span>, <span class="num">4</span>]})\nr = pd.concat([a, b])\n<span class="fn">print</span>(r.shape)`,
-      pergunta: "Qual o shape do DataFrame resultante?",
+        "Monta uma linha com ContentValues (coluna→valor) e a insere na tabela \"livros\" do SQLite.",
+        "Lê linha a linha os livros já salvos na tabela, usando um Cursor.",
+        "Cria a tabela \"livros\" com as colunas titulo e ano no banco de dados.",
+        "Envia o livro para uma API externa por uma requisição HTTP do tipo POST."
+      ], correta: 0, explicacao: "<code>ContentValues</code> monta a linha (coluna→valor) sem concatenar SQL; <code>db.insert</code> grava na tabela \"livros\". Inserção manual no SQLite cru." },
+    { tema: "SQLite · Cursor", trecho: `<span class="kw">val</span> cursor = db.rawQuery(<span class="str">"SELECT titulo FROM livros"</span>, <span class="kw">null</span>)\n<span class="kw">while</span> (cursor.moveToNext()) {\n    <span class="kw">val</span> t = cursor.getString(<span class="num">0</span>)\n    println(t)\n}\ncursor.close()`,
+      pergunta: "O que este código faz?",
       opcoes: [
-        "<code>(4, 1)</code> — as duas tabelas empilhadas: 2+2 = 4 linhas, 1 coluna.",
-        "<code>(2, 2)</code> — as tabelas juntadas lado a lado, gerando 2 colunas.",
-        "<code>(2, 1)</code> — apenas a primeira tabela, pois <code>concat</code> descarta a segunda.",
-        "<code>(1, 4)</code> — os valores transpostos em uma única linha de 4 colunas."
-      ], correta: 0, explicacao: "<code>concat</code> empilha (junta linhas): 2 + 2 = 4 linhas, mesma coluna \"x\" → shape <code>(4, 1)</code>." },
-    { tema: "loc · atribuição", trecho: `df = pd.DataFrame({<span class="str">"nome"</span>: [<span class="str">"Ana"</span>], <span class="str">"nota"</span>: [<span class="num">5</span>]},\n                  index=[<span class="str">"aluno1"</span>])\ndf.loc[<span class="str">"aluno1"</span>, <span class="str">"nota"</span>] = <span class="num">10</span>\n<span class="fn">print</span>(df.loc[<span class="str">"aluno1"</span>, <span class="str">"nota"</span>])`,
-      pergunta: "O que este código imprime?",
+        "Percorre o resultado da consulta linha a linha com o Cursor, lendo e imprimindo o título de cada livro.",
+        "Insere um novo livro na tabela a cada volta do laço while até o banco encher.",
+        "Cria a tabela \"livros\" e depois a apaga, limpando o banco de dados.",
+        "Busca os livros de uma API externa e os salva no banco de dados local."
+      ], correta: 0, explicacao: "O <code>Cursor</code> itera o resultado: <code>moveToNext()</code> avança linha a linha e <code>getString(0)</code> lê a coluna 0. No fim, <code>close()</code> libera o cursor." },
+    { tema: "Compose · Column + Modifier", trecho: `<span class="fn">Column</span>(\n    modifier = Modifier\n        .fillMaxWidth()\n        .padding(<span class="num">16</span>.dp)\n) {\n    <span class="fn">Text</span>(<span class="str">"Título"</span>)\n    <span class="fn">Button</span>(onClick = {}) { <span class="fn">Text</span>(<span class="str">"OK"</span>) }\n}`,
+      pergunta: "O que este código monta?",
       opcoes: [
-        "<code>10</code> — o <code>loc</code> também serve para atribuir: a nota do \"aluno1\" foi alterada para 10.",
-        "<code>5</code> — o valor original, pois <code>loc</code> só lê dados, nunca os altera.",
-        "<code>15</code> — o novo valor é somado ao antigo em vez de substituí-lo.",
-        "Um erro, pois <code>loc</code> não pode receber uma atribuição com <code>=</code>."
-      ], correta: 0, explicacao: "<code>loc</code> também atribui: <code>df.loc[\"aluno1\", \"nota\"] = 10</code> troca o 5 por 10. O print mostra <code>10</code>." },
-    { tema: "astype", trecho: `df = pd.DataFrame({<span class="str">"ano"</span>: [<span class="str">"2020"</span>, <span class="str">"2021"</span>]})\ndf[<span class="str">"ano"</span>] = df[<span class="str">"ano"</span>].astype(<span class="fn">int</span>)\n<span class="fn">print</span>(df[<span class="str">"ano"</span>].sum())`,
-      pergunta: "O que este código imprime?",
+        "Uma coluna que ocupa toda a largura, com 16dp de espaçamento, contendo um texto e um botão empilhados na vertical.",
+        "Uma linha horizontal com o texto e o botão lado a lado, ocupando metade da tela.",
+        "Uma caixa que sobrepõe o botão sobre o texto, um por cima do outro.",
+        "Uma tabela do banco com as colunas \"Título\" e \"OK\" preenchidas com dados."
+      ], correta: 0, explicacao: "<code>Column</code> empilha na vertical: o <code>Text</code> em cima e o <code>Button</code> embaixo. O Modifier faz ocupar a largura toda com 16dp de padding." },
+    { tema: "Singleton · Kotlin", trecho: `<span class="kw">object</span> <span class="fn">BancoManager</span> {\n    <span class="kw">var</span> conexoes = <span class="num">0</span>\n    <span class="kw">fun</span> <span class="fn">conectar</span>() { conexoes++ }\n}`,
+      pergunta: "Qual padrão de projeto este código em Kotlin implementa?",
       opcoes: [
-        "<code>4041</code> — após converter para int, 2020 + 2021 são somados numericamente.",
-        "<code>20202021</code> — os textos são concatenados, pois continuam sendo strings.",
-        "<code>2</code> — a quantidade de anos existentes na coluna após a conversão.",
-        "Um erro, pois não é possível converter texto em número inteiro no Pandas."
-      ], correta: 0, explicacao: "<code>astype(int)</code> converte \"2020\"/\"2021\" em números; a soma vira 2020+2021 = <code>4041</code>. Sem converter, seria concatenação de texto." },
-    { tema: "describe", trecho: `s = pd.Series([<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>])\n<span class="fn">print</span>(s.describe()[<span class="str">"mean"</span>])`,
-      pergunta: "O que este código imprime?",
+        "Singleton — a palavra <code>object</code> cria uma única instância global de <code>BancoManager</code> no app.",
+        "Factory Method — <code>BancoManager</code> fabrica novos objetos de conexão sob demanda.",
+        "Observer — <code>BancoManager</code> notifica outros objetos quando <code>conexoes</code> muda.",
+        "Adapter — <code>BancoManager</code> adapta uma interface incompatível a outra."
+      ], correta: 0, explicacao: "Em Kotlin, <code>object</code> já é um Singleton: existe uma única instância de <code>BancoManager</code> no app inteiro. É a forma idiomática do padrão." },
+    { tema: "Room · instância", trecho: `<span class="kw">val</span> db = Room.databaseBuilder(\n    context,\n    BibliotecaDatabase::class.java,\n    <span class="str">"biblioteca.db"</span>\n).build()\n<span class="kw">val</span> dao = db.livroDao()`,
+      pergunta: "O que este código faz?",
       opcoes: [
-        "<code>20.0</code> — a média de 10, 20 e 30, que é um dos valores do <code>describe()</code>.",
-        "<code>60.0</code> — a soma dos valores, e não a média, apesar do rótulo \"mean\".",
-        "<code>3</code> — a quantidade de elementos da Series (contagem).",
-        "<code>30.0</code> — o valor máximo da Series, retornado pelo <code>describe()</code>."
-      ], correta: 0, explicacao: "<code>describe()</code> traz estatísticas; <code>[\"mean\"]</code> pega a média: (10+20+30)/3 = <code>20.0</code>." },
-    { tema: "groupby · mean", trecho: `df = pd.DataFrame({\n  <span class="str">"cat"</span>: [<span class="str">"X"</span>, <span class="str">"X"</span>, <span class="str">"Y"</span>],\n  <span class="str">"v"</span>: [<span class="num">4</span>, <span class="num">6</span>, <span class="num">10</span>]\n})\n<span class="fn">print</span>(df.groupby(<span class="str">"cat"</span>)[<span class="str">"v"</span>].mean().tolist())`,
-      pergunta: "O que este código imprime?",
-      opcoes: [
-        "<code>[5.0, 10.0]</code> — média de X = (4+6)/2 = 5 e média de Y = 10.",
-        "<code>[10.0, 10.0]</code> — a soma de cada grupo, e não a média dos valores.",
-        "<code>[4.0, 10.0]</code> — apenas o primeiro valor de cada grupo é considerado.",
-        "<code>[6.66]</code> — a média geral de todos os valores, sem separar por grupo."
-      ], correta: 0, explicacao: "Agrupa por \"cat\" e tira a média: X = (4+6)/2 = 5.0, Y = 10.0 → <code>[5.0, 10.0]</code>." }
+        "Cria/abre o banco Room chamado \"biblioteca.db\" e obtém o DAO para fazer as operações na tabela.",
+        "Faz uma requisição a uma API externa para baixar a biblioteca de livros.",
+        "Desenha a tela da biblioteca com a lista de livros usando Composables.",
+        "Apaga o banco de dados \"biblioteca.db\" e recria todas as tabelas vazias."
+      ], correta: 0, explicacao: "<code>Room.databaseBuilder(...).build()</code> cria/abre o banco; <code>db.livroDao()</code> pega o DAO para inserir, consultar etc. Ponto de entrada do Room." }
   ];
 
-  /* =========================== MODO RESUMO (11) =========================== */
+  /* =========================== MODO RESUMO (12) =========================== */
   const resumo = [
-    { titulo: "Por que o Pandas existe", tag: "análise de dados", corpo: `<p>O <b>Pandas</b> é a biblioteca padrão de análise de dados em Python: carregar, explorar, limpar e transformar tabelas.</p>
-<p>Compare as três estruturas:</p>
-<span class="destaque">list → flexível, mas lenta em cálculos grandes<br>ndarray (NumPy) → rápido, porém sem rótulos<br>Series (Pandas) → velocidade do NumPy + índice rotulado</span>
-<p>A Series é o "tijolo" da análise; o próximo passo (a "parede") é o <b>DataFrame</b> — a tabela completa.</p>` },
-    { titulo: "Vetores e Matrizes (NumPy)", tag: "estruturas base", corpo: `<p><b>Vetor (1D):</b> sequência em uma única dimensão, só comprimento. É um <code>ndarray</code> com shape <code>(n,)</code> e um único tipo de dado (ex.: <code>float64</code>).</p>
-<p><b>Matriz (2D):</b> ganha linhas e colunas, shape <code>(linhas, colunas)</code>. O acesso exige dois índices:</p>
-<span class="destaque">matriz[linha, coluna] → um elemento<br>matriz[0] → a primeira linha<br>matriz[:, 0] → a primeira coluna (":" = todas as linhas)</span>
-<p>Operações são <b>elemento a elemento</b>: <code>notas + 1</code> soma 1 em todos ao mesmo tempo, sem loop.</p>` },
-    { titulo: "pd.Series: o vetor rotulado", tag: "o tijolo", corpo: `<p>Uma Series é um vetor NumPy "turbinado" com um índice. Três partes:</p>
-<span class="destaque">values → os dados (por baixo, NumPy puro)<br>index → o rótulo (nome) de cada posição<br>name → nome global opcional da coluna</span>
-<p>Em vez de acessar pela "posição 3", você usa o rótulo "Diego". Os dados ganham significado de negócio.</p>` },
-    { titulo: "Criando uma Series", tag: "duas formas", corpo: `<p><b>A partir de lista:</b> você fornece os dados e, separadamente, o índice.</p>
-<span class="destaque">pd.Series([7, 8], index=["Ana", "Bruno"])</span>
-<p>Sem informar o index, o Pandas gera numeração automática: 0, 1, 2, 3...</p>
-<p><b>A partir de dicionário:</b> forma mais orgânica.</p>
-<span class="destaque">pd.Series({"BH": 22, "SP": 19})</span>
-<p>As chaves ("BH", "SP") viram o índice; os valores (22, 19) viram os dados.</p>` },
-    { titulo: "Acessando valores: loc vs iloc", tag: "a dica de ouro", corpo: `<p>Três formas de acessar, mas só duas recomendadas:</p>
-<span class="destaque">.loc[] → pelo rótulo (nome). Ex.: notas.loc["Ana"]<br>.iloc[] → pela posição inteira. Ex.: notas.iloc[0]<br>[] → tenta adivinhar o contexto (pode confundir)</span>
-<p><b>Dica de Ouro:</b> use sempre <code>loc</code> ou <code>iloc</code>. Deixa o código à prova de bugs e legível. Os dois também servem para <b>atribuir</b> valores.</p>` },
-    { titulo: "A inteligência do Pandas", tag: "3 superpoderes", corpo: `<p><b>Estatísticas nativas:</b> a Series tem dezenas de métodos diretos e otimizados — <code>notas.mean()</code>, <code>notas.max()</code> rodam em microssegundos.</p>
-<p><b>Alinhamento por índice:</b> ao somar duas Series, o Pandas soma "Ana" com "Ana". A ordem na lista não importa — a matemática viaja acompanhada do índice.</p>
-<p><b>Máscaras booleanas:</b> uma condição como <code>notas >= 7</code> gera True/False; jogá-la na Series extrai exatamente as linhas desejadas.</p>` },
-    { titulo: "Lidando com ausências (NaN)", tag: "limpeza", corpo: `<p>Dados reais nunca são perfeitos: informações faltam, corrompem ou falham na coleta. O Pandas marca a falha com <b>NaN</b> (Not a Number).</p>
-<span class="destaque">.isna() → identifica quem está faltando<br>.fillna(x) → preenche os buracos com 'x'<br>.dropna() → remove as linhas falhas</span>
-<p><code>df.isna().sum()</code> conta os NaN por coluna. Ao somar Series, um rótulo sem par vira NaN.</p>` },
-    { titulo: "Visão e transformação", tag: "métodos essenciais", corpo: `<p><b>Visão inicial:</b></p>
-<span class="destaque">head() → primeiras linhas · tail() → últimas<br>info() → colunas e tipos · describe() → estatísticas<br>shape → (linhas, colunas) · columns → nomes das colunas</span>
-<p><b>Limpeza/transformação:</b> <code>rename()</code> (renomeia colunas), <code>drop()</code> (remove colunas/linhas), <code>fillna()</code>, <code>isna()</code>, <code>astype()</code> (converte tipos).</p>` },
-    { titulo: "Seleção, filtro e agregação", tag: "extrair e resumir", corpo: `<p><b>Selecionar/filtrar:</b> <code>loc[]</code>, <code>iloc[]</code>, filtro booleano <code>df[df['idade'] > 18]</code>, <code>sort_values()</code>.</p>
-<p><b>Agregar:</b> <code>groupby()</code> agrupa por uma coluna; depois se aplica:</p>
-<span class="destaque">.sum() → soma · .mean() → média<br>.median() → mediana · .count() → conta registros<br>.agg({'vendas':['sum','mean']}) → várias de uma vez</span>
-<p><b>Combinar tabelas:</b> <code>merge()</code> (junta por chave), <code>concat()</code> (empilha), <code>join()</code> (pelo índice).</p>` },
-    { titulo: "Fluxo comum de análise", tag: "passo a passo", corpo: `<p>A ordem lógica típica de um dia a dia de análise:</p>
-<span class="destaque">head() → info() → filtro → groupby() → agg() → merge()/concat()</span>
-<p>Primeiro <b>explora</b> (head, info), depois <b>filtra</b> o que interessa, <b>agrupa e resume</b> (groupby + agg) e, por fim, <b>combina</b> tabelas quando precisa. Pequenos comandos, grandes insights.</p>` },
-    { titulo: "Dados e Responsabilidade", tag: "ética", corpo: `<p>Dados podem <b>subverter o senso comum</b> e revelar padrões invisíveis (ex.: John Snow mapeou a cólera em 1854 e provou que a doença vinha da água, não do ar).</p>
-<p>Mas também podem <b>sistematizar o preconceito</b>:</p>
-<span class="destaque">Viés algorítmico → a IA aprende o preconceito dos dados históricos (55% da origem do viés)<br>Fim da privacidade → coleta massiva vira vigilância<br>Manipulação visual → mudar a escala do eixo distorce a percepção</span>
-<p>A reflexão final: <b>"Dados não tomam decisões éticas. Pessoas tomam."</b></p>` }
+    { titulo: "Jetpack Compose: o básico", tag: "UI declarativa", corpo: `<p>Compose é <b>declarativo</b>: <code>UI = f(state)</code>. Você descreve como a tela fica para cada estado; muda o estado, a tela se atualiza sozinha (nada de <code>tv.text = ...</code> manual).</p>
+<span class="destaque">@Composable → marca uma função que emite UI (PascalCase)<br>setContent { } → onde a UI começa, na Activity<br>@Preview → renderiza a tela no Android Studio, sem emulador</span>
+<p>Uma Composable só pode ser chamada de dentro do <code>setContent</code> ou de outra Composable.</p>` },
+    { titulo: "Estado e recomposição", tag: "o coração do Compose", corpo: `<p><b>Estado</b> são dados que mudam durante a execução.</p>
+<span class="destaque">mutableStateOf(0) → envelope observável<br>remember { } → preserva o valor entre recomposições<br>var x by remember { mutableStateOf(0) } → acesso direto a x</span>
+<p><b>Recomposição:</b> o Compose redesenha <i>só</i> as Composables que leem o estado alterado — não a tela toda. Sem <code>remember</code>, o valor volta ao inicial a cada redesenho.</p>` },
+    { titulo: "State Hoisting", tag: "elevação de estado", corpo: `<p>Padrão que move o estado para um componente <b>ancestral</b>. A tela filha fica "sem estado": recebe dados por parâmetro e emite eventos por callback.</p>
+<span class="destaque">@Composable<br>fun Contador(cliques: Int, onIncrementar: () -> Unit) { ... }<br><br>// quem chama é o dono do estado:<br>var cliques by remember { mutableStateOf(0) }<br>Contador(cliques, onIncrementar = { cliques++ })</span>
+<p>Deixa o componente reutilizável e testável. Dados descem, eventos sobem.</p>` },
+    { titulo: "Layouts e Modifiers", tag: "organizar a tela", corpo: `<p>Os três layouts base:</p>
+<span class="destaque">Column → empilha na vertical (↓)<br>Row → empilha na horizontal (→)<br>Box → sobrepõe em profundidade (Z-order)</span>
+<p><b>Modifier</b> decora e posiciona (padding, background, tamanho). Aplicados <b>em cadeia</b>, e a <b>ordem importa</b>: <code>padding().background()</code> ≠ <code>background().padding()</code>.</p>` },
+    { titulo: "SQLite puro", tag: "persistência manual", corpo: `<p>O <b>SQLite</b> é um banco relacional leve e embutido no Android. Fazendo "na mão":</p>
+<span class="destaque">SQLiteOpenHelper → onCreate() cria tabelas, onUpgrade() migra versões<br>ContentValues → monta uma linha (coluna→valor) antes de inserir<br>Cursor → percorre o resultado linha a linha (getString, getInt)</span>
+<p>Use <b>SharedPreferences/DataStore</b> só para dados pequenos chave-valor (configurações) — não para listas estruturadas.</p>` },
+    { titulo: "Room: SQLite com anotações", tag: "persistência moderna", corpo: `<p><b>Room</b> é uma camada sobre o SQLite que automatiza schema e queries. Três anotações centrais:</p>
+<span class="destaque">@Entity → data class vira tabela (cada campo = coluna)<br>@Dao → interface com as operações (@Insert, @Query, @Update, @Delete)<br>@Database → lista as entities e a versão, dá acesso aos DAOs</span>
+<p><code>@PrimaryKey(autoGenerate = true)</code> cria ids sequenciais. O Room ainda valida as queries em tempo de compilação.</p>` },
+    { titulo: "Room reativo", tag: "Flow e coroutines", corpo: `<p>Queries do Room podem retornar <b>Flow</b>: um fluxo que reemite os dados sozinho quando a tabela muda — a UI se atualiza sem callbacks.</p>
+<span class="destaque">@Query("SELECT * FROM livros")<br>fun observeAll(): Flow&lt;List&lt;LivroEntity&gt;&gt;<br><br>@Insert<br>suspend fun insertAll(...)  // roda em background</span>
+<p>Operações de escrita são <code>suspend</code> (rodam no <code>Dispatchers.IO</code>). <b>Single Source of Truth:</b> a UI observa só o Room, nunca a API direto.</p>` },
+    { titulo: "Consumo de API: Retrofit", tag: "rede", corpo: `<p><b>Retrofit</b> é um cliente HTTP type-safe: declara os endpoints por anotações e converte o JSON em objetos Kotlin.</p>
+<span class="destaque">interface PokeApiService {<br>&nbsp;&nbsp;@GET("pokemon/{nameOrId}")<br>&nbsp;&nbsp;suspend fun getPokemon(@Path("nameOrId") n: String): ...<br>}</span>
+<p>Você só declara a <b>interface</b> — o Retrofit gera a implementação em runtime. <code>@Path</code> injeta o valor na URL; o <b>Gson</b> converte o JSON.</p>` },
+    { titulo: "Coroutines e ViewModel", tag: "assíncrono", corpo: `<p><b>suspend</b> permite pausar esperando rede/banco sem travar a thread principal. Coroutines são leves: milhares rodam sobre poucas threads reais.</p>
+<span class="destaque">viewModelScope.launch { ... } → coroutine ligada ao ViewModel<br>Dispatchers.IO → dispatcher para operações de rede/banco</span>
+<p>O <b>ViewModel</b> guarda o estado e sobrevive à rotação da tela — os dados carregados não se perdem nem a API é chamada de novo.</p>` },
+    { titulo: "UI State e arquitetura", tag: "MVVM + UDF", corpo: `<p>O estado da tela é modelado como uma <b>sealed interface</b>, garantindo um único estado válido por vez:</p>
+<span class="destaque">sealed interface UiState {<br>&nbsp;&nbsp;object Loading<br>&nbsp;&nbsp;data class Success(val p: Pokemon)<br>&nbsp;&nbsp;object Error<br>}</span>
+<p><b>MVVM + fluxo unidirecional (UDF):</b> dados descem (API → ViewModel → UI), eventos sobem por callbacks. O ViewModel nunca conhece a UI.</p>` },
+    { titulo: "Caminho completo dos dados", tag: "juntando tudo", corpo: `<p>A arquitetura Android completa conecta todas as camadas:</p>
+<span class="destaque">API (Retrofit) → grava no Room → ViewModel observa (Flow) → UI (Compose) exibe</span>
+<p>A API alimenta o banco; o Room é a <b>fonte única da verdade</b>; o ViewModel expõe o estado; o Compose desenha em função desse estado. Tudo assíncrono via coroutines.</p>` },
+    { titulo: "Padrões de Projeto", tag: "design patterns", corpo: `<p>Soluções reutilizáveis para problemas comuns, em <b>3 categorias</b>:</p>
+<span class="destaque">Criacionais → criação de objetos: Singleton, Factory Method, Builder, Abstract Factory, Prototype<br>Estruturais → composição: Adapter, Decorator, Facade, Proxy, Composite<br>Comportamentais → interação: Observer, Strategy, Command, State</span>
+<p><b>Singleton</b> (1 instância): em Kotlin, <code>object</code>. <b>Observer</b> (notifica mudanças): a base do Flow/estado reativo. <b>Strategy</b>: algoritmos intercambiáveis.</p>` }
   ];
 
   const modos = {
@@ -702,7 +690,7 @@
     resumo:  { nome: "Resumo",  tipo: "resumo", questoes: resumo }
   };
 
-  const temasChips = ["NumPy", "Series", "loc/iloc", "DataFrame", "groupby", "merge/concat", "NaN", "Ética de dados"];
+  const temasChips = ["Jetpack Compose", "Estado", "SQLite", "Room", "Retrofit/API", "Coroutines", "ViewModel", "Design Patterns"];
 
   let modoAtual = null, questoes = [], atual = 0, acertos = 0, ordemAtual = [], respondida = false, erros = [], iniciado = false, respostasDadas = [];
 
@@ -734,15 +722,15 @@
     barra.style.width = "0%"; contador.textContent = ""; placar.textContent = "";
     card.innerHTML = `
       <div class="hero">
-        <h1>&gt; Prova Python<br><span>Pandas & Análise de Dados</span></h1>
-        <p class="desc">NumPy (vetores/matrizes), Series, loc/iloc, métodos de DataFrame, tratamento de NaN e ética de dados. Nos quizzes as alternativas embaralham e a explicação aparece na hora. O modo Resumo é material de estudo.</p>
+        <h1>&gt; Prova Kotlin<br><span>Android: Compose, Room & API</span></h1>
+        <p class="desc">Jetpack Compose (estado, recomposição, modifiers), persistência (SQLite e Room), consumo de API com Retrofit e padrões de projeto. Nos quizzes as alternativas embaralham e a explicação aparece na hora. O modo Resumo é material de estudo.</p>
         <div class="chips">${temasChips.map(t => `<span class="chip">${t}</span>`).join("")}</div>
         <div class="modos">
           <button class="modo facil" onclick="iniciar('facil')"><span class="m-icone">🟢</span><span class="m-nome">Fácil</span><span class="m-desc">18 questões · conceitos e definições básicas</span></button>
           <button class="modo medio" onclick="iniciar('medio')"><span class="m-icone">🟡</span><span class="m-nome">Médio</span><span class="m-desc">18 questões · aplicação prática dos conceitos</span></button>
-          <button class="modo dificil" onclick="iniciar('dificil')"><span class="m-icone">🔴</span><span class="m-nome">Difícil</span><span class="m-desc">20 questões · mecanismos, pegadinhas e ética</span></button>
-          <button class="modo codigo" onclick="iniciar('codigo')"><span class="m-icone">💻</span><span class="m-nome">Código</span><span class="m-desc">16 trechos · leia o código e acerte a saída</span></button>
-          <button class="modo resumo" onclick="iniciar('resumo')"><span class="m-icone">📖</span><span class="m-nome">Resumo</span><span class="m-desc">11 tópicos · material de estudo, sem quiz</span></button>
+          <button class="modo dificil" onclick="iniciar('dificil')"><span class="m-icone">🔴</span><span class="m-nome">Difícil</span><span class="m-desc">20 questões · mecanismos, arquitetura e pegadinhas</span></button>
+          <button class="modo codigo" onclick="iniciar('codigo')"><span class="m-icone">💻</span><span class="m-nome">Código</span><span class="m-desc">16 trechos · leia o código e acerte o que ele faz</span></button>
+          <button class="modo resumo" onclick="iniciar('resumo')"><span class="m-icone">📖</span><span class="m-nome">Resumo</span><span class="m-desc">12 tópicos · material de estudo, sem quiz</span></button>
         </div>
         <p class="dica-teclado">atalhos nos quizzes: 1–4 responde · Enter avança · ← volta</p>
       </div>`;
@@ -825,7 +813,7 @@
     const pct = Math.round((acertos / questoes.length) * 100);
     let veredito, sub;
     if (pct >= 90)      { veredito = "Monstro. 🏆";                sub = modoAtual === "dificil" ? "Pode fazer a prova de olhos fechados." : "Bora subir de nível — tenta o próximo modo."; }
-    else if (pct >= 70) { veredito = "Tá pronto pra prova. 🐼";    sub = "Só dá uma olhada nos erros abaixo."; }
+    else if (pct >= 70) { veredito = "Tá pronto pra prova. 🤖";    sub = "Só dá uma olhada nos erros abaixo."; }
     else if (pct >= 50) { veredito = "Na média, mas dá pra mais."; sub = "Revisa os tópicos das questões erradas."; }
     else                { veredito = "Volta pra teoria. 📚";       sub = "Dá uma passada no modo Resumo e refaz."; }
     card.innerHTML = `
